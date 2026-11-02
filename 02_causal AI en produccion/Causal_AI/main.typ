@@ -1,0 +1,155 @@
+// ============================================================
+//  Sistema de Inteligencia Causal, edición 2026
+//  Monografía del Curso ECO-490 / ECON-540
+// ============================================================
+//  Dos modos de compilación desde este mismo archivo (ver template.typ §0):
+//    curso (por defecto):      typst compile main.typ main-curso.pdf
+//    comercial (librería):     typst compile --input modo=comercial main.typ main-comercial.pdf
+//  El modo comercial excluye los apéndices de uso educativo (E e I) y sustituye
+//  los callouts del monorepo por una nota genérica; no altera el contenido
+//  técnico de los capítulos.
+// ============================================================
+
+#import "template/template.typ": *
+
+#show: project
+
+// ============================
+//  Frontmatter (numeración romana)
+// ============================
+#frontmatter[
+  #include "frontmatter/portada.typ"
+  #include "frontmatter/colofon.typ"
+  #include "frontmatter/prefacio.typ"
+  #include "frontmatter/como_usar.typ"
+  #include "frontmatter/notacion.typ"
+
+  // Índices separados (cada uno en su propia página)
+  #pagebreak()
+  #outline(title: [Índice general], depth: 3, indent: auto)
+  #pagebreak()
+  #outline(title: [Índice de figuras], target: figure.where(kind: image))
+  #pagebreak()
+  #outline(title: [Índice de tablas], target: figure.where(kind: table))
+  #pagebreak()
+  #outline(title: [Índice de algoritmos], target: figure.where(kind: "algorithm"))
+  #pagebreak()
+  #outline(title: [Índice de listados], target: figure.where(kind: raw))
+]
+
+// ============================
+//  Mainmatter (numeración arábiga, capítulos 1-33)
+// ============================
+#mainmatter[
+
+  // --- Parte 0: Introducción --------------------------------
+  #include "partes/parte0.typ"
+  #include "capitulos/cap01_causalidad_elemental.typ"        // Cap. 1
+  #include "capitulos/cap02_anatomia_sistema.typ"            // Cap. 2
+
+  // --- Parte I: Fundamentos estructurales y de datos --------
+  #include "partes/parte1.typ"
+  #include "capitulos/cap03_scm_pch.typ"                     // Cap. 3
+  #include "capitulos/cap04_ingenieria_datos.typ"             // Cap. 4
+  #include "capitulos/cap05_prediccion_causalidad.typ"         // Cap. 5
+  #include "capitulos/cap06_regularizacion_postseleccion.typ"  // Cap. 6
+  #include "capitulos/cap07_datos_entrenamiento.typ"          // Cap. 7
+  #include "capitulos/cap08_intervencion_contrafactual.typ"   // Cap. 8
+  #include "capitulos/cap09_features_sin_fuga.typ"            // Cap. 9
+
+  // --- Parte II: Estimación causal flexible y primer despliegue
+  #include "partes/parte2.typ"
+  #include "capitulos/cap10_ortogonalidad_crossfitting.typ"    // Cap. 10
+  #include "capitulos/cap11_dml.typ"                           // Cap. 11
+  #include "capitulos/cap12_metalearners.typ"                  // Cap. 12
+  #include "capitulos/cap13_arboles_bosques.typ"                // Cap. 13
+  #include "capitulos/cap14_validacion.typ"                     // Cap. 14
+  #include "capitulos/cap15_despliegue_servicio.typ"           // Cap. 15
+
+  // --- Parte III: Diseños de identificación con ML -----------
+  #include "partes/parte3.typ"
+  #include "capitulos/cap16_pds.typ"                            // Cap. 16
+  #include "capitulos/cap17_panel_dmliv.typ"                    // Cap. 17
+  #include "capitulos/cap18_mapa_decision.typ"                  // Cap. 18
+
+  // --- Parte IV: Publicación y operación en producción -------
+  #include "partes/parte4.typ"
+  #include "capitulos/cap19_model_card_causal.typ"                        // Cap. 19
+  #include "capitulos/cap20_cicd.typ"                          // Cap. 20
+
+  // --- Parte V: Heterogeneidad, políticas y targeting --------
+  #include "partes/parte5.typ"
+  #include "capitulos/cap21_policy_learning.typ"                // Cap. 21
+  #include "capitulos/cap22_uplift_targeting.typ"                // Cap. 22
+
+  // --- Parte VI: Explicación, equidad y decisión estructural -
+  #include "partes/parte6.typ"
+  #include "capitulos/cap23_explicacion_equidad.typ"           // Cap. 23
+  #include "capitulos/cap24_etica_interpretabilidad.typ"         // Cap. 24
+  #include "capitulos/cap25_decisiones_estructurales.typ"       // Cap. 25
+  #include "capitulos/cap26_generalizacion.typ"                 // Cap. 26
+
+  // --- Parte VII: Métodos avanzados ---------------------------
+  #include "partes/parte7.typ"
+  #include "capitulos/cap27_deep_causal.typ"                     // Cap. 27
+  #include "capitulos/cap28_scm_matrix_completion.typ"           // Cap. 28
+
+  // --- Parte VIII: Estructura, monitoreo y frontera -----------
+  #include "partes/parte8.typ"
+  #include "capitulos/cap29_descubrimiento_grafos.typ"           // Cap. 29
+  #include "capitulos/cap30_monitoreo.typ"                      // Cap. 30
+  #include "capitulos/cap31_aprendizaje_continuo.typ"           // Cap. 31
+  #include "capitulos/cap32_lado_humano.typ"                    // Cap. 32
+  #include "capitulos/cap33_supuestos_no_observables.typ"        // Cap. 33
+
+]
+
+// ============================
+//  Apéndices (numeración A, B, C, ...)
+// ============================
+#appendix-mode[
+  #include "apendices/apA_notacion_fundamentos.typ"
+  // Apéndice B, guía de librerías y entorno: material de implementación; la edición de
+  // principios no lo incluye y reserva su letra para que las demás referencias sigan válidas.
+  #if es-principios [
+    #apendice-reservado()
+  ] else [
+    #include "apendices/apB_librerias_entorno.typ"
+  ]
+  #include "apendices/apC_datos_dgp.typ"
+  #include "apendices/apD_glosario.typ"
+
+  // Apéndice E, plantilla de proyecto final y rúbrica: material de uso
+  // educativo, ligado a la entrega del curso. Se conserva en la edición de
+  // curso y se excluye de la comercial, donde se reserva su letra para que las
+  // referencias "Ap. G.4" del texto y de los listados de código sigan siendo
+  // válidas (ver `apendice-reservado` en template.typ).
+  #if es-curso [
+    #include "apendices/apE_proyecto_rubrica.typ"
+  ] else [
+    #apendice-reservado()
+  ]
+
+  #include "apendices/apF_checklists.typ"
+  #include "apendices/apG_model_card_causal.typ"
+  #include "apendices/apH_checklist_despliegue.typ"
+  #include "apendices/apI_contratos.typ"
+
+  // Apéndice J, guía para instructores y equipos de curso: solo edición de curso.
+  // Va al final para que, al omitirlo, las demás ediciones no queden con un hueco de letra.
+  #if es-curso [
+    #include "apendices/apJ_guia_instructores.typ"
+  ]
+]
+
+// ============================
+//  Bibliografía
+// ============================
+// La bibliografía no es un capítulo ni un apéndice numerado: se reutiliza el
+// estilo "frontmatter" (encabezado sin contador) para que no herede el
+// numeral de apéndice (bug preexistente: sin este reset, el heading nativo
+// de #bibliography() heredaba chapter-kind="appendix" y mostraba una letra
+// (o, tras el fix de apéndices, "Apéndice J") delante de "Bibliografía").
+#state("chapter-kind").update("frontmatter")
+#pagebreak()
+#bibliography("bibliografia/refs.yml", title: "Bibliografía", style: "chicago-author-date")
