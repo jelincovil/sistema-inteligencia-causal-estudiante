@@ -29,10 +29,18 @@ class EsquemaCausal:
         return [self.tratamiento, self.resultado, *self.covariables]
 
     def validar(self, columnas_datos: list[str], valores_tratamiento) -> None:
-        # TODO-1 (C-01): rechazar (a) columnas del esquema ausentes en los datos,
-        # (b) columnas con dos roles y (c) un tratamiento que no varía.
-        # Pista: tres `if` con raise ValueError que NOMREN la columna culpable.
-        raise NotImplementedError("TODO-1 pendiente de completar")
+        # C-01: cada columna, un solo rol; el rechazo nombra a la culpable.
+        esquema = self.columnas()
+        ausentes = [c for c in esquema if c not in columnas_datos]
+        if ausentes:
+            raise ValueError(
+                f"columna(s) del esquema ausentes en los datos: {ausentes}")
+        dobles = sorted({c for c in esquema if esquema.count(c) > 1})
+        if dobles:
+            raise ValueError(f"columna(s) con más de un rol: {dobles}")
+        if np.unique(np.asarray(valores_tratamiento)).size < 2:
+            raise ValueError(
+                f"el tratamiento '{self.tratamiento}' no varía en los datos")
 
 
 # ------------------------------------------------------------------ carga CSV
@@ -52,10 +60,10 @@ def verificar_splits() -> bool:
     declarados = json.loads((DATOS / "splits.json").read_text())
     ok = True
     for parte in ("train", "validation", "test"):
-        # TODO-2 (C-10): hash SHA-256 del archivo de la partición y comparación
-        # con declarados["splits"][parte]["file_sha256"].
-        # Pista: hashlib.sha256((DATOS / f"observed_{parte}.csv").read_bytes())
-        raise NotImplementedError("TODO-2 pendiente de completar")
+        # C-10: el hash se recomputa; no se confía en el declarado.
+        coincide = (hashlib.sha256(
+            (DATOS / f"observed_{parte}.csv").read_bytes()).hexdigest()
+            == declarados["splits"][parte]["file_sha256"])
         ok &= coincide
         print(f"  {parte:12s} hash {'OK' if coincide else 'NO COINCIDE'}"
               f"  ({declarados['splits'][parte]['n_rows']} filas,"
@@ -67,10 +75,14 @@ def verificar_splits() -> bool:
 
 def comprobar_pared() -> None:
     """La verdad del escenario no está en el paquete: intentar cargarla falla."""
-    # TODO-3 (la pared): abrir truth_train.csv y convertir el FileNotFoundError
-    # en la confirmación de que la pared se cumple (print + return);
-    # si el archivo EXISTIERA, la pared está rota -> RuntimeError.
-    raise NotImplementedError("TODO-3 pendiente de completar")
+    # La pared: la verdad del escenario no está en el paquete.
+    try:
+        with open(DATOS / "truth_train.csv"):
+            pass
+    except FileNotFoundError:
+        print("  pared OK: truth_train.csv no existe en el paquete (reservado)")
+        return
+    raise RuntimeError("pared rota: truth_train.csv SÍ existe en el paquete")
 
 
 if __name__ == "__main__":
