@@ -353,3 +353,50 @@ compara al final: el IC del AIPW la contiene. La pared se mantiene.
 `tarjeta.json`, `manifest.json`) + `champion` → `v0001`, generados con
 `SIC_ESCENARIO=real/ihdp make demo` desde cero (`make limpiar` previo). Versión
 inmutable: no se edita, se audita.
+
+---
+
+## 9. Notebook ejecutado
+
+**Qué:** `proyecto.ipynb` ejecutado de punta a punta (13 celdas de código, 0 errores,
+5 checkpoints en verde, gráfico PNG embebido) y con las celdas de respuesta rellenas:
+- sección 5: las 3 respuestas de ventanas;
+- sección 7: tabla de números de `ihdp` + reglas de la tarea cumplidas;
+- sección 8: las 5 respuestas de cierre;
+- sección 0: nota de que el fallo inicial con `TODO-1` quedó registrado aquí (§1) y en
+  el tag `semana4-kit-original`.
+
+**Por qué así:** los checkpoints del notebook corren sobre `real/jobs` (el escenario
+por defecto) y la sección 7 documenta `ihdp`; los artefactos que se entregan son los de
+`ihdp`. Para que ambas cosas convivan:
+
+1. `make limpiar` antes de ejecutar (registro vacío → los checkpoints crean `v0001` de
+   `jobs`).
+2. Ejecución con el env correcto: `nbconvert` solo existe en `/usr/bin/python3`, así que
+   se lanzó desde ahí con un **kernelspec temporal** dentro del proyecto
+   (`JUPYTER_PATH=.tmp_notebook/jupyter`, kernel `sic-estudiante` apuntando a
+   `temp_causal_env`). No se escribió nada en `~/Library/Jupyter`.
+3. Al terminar, se regeneraron los artefactos de `ihdp` desde cero y se verificó el
+   manifiesto: **ambos hashes `OK`** y `dataset_sha256 = 9af86718…`, idénticos a los
+   comprometidos.
+
+Comando reproducible (con el kernelspec temporal en su sitio, o registrándolo con
+`ipykernel install --user --name sic-estudiante`):
+
+```sh
+JUPYTER_PATH=$PWD/.tmp_notebook/jupyter \
+PATH=/opt/homebrew/Caskroom/miniforge/base/envs/temp_causal_env/bin:/usr/bin:/bin \
+/usr/bin/python3 -m nbconvert --to notebook --execute --inplace \
+  --ExecutePreprocessor.kernel_name=sic-estudiante proyecto.ipynb
+```
+
+**Evidencia:**
+
+```text
+[deriva      ] estado = alerta | acción: alertar (revisar antes de reentrenar)
+[positividad ] estado = falla  | acción: abstenerse (bloquear la promoción)
+/efecto: 200 efecto=1638.6 ic95=[1001.6, 2275.7] version=v0001
+/consulta dentro: 200 estado=respuesta efecto=1060.1
+/consulta fuera (age=99): 200 estado=abstencion motivo=age=99 fuera de [18.0, 54.0]
+HUMO: OK
+```
