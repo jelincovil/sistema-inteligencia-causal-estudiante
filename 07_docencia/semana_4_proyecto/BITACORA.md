@@ -550,3 +550,36 @@ que la validación HTML exigía múltiplos exactos del paso desde el mínimo y *
 valores por defecto**. Se cambió a `step="any"`, el `min`/`max` va con precisión completa y
 cada campo muestra su rango. Verificado: envío con los valores sugeridos → «9,1 puntos»;
 `bw=0` → respuesta válida.
+
+---
+
+## 15. Primera versión funcional (tag `v1.0.0`)
+
+**Qué se congela:** el commit que hace funcionar el artefacto de punta a punta, por CLI, por
+API y por formulario, con los mismos números que declara la documentación.
+
+| Componente | Estado |
+|---|---|
+| Pipeline (`make demo`) | 5/5 checkpoints en `jobs`; demo `ihdp` en verde; ≈ 2 s |
+| Estimador | AIPW cross-fitting K=5 → **5,2** [`3,9`; `6,4`] en `ihdp` |
+| Artefactos | `v0001` inmutable, manifiesto verificado, `dataset_sha256 = 9af86718…` |
+| Servicio | `/salud`, `/efecto`, `/consulta`, `/efecto_individual`, `?formato=texto` |
+| Formulario web | `GET /` con 25 campos validados + `GET /calcular` |
+| Contenedor | `puente:0.1.0` (`sha256:dbe3453abc5b`, 561 MB), no-root, `HEALTHCHECK` → `healthy` |
+| Pruebas | `make humo` verde, incluidos los dos casos de abstención |
+| Documentación | `BITACORA.md`, `PLAN_DEMO_2H.md` (guía), `pregunta_ihdp.md`, ficha Typst + PDF |
+
+**Límites conocidos de esta versión** (no son defectos ocultos, están declarados):
+proyección individual con `R² = 0,095`; sin verificación de hash al cargar el bundle; sin
+autenticación ni TLS; un escenario por artefacto; piernas lineales.
+
+**Cómo verificar la versión desde cero:**
+
+```sh
+make limpiar && SIC_ESCENARIO=real/ihdp make demo   # ≈ 2 s, verde
+jq -r '.archivos | to_entries[] | "\(.value)  artifacts/registro/v0001/\(.key)"' \
+  artifacts/registro/v0001/manifest.json > /tmp/v1.sha256
+shasum -a 256 -c /tmp/v1.sha256                    # 2/2 OK
+docker build -t puente:0.1.0 . && docker run -d -p 8000:8000 --name puente puente:0.1.0
+curl -s localhost:8000/salud                        # {"estado":"ok",...}
+```
