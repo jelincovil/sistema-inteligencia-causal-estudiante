@@ -22,31 +22,42 @@ def ate_ols(col: dict, esquema: EsquemaCausal, extra=None) -> dict:
     columnas = [col[c] for c in esquema.covariables] + (
         [extra["valores"]] if extra else [])
     M = np.column_stack([np.ones(n), D, *columnas])
-    # TODO-4 (el efecto): lstsq para beta; residuo; sigma2; y el SE del
-    # coeficiente del tratamiento = sqrt(sigma2 * (M'M)^-1_[1,1]).
-    # Pista: beta[1] es el ATE; devolver {"ate", "se", "ic"} con ic = ate ± 1.96*se.
-    raise NotImplementedError("TODO-4 pendiente de completar")
+    # OLS: el coeficiente del tratamiento es el ATE bajo el modelo lineal.
+    beta = np.linalg.lstsq(M, Y, rcond=None)[0]
+    residuo = Y - M @ beta
+    sigma2 = float(residuo @ residuo / (n - M.shape[1]))
+    cov = sigma2 * np.linalg.inv(M.T @ M)
+    ate = float(beta[1])
+    se = float(np.sqrt(cov[1, 1]))
+    return {"ate": ate, "se": se, "ic": [ate - 1.96 * se, ate + 1.96 * se]}
 
 
 def propensity(X: np.ndarray, D: np.ndarray) -> np.ndarray:
     """Logística por máxima verosimilitud (BFGS, covariables estandarizadas)."""
     Z = (X - X.mean(0)) / X.std(0)
-    # TODO-5 (soporte): minimizar la negativa de la log-verosimilitud binaria:
-    # nll(w) = sum(logaddexp(0, eta) - D*eta) con eta = Z @ w[1:] + w[0].
-    # Pista: minimize(nll, np.zeros(p+1), method="BFGS"); devolver sigmoid(eta).
-    raise NotImplementedError("TODO-5 pendiente de completar")
+    # Soporte: la logística se ajusta por máxima verosimilitud (BFGS).
+    def nll(w):
+        eta = Z @ w[1:] + w[0]
+        return float(np.sum(np.logaddexp(0, eta) - D * eta))
+
+    r = minimize(nll, np.zeros(Z.shape[1] + 1), method="BFGS")
+    eta = Z @ r.x[1:] + r.x[0]
+    return 1 / (1 + np.exp(-eta))
 
 
 def ess_kish(D: np.ndarray, e: np.ndarray) -> float:
     """Tamaño efectivo de la ponderación IPW: ESS = (sum w)^2 / sum w^2."""
-    # TODO-6 (ESS): w_i = 1/e si D=1, 1/(1-e) si D=0 (clip de e a [1e-6, 1-1e-6]).
-    raise NotImplementedError("TODO-6 pendiente de completar")
+    # ESS: cuántas unidades "cuentan" de verdad bajo los pesos IPW.
+    e = np.clip(e, 1e-6, 1 - 1e-6)
+    w = np.where(D == 1, 1 / e, 1 / (1 - e))
+    return float(w.sum() ** 2 / np.sum(w ** 2))
 
 
 def smd(v: np.ndarray, D: np.ndarray) -> float:
     """Diferencia media estandarizada: tratados vs controles (Cap. 7)."""
-    # TODO-7 (balance): (media_t - media_c) / sqrt((var_t + var_c)/2).
-    raise NotImplementedError("TODO-7 pendiente de completar")
+    # Balance: la diferencia de medias en unidades de desviación común.
+    t, c = v[D == 1], v[D == 0]
+    return float((t.mean() - c.mean()) / np.sqrt((t.var() + c.var()) / 2))
 
 
 def _ajustar_lineal(Xm: np.ndarray, y: np.ndarray) -> np.ndarray:
@@ -80,15 +91,24 @@ def aipw_crossfit(col: dict, esquema: EsquemaCausal, k: int = 5) -> dict:
     g = np.random.default_rng(SEMILLA)
     folds = np.array_split(g.permutation(n), k)
     mu1, mu0, e = np.empty(n), np.empty(n), np.empty(n)
-    # TODO-21 (la innovación): para cada fold f —
-    #   1. máscara m = todas las unidades menos f (entrenamiento del fold)
-    #   2. b1 = _ajustar_lineal(X[Dtr==1], Y[Dtr==1]); b0 = ... (Dtr==0)  [outcome por brazo]
-    #   3. mu1[f], mu0[f] = predicción lineal de X[f] con b1 / b0
-    #   4. e[f] = _propensity_fit(X[m], D[m])(X[f])
-    # luego: e = clip(e, 0.05, 0.95) [trimming declarado];
-    #        score = mu1 - mu0 + D*(Y-mu1)/e - (1-D)*(Y-mu0)/(1-e)
-    #        ate = media, se = std/raíz(n); devolver {"ate","se","ic","scores"}.
-    raise NotImplementedError("TODO-21 pendiente de completar")
+    for fold in folds:
+        # Cross-fitting: ningún nuisance ve a la unidad que predice.
+        fuera = np.ones(n, dtype=bool)
+        fuera[fold] = False
+        dentro = np.zeros(n, dtype=bool)
+        dentro[fold] = True
+        b1 = _ajustar_lineal(X[fuera & (D == 1)], Y[fuera & (D == 1)])
+        b0 = _ajustar_lineal(X[fuera & (D == 0)], Y[fuera & (D == 0)])
+        Xf = np.column_stack([np.ones(dentro.sum()), X[dentro]])
+        mu1[dentro], mu0[dentro] = Xf @ b1, Xf @ b0
+        e[dentro] = _propensity_fit(X[fuera], D[fuera])(X[dentro])
+
+    e = np.clip(e, 0.05, 0.95)  # trimming declarado en la tarjeta
+    score = (mu1 - mu0 + D * (Y - mu1) / e - (1 - D) * (Y - mu0) / (1 - e))
+    ate = float(score.mean())
+    se = float(score.std(ddof=1) / np.sqrt(n))
+    return {"ate": ate, "se": se, "ic": [ate - 1.96 * se, ate + 1.96 * se],
+            "scores": score}
 
 
 def estratos_nodegree(score: np.ndarray, col: dict, esquema: EsquemaCausal) -> dict:
@@ -96,19 +116,29 @@ def estratos_nodegree(score: np.ndarray, col: dict, esquema: EsquemaCausal) -> d
 
     No es un CATE: es la media de scores AIPW de cada estrato, con su IC.
     """
-    # TODO-22 (el estrato): para nodegree = 1 ("sin título") y 0 ("con título"):
-    # media de scores del grupo, se = std/raíz(n_grupo), ic = media ± 1.96*se.
-    # Devolver {"variable": "nodegree", "regla": ..., "hojas": {valor: {...}}}.
-    raise NotImplementedError("TODO-22 pendiente de completar")
+    # El estrato NO es un CATE: es la media de scores AIPW del grupo, con su IC.
+    regla = ("corte único por nodegree (título): criterio administrativo y de "
+             "interpretabilidad, declarado antes de mirar los efectos; "
+             "NO elegido por ganancia de varianza")
+    hojas = {}
+    for valor, etiqueta in ((1, "sin título"), (0, "con título")):
+        sel = col["nodegree"] == valor
+        s = score[sel]
+        media = float(s.mean())
+        se = float(s.std(ddof=1) / np.sqrt(len(s)))
+        hojas[str(valor)] = {"etiqueta": etiqueta, "n": int(sel.sum()),
+                             "efecto": media, "se": se,
+                             "ic": [media - 1.96 * se, media + 1.96 * se]}
+    return {"variable": "nodegree", "regla": regla, "hojas": hojas}
 
 
 def trampa_score_post(col: dict, esquema: EsquemaCausal) -> dict:
     """Columna derivada del resultado: 'score de éxito' calculado con re78."""
     g = np.random.default_rng(SEMILLA)
     D, Y = col[esquema.tratamiento], col[esquema.resultado]
-    # TODO-8 (la trampa, Cap. 6): score = 0.6*Y + 0.4*D + ruido(0, 500, n);
-    # llamar a ate_ols con extra={"valores": score} y devolver el resultado.
-    raise NotImplementedError("TODO-8 pendiente de completar")
+    # La trampa: una columna calculada CON el resultado (Cap. 6).
+    score = 0.6 * Y + 0.4 * D + g.normal(0, 500, len(Y))
+    return ate_ols(col, esquema, extra={"valores": score})
 
 
 def estimar() -> dict:
