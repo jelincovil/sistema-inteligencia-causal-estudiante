@@ -414,10 +414,10 @@ HUMO: OK
 
 ## 10. Cierre
 
-**Plan de demostración.** `PLAN_DEMO_2H.md`: agenda de 2 h con puertas de salida, reglas
-de parada (D06), validación externa de los umbrales y guion de 10 minutos. Protocolos
-tomados de la memoria (mem0, `user_id=memo_enrique`): D06, D02, AC01/AC03, R02/E04/E03,
-DL04 y la separación de DoD (auditoría vs envío).
+**Guía de construcción.** `PLAN_DEMO_2H.md` (contenido reemplazado por la guía):
+instalación del entorno, verificación del contrato de datos, construcción bloque a bloque
+con salidas esperadas, adaptación a `ihdp`, auditoría de artefactos, notebook, servicio,
+reproducción final y problemas frecuentes.
 
 **Ensayo cronometrado (dos veces, desde `make limpiar`):**
 
