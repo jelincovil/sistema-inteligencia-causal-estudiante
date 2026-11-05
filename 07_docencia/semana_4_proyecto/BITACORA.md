@@ -414,10 +414,11 @@ HUMO: OK
 
 ## 10. Cierre
 
-**Guía de construcción.** `GUIA_CONSTRUCCION.md`:
-instalación del entorno, verificación del contrato de datos, construcción bloque a bloque
-con salidas esperadas, adaptación a `ihdp`, auditoría de artefactos, notebook, servicio,
-reproducción final y problemas frecuentes.
+**Guía docente.** `GUIA_CONSTRUCCION.md`: construcción paso a paso pensada para clase
+(14 partes, 31 pasos): instalación y kernel, inventario del dato, los cinco bloques con
+concepto + qué escribir + salida esperada + checkpoint + errores típicos, la adaptación a
+`ihdp` como entregable, notebook, extensión de servicio y contenedor, rúbrica formativa y
+fuera de alcance.
 
 **Ensayo cronometrado (dos veces, desde `make limpiar`):**
 

@@ -1,69 +1,61 @@
-# Construcción paso a paso — «Puente» (semana 4)
+# Guía docente — construcción de «Puente» (semana 4)
 
-Guía de reproducción desde cero: instalar, verificar, construir los cinco bloques,
-adaptar a `ihdp`, generar artefactos auditables y levantar el servicio.
-Cada paso indica **el comando**, **la salida esperada** y **qué prueba**.
+Guía para **construir** este repositorio desde el kit vacío y para **producir el entregable**
+sobre `real/ihdp`. Cada paso declara el objetivo de aprendizaje, el concepto, qué se escribe,
+el comando, la salida esperada y el checkpoint de clase.
 
-> Tiempo medido del pipeline completo (verificación + estimación + registro + ventanas +
-> humo): **≈ 1,5–2 s**. Lo que lleva tiempo es instalar y leer, no ejecutar.
-
----
-
-## 0. Requisitos
-
-| Pieza | Versión usada | Nota |
-|---|---|---|
-| macOS / Linux | — | Probado en macOS arm64 |
-| `git` | 2.x | Para el baseline y los tags |
-| `make` | cualquiera | Los objetivos son atajos de un comando |
-| Python | **3.13** (mínimo 3.10) | `from __future__ import annotations` en todos los módulos |
-| Docker | opcional | Solo para empaquetar el servicio |
+> **Formato de la guía.** Los pasos están pensados para dos sesiones de 2 h más la tarea:
+> sesión 1 = bloques 2 y 3; sesión 2 = bloques 4, 5 y 6; tarea = adaptación a `ihdp`.
+> El pipeline completo corre en **≈ 2 s**: el tiempo de clase se gasta en decidir y leer,
+> no en esperar.
 
 ---
 
-## 1. Instalación del entorno
+## Parte 0 — Antes de empezar (para el docente)
 
-### 1.1 Crear el entorno
+**Qué se construye:** un servicio causal local completo —estimador con incertidumbre,
+tarjeta de modelo, registro inmutable con hashes, servicio que se abstiene fuera de soporte
+y una puerta `pasa / alerta / falla`— sobre dos escenarios sintéticos.
 
-Opción A — `uv` (rápido, sin tocar el Python del sistema):
+**Las cinco ideas que hay que dejar instaladas:**
+
+1. El **estimando se declara antes** de mirar datos (`pregunta.md`).
+2. La estimación viene con **incertidumbre** y con la declaración de qué cubre el IC.
+3. Un artefacto publicado se refiere a un **sujeto con hash**; si cambia, es otra versión.
+4. **Abstenerse es una respuesta** de primera clase, no un error.
+5. Los **umbrales se declaran antes** del desenlace; moverlos después es elegir el resultado.
+
+**Estado de arranque correcto:** `make verificar` **falla** con `TODO-1`.
 
 ```sh
-cd semana_4_proyecto
-uv venv --python 3.13 .venv
-uv pip install --python .venv/bin/python -r requirements.txt
+git checkout semana4-kit-original   # opcional: ver el kit prístino
+make verificar                       # NotImplementedError: TODO-1 pendiente de completar
 ```
 
-Opción B — `venv` clásico:
+---
+
+## Parte 1 — Preparación del entorno
+
+### Paso 1.1 — Crear el entorno
 
 ```sh
 cd semana_4_proyecto
-python3.13 -m venv .venv
-. .venv/bin/activate
+python3.13 -m venv .venv && . .venv/bin/activate
 python -m pip install -r requirements.txt
 ```
 
-`requirements.txt` cubre lo que el kit **usa de verdad**:
+`requirements.txt` cubre lo que el kit usa de verdad: `numpy`, `scipy`, `fastapi`,
+`uvicorn`, `httpx` (pipeline y servicio), `matplotlib` (gráfico del notebook),
+`ipykernel` y `jupyterlab`.
 
-```text
-numpy  scipy  fastapi  uvicorn  httpx        # pipeline + servicio
-matplotlib                                  # celda del gráfico (§6.1)
-ipykernel                                   # kernel del notebook
-jupyterlab                                  # `jupyter lab` del LEEME
-```
-
-### 1.2 Verificar la instalación
+**Verificar:**
 
 ```sh
 python -V
 python -c "import numpy, scipy, fastapi, matplotlib; print('ok')"
 ```
 
-Esperado: `Python 3.13.x` y `ok`.
-
-### 1.3 Registrar el kernel del notebook (una vez)
-
-El notebook pide el kernel `sic-estudiante`; sin él, Jupyter abre con otro intérprete y
-`!make` ejecutará un `python3` distinto (sin `fastapi`).
+### Paso 1.2 — Registrar el kernel (una sola vez)
 
 ```sh
 python -m ipykernel install --user --name sic-estudiante \
@@ -71,36 +63,102 @@ python -m ipykernel install --user --name sic-estudiante \
 jupyter kernelspec list
 ```
 
-Esperado: aparece `sic-estudiante` apuntando a tu entorno.
+**Concepto que hay que explicar:** las celdas `!make` heredan el `PATH` del kernel, así que
+**el kernel es el entorno del proyecto**. Con otro kernel, `make humo` muere con
+`ModuleNotFoundError: fastapi` aunque el paquete esté instalado.
 
-> **Importante:** las celdas `!make` heredan el `PATH` del kernel. El kernel **es** el
-> entorno del proyecto.
+### Paso 1.3 — Mapa de la construcción
+
+| Bloque | TODOs | Archivo | Concepto | Artefacto que produce |
+|---|---|---|---|---|
+| 2 | 1–3 | `datos.py` | Rol único por columna, splits con hash, la pared | verificación en pantalla |
+| 3 | 4–8, 21, 22 | `estimacion.py` | OLS, propensity, ESS, SMD, **AIPW cross-fitting**, estratos, trampa | `artifacts/estimacion.json` |
+| 4 | 9–13 | `registro.py` | Tarjeta, versión inmutable, manifiesto, promoción atómica | `artifacts/registro/v0001/` + `champion` |
+| 5 | 14–18 | `monitor.py` | PSI, ventanas, puerta causal | estados por ventana |
+| 6 | 19–20 | `servicio_core.py` | Bundle cacheado, abstención | `/efecto`, `/consulta` |
 
 ---
 
-## 2. Estructura y primer arranque
+## Parte 2 — Entender el dato antes de escribir código
 
-### 2.1 Qué es cada archivo
+### Paso 2.1 — Leer la pregunta (10 min, sin teclado)
 
-| Archivo | Función |
-|---|---|
-| `pregunta.md` · `pregunta_ihdp.md` | Estimando declarado **antes** de mirar datos |
-| `datos.py` | Esquema de roles (C-01), hashes de splits (C-10), la pared |
-| `estimacion.py` | OLS, propensity, ESS, SMD, AIPW con cross-fitting, estratos, trampa |
-| `registro.py` | Tarjeta, versión `vNNNN` con manifiesto, `champion` atómico |
-| `monitor.py` | PSI, tres ventanas, puerta `pasa / alerta / falla` |
-| `servicio_core.py` · `servicio.py` | Bundle cacheado + FastAPI |
-| `humo.py` | Smoke test del servicio |
-| `rutas.py` | Raíz del repo y escenario (`SIC_ESCENARIO`) |
-| `data_benchmark_causal/…/real/{jobs,ihdp}` | Datos observados y metadatos |
+Abrir `pregunta.md`: pregunta, estimando, población, supuestos con su clase y qué **no**
+afirma el prototipo. Discusión de clase: *¿la pregunta pide un promedio o un efecto
+individual?*
 
-### 2.2 Comprobar el contrato de datos
+### Paso 2.2 — Inventariar el escenario
 
 ```sh
-make verificar      # = python3 datos.py
+ls data_benchmark_causal/causal_benchmark_synthetic/datasets/real/jobs/
+head -2 data_benchmark_causal/causal_benchmark_synthetic/datasets/real/jobs/observed_train.csv
 ```
 
-Salida esperada (`real/jobs`):
+**Qué hay y qué no:**
+
+| Archivo | Uso |
+|---|---|
+| `observed_{train,validation,test}.csv` | datos; solo `train` alimenta decisiones |
+| `splits.json` | hashes y recuentos de las particiones |
+| `metadata.json` / `identification.json` | ficha y conjunto de ajuste válido |
+| `interventions.json` | **contiene `ate`/`att`**: no se usa (hueco de la pared) |
+| `truth_*.csv` | **no existe**: eso es la pared |
+
+---
+
+## Parte 3 — Bloque 2: roles, hashes y la pared (`datos.py`)
+
+### Paso 3.1 — `TODO-1`: un rol por columna
+
+**Concepto (C-01):** cada columna tiene *un* papel. Si `re78` es resultado, no puede ser
+también covariable; si `treatment` no varía, no hay nada que estimar.
+
+```python
+def validar(self, columnas_datos, valores_tratamiento):
+    esquema = self.columnas()
+    ausentes = [c for c in esquema if c not in columnas_datos]
+    if ausentes:
+        raise ValueError(f"columna(s) del esquema ausentes en los datos: {ausentes}")
+    dobles = sorted({c for c in esquema if esquema.count(c) > 1})
+    if dobles:
+        raise ValueError(f"columna(s) con más de un rol: {dobles}")
+    if np.unique(np.asarray(valores_tratamiento)).size < 2:
+        raise ValueError(f"el tratamiento '{self.tratamiento}' no varía en los datos")
+```
+
+**Enseñar:** el mensaje de error **nombra la culpable**. Un `assert` genérico no sirve en
+producción: quien lo lea a las 3 a.m. tiene que saber qué arreglar.
+
+### Paso 3.2 — `TODO-2`: recomputar, no confiar
+
+```python
+coincide = (hashlib.sha256((DATOS / f"observed_{parte}.csv").read_bytes()).hexdigest()
+            == declarados["splits"][parte]["file_sha256"])
+```
+
+**Concepto (C-10):** el productor declara hashes; el consumidor los **recomputa**. Es la
+diferencia entre creer y verificar.
+
+### Paso 3.3 — `TODO-3`: la pared
+
+```python
+try:
+    with open(DATOS / "truth_train.csv"):
+        pass
+except FileNotFoundError:
+    print("  pared OK: truth_train.csv no existe en el paquete (reservado)")
+    return
+raise RuntimeError("pared rota: truth_train.csv SÍ existe en el paquete")
+```
+
+**Concepto:** la pared no es una convención, es una comprobación ejecutable. Si alguien
+reintroduce la verdad, el programa falla.
+
+### Checkpoint 1
+
+```sh
+make verificar
+```
 
 ```text
 esquema valida contra observed_train: OK (n = 1033, tratados = 262)
@@ -110,22 +168,109 @@ esquema valida contra observed_train: OK (n = 1033, tratados = 262)
   pared OK: truth_train.csv no existe en el paquete (reservado)
 ```
 
-Qué prueba: cada columna tiene un único rol, los tres splits coinciden con el
-`sha256` declarado por el productor, y la verdad del escenario **no está** en el paquete.
+**Prueba negativa de clase** (celda del notebook):
 
-> Si trabajas desde el kit original (tag `semana4-kit-original`), este paso **falla** con
-> `TODO-1`: es el estado de arranque correcto. La construcción de cada bloque está
-> registrada en `BITACORA.md` §5.
+```python
+esquema.validar(["treatment", "re78", "age", "black"], [0, 1, 0, 1])
+# ValueError: columna(s) del esquema ausentes en los datos: ['educ', 'hispan', ...]
+```
+
+**Errores típicos:** hashear el texto normalizado en vez de los bytes; aceptar columnas
+ausentes sin nombrarlas; confundir «no hay `truth`» con «no hay verdad».
 
 ---
 
-## 3. Construir el estimador (bloque 3)
+## Parte 4 — Bloque 3: el efecto con incertidumbre (`estimacion.py`)
 
-```sh
-make estimar        # = python3 estimacion.py
+### Paso 4.1 — `TODO-4`: la referencia ingenua (OLS)
+
+```python
+beta = np.linalg.lstsq(M, Y, rcond=None)[0]
+residuo = Y - M @ beta
+sigma2 = float(residuo @ residuo / (n - M.shape[1]))
+cov = sigma2 * np.linalg.inv(M.T @ M)
+ate, se = float(beta[1]), float(np.sqrt(cov[1, 1]))
 ```
 
-Salida esperada (`real/jobs`):
+**Concepto:** el coeficiente del tratamiento es el ATE *bajo un modelo lineal*. Sirve como
+referencia, no como respuesta: si el AIPW y el OLS coinciden, gana confianza; si no,
+aparece una conversación.
+
+### Paso 4.2 — `TODO-5`: el propensity
+
+```python
+def nll(w):
+    eta = Z @ w[1:] + w[0]
+    return float(np.sum(np.logaddexp(0, eta) - D * eta))
+r = minimize(nll, np.zeros(Z.shape[1] + 1), method="BFGS")
+```
+
+**Concepto:** `ê(X)` es la probabilidad de tratamiento. Se estandarizan las covariables para
+que BFGS converja; `logaddexp` evita desbordes.
+
+### Paso 4.3 — `TODO-6` y `TODO-7`: ESS y SMD
+
+```python
+e = np.clip(e, 1e-6, 1 - 1e-6)
+w = np.where(D == 1, 1 / e, 1 / (1 - e))
+ess = float(w.sum() ** 2 / np.sum(w ** 2))
+
+smd = float((v[D == 1].mean() - v[D == 0].mean())
+            / np.sqrt((v[D == 1].var() + v[D == 0].var()) / 2))
+```
+
+**Concepto:** el ESS dice cuántas unidades «cuentan» de verdad; el SMD mide desequilibrio en
+unidades de desviación común.
+
+### Paso 4.4 — `TODO-21`: **la pieza del día** (AIPW con cross-fitting)
+
+```python
+for fold in folds:
+    fuera = np.ones(n, bool); fuera[fold] = False
+    dentro = ~fuera
+    b1 = _ajustar_lineal(X[fuera & (D == 1)], Y[fuera & (D == 1)])
+    b0 = _ajustar_lineal(X[fuera & (D == 0)], Y[fuera & (D == 0)])
+    mu1[dentro] = np.column_stack([np.ones(dentro.sum()), X[dentro]]) @ b1
+    mu0[dentro] = np.column_stack([np.ones(dentro.sum()), X[dentro]]) @ b0
+    e[dentro] = _propensity_fit(X[fuera], D[fuera])(X[dentro])
+
+e = np.clip(e, 0.05, 0.95)                       # trimming declarado
+score = mu1 - mu0 + D * (Y - mu1) / e - (1 - D) * (Y - mu0) / (1 - e)
+ate, se = float(score.mean()), float(score.std(ddof=1) / np.sqrt(n))
+```
+
+**Tres conceptos que hay que verbalizar:**
+
+1. **Ningún nuisance ve a la unidad que predice** (cross-fitting). Es la exigencia del cap. 9.
+2. **Doble robustez:** basta que una de las dos piernas esté bien especificada.
+3. **El score es la influence function:** su media es el ATE y su desviación da el IC.
+
+### Paso 4.5 — `TODO-22`: estratos (y lo que **no** son)
+
+```python
+sel = (col[variable] > umbral).astype(int) == int(clave)
+media = float(score[sel].mean())
+se = float(score[sel].std(ddof=1) / np.sqrt(sel.sum()))
+```
+
+**Concepto:** la media de scores AIPW dentro de una hoja es un efecto **de estrato**, no un
+CATE. El corte se declara antes y va en la tarjeta.
+
+### Paso 4.6 — `TODO-8`: la trampa de fuga
+
+```python
+score = 0.6 * Y + 0.4 * D + g.normal(0, RUIDO_TRAMPA[ESCENARIO], len(Y))
+return ate_ols(col, esquema, extra={"valores": score})
+```
+
+**Concepto:** una columna derivada del resultado **mejora** el ajuste y **vacía** el
+coeficiente del tratamiento. Ninguna métrica predictiva la detecta; solo el diseño.
+
+### Checkpoint 2
+
+```sh
+make estimar
+```
 
 ```text
 diferencia cruda E[Y|D=1]-E[Y|D=0] = 1600.8 USD
@@ -136,24 +281,61 @@ estrato nodegree=1 (sin título, n=568): efecto 1060.1 IC95 [233.1, 1887.2]
 estrato nodegree=0 (con título, n=465): efecto 2345.2 IC95 [1356.9, 3333.4]
 ESS = 729 (ESS/n = 0.71) | rango e = [0.092, 0.530] | solapamiento = 100%
 SMD máx = 0.19
-artefacto: artifacts/estimacion.json
 ```
 
-Qué prueba: dos estimadores independientes coinciden (OLS 1596 vs AIPW 1638); la
-trampa `score_post` vacía el coeficiente sin lanzar error (la fuga no penaliza el ajuste);
-los estratos se informan con su IC y no como CATE.
+**Pregunta de clase:** AIPW 1638,6 y OLS 1596,0 difieren en 42 USD con SE ≈ 300.
+*¿Es una discrepancia preocupante o está dentro del ruido?*
 
-Genera: `artifacts/estimacion.json`.
+**Errores típicos:** ajustar y predecir con el mismo pliegue; usar `ddof=0` y sorprenderse del
+IC; **recortar `ê` sin declararlo en la tarjeta** (el *trimming* es una decisión, no un
+detalle de implementación); llamar CATE al estrato.
 
 ---
 
-## 4. Registrar la versión y el champion (bloque 4)
+## Parte 5 — Bloque 4: tarjeta, versión y champion (`registro.py`)
 
-```sh
-make registrar      # = python3 registro.py
+### Paso 5.1 — `TODO-9`: la tarjeta
+
+Siete campos (`CAMPOS_TARJETA`): `estimando`, `poblacion`, `supuestos`, `umbrales`,
+`semilla`, `dataset_sha256`, `estimador`. Además `heterogeneidad` con **corte, umbral y
+regla**.
+
+**Concepto:** la tarjeta es el contrato público. Lo que no está ahí, no está prometido.
+
+### Paso 5.2 — `TODO-10`: validar la tarjeta
+
+Falta un campo o una clase de supuesto que no es `observable`/`no_observable` → error.
+
+### Paso 5.3 — `TODO-11`: el manifiesto
+
+```python
+archivos = {n: sha256_archivo(carpeta / n) for n in ("estimacion.json", "tarjeta.json")}
+_escribir(carpeta / "manifest.json", {
+    "version": version, "dataset_sha256": tarjeta["dataset_sha256"],
+    "puerta": estado_puerta, "archivos": archivos})
 ```
 
-Salida esperada:
+### Paso 5.4 — `TODO-12`: integridad que recomputa
+
+```python
+return all(sha256_archivo(carpeta / n) == h for n, h in m["archivos"].items())
+```
+
+### Paso 5.5 — `TODO-13`: promoción atómica
+
+```python
+if manifest["puerta"] == "falla":
+    raise RuntimeError(f"{version} tiene puerta 'falla': no se promueve")
+tmp = REGISTRO / "champion.tmp"
+tmp.write_text(version + "\n")
+tmp.replace(REGISTRO / "champion")     # rename atómico, nunca editar en sitio
+```
+
+### Checkpoint 3
+
+```sh
+make registrar
+```
 
 ```text
 registrada v0001 | integridad: OK
@@ -162,22 +344,57 @@ champion -> v0001
 champion resuelve a: v0001
 ```
 
-Qué prueba: la tarjeta valida sus siete campos, el manifiesto guarda el hash de cada
-JSON, un byte añadido rompe la integridad, y la promoción es un `rename` atómico que
-rechaza `falla` y `alerta` sin aceptación explícita.
+**Enseñar con la mutación:** un byte añadido a una copia rompe el hash. La afirmación
+publicada se refiere a un sujeto con hash; si el hash cambia, es otra cosa.
 
-Genera: `artifacts/registro/v0001/{estimacion,tarjeta,manifest}.json` y
-`artifacts/registro/champion`.
+**Errores típicos:** escribir `champion` en sitio (estado intermedio); omitir
+`dataset_sha256`; promover una versión en `alerta` sin aceptación explícita.
 
 ---
 
-## 5. Puerta causal sobre ventanas (bloque 5)
+## Parte 6 — Bloque 5: ventanas y puerta causal (`monitor.py`)
 
-```sh
-make ventanas       # = python3 monitor.py
+### Paso 6.1 — `TODO-14`: PSI
+
+```python
+cortes = np.unique(np.quantile(ref, np.linspace(0, 1, bins + 1)))
+a = np.histogram(ref, bins=cortes)[0] / len(ref)
+b = np.histogram(nueva, bins=cortes)[0] / len(nueva)
+return float(np.sum((np.clip(a, eps, None) - np.clip(b, eps, None))
+                    * np.log(np.clip(a, eps, None) / np.clip(b, eps, None))))
 ```
 
-Salida esperada:
+**Concepto:** los cortes son de la **referencia**; el `clip` evita `log(0)`. Bandas
+convencionales: <0,1 estable · 0,1–0,25 moderado · ≥0,25 significativo (es un punto de
+partida, no una ley).
+
+### Paso 6.2 — `TODO-15` a `TODO-17`: las tres ventanas
+
+| Ventana | Construcción | Qué enseña |
+|---|---|---|
+| `sana` | submuestra sin reemplazo (700 de 1033) | el ruido de muestreo no debe alertar |
+| `deriva` | `age + 10` sobre una **copia** | la población cambió, no la relación |
+| `positividad` | tratados con `re74 > p75`, controles con `re74 < p25` | el soporte se rompe |
+
+### Paso 6.3 — `TODO-18`: la puerta
+
+```python
+if solape < umbrales["solape_min"]:
+    estado = "falla"; motivo.append(f"solapamiento roto: {solape:.0%} …")
+elif psi_max > umbrales["psi_alerta"]:
+    estado = "alerta"; motivo.append(f"deriva: PSI de {culpable} = {psi_max:.2f} …")
+if estado == "pasa" and smd_max > umbrales["smd_max"]:
+    estado = "alerta"; motivo.append(...)
+```
+
+**Concepto:** prioridad `falla > alerta`. Una alerta **nombra la covariable**; sin nombre no
+es accionable.
+
+### Checkpoint 4
+
+```sh
+make ventanas
+```
 
 ```text
 [sana        ] estado = pasa   | acción: continuar
@@ -187,21 +404,53 @@ Salida esperada:
               - solapamiento roto: 0% de unidades con e en [0.05, 0.95] (mínimo 50%)
 ```
 
-Qué prueba: la puerta distingue tres situaciones distintas y **nombra la señal**.
-`positividad` con `ESS/n = 1.0` demuestra que la eficiencia de la ponderación no es
-criterio de validez: lo que se rompe es el solapamiento.
+**Preguntas de clase (obligatorias en el notebook):**
+
+1. En `positividad`, `ESS/n = 1.0`: ¿por qué no es buena señal? *(Los pesos son casi
+   constantes dentro de cada brazo; lo que se rompió es el solapamiento.)*
+2. En `deriva`, el SMD queda en 0,19: ¿por qué no alerta por balance? *(El SMD de la puerta
+   es interno a la ventana; envejecer a todos no cambia el contraste.)*
+3. ¿Qué acción corresponde y qué **no** se puede afirmar sobre la causa?
+
+**Errores típicos:** calcular los cortes del PSI con la ventana; confundir SMD interno con
+deriva; mover el umbral después de ver la ventana.
 
 ---
 
-## 6. Servicio y humo (bloque 6)
+## Parte 7 — Bloque 6: servicio y abstención (`servicio_core.py`)
 
-### 6.1 Humo sin levantar puerto
+### Paso 7.1 — `TODO-19`: el bundle
 
-```sh
-make humo           # = python3 humo.py
+```python
+if "bundle" not in _cache:
+    version = champion()
+    carpeta = REGISTRO / version
+    _cache["bundle"] = {"version": version,
+                        "estimacion": json.loads((carpeta / "estimacion.json").read_text()),
+                        "tarjeta": json.loads((carpeta / "tarjeta.json").read_text())}
 ```
 
-Esperado:
+**Concepto:** el bundle viaja; el servicio **no lee los CSV**. Por eso puede correr en un
+contenedor sin datos.
+
+### Paso 7.2 — `TODO-20`: la consulta y la abstención
+
+```python
+motivos = [f"{c}={float(perfil[c]):g} fuera de [{round(lo, 4)}, {round(hi, 4)}]"
+           for c, (lo, hi) in rangos.items() if c in perfil
+           and not (lo <= float(perfil[c]) <= hi)]
+if motivos:
+    return {"estado": "abstencion", "motivo": "; ".join(motivos), "version": b["version"]}
+```
+
+**Concepto:** abstención = HTTP **200 sin ningún número**. No es un error del cliente ni del
+servidor: es una respuesta válida.
+
+### Checkpoint 5
+
+```sh
+make humo
+```
 
 ```text
 /salud: 200 {'estado': 'ok', 'version': 'v0001', ...}
@@ -212,229 +461,178 @@ determinismo: dos llamadas idénticas -> iguales
 HUMO: OK
 ```
 
-Qué prueba: el bundle viaja (el servicio no lee CSV), la abstención es HTTP **200** y sin
-número, y dos llamadas idénticas devuelven lo mismo.
-
-### 6.2 Servicio real
-
-```sh
-make servir          # uvicorn servicio:app --port 8000
-curl -s localhost:8000/efecto | python -m json.tool
-curl -s -X POST localhost:8000/consulta -H "Content-Type: application/json" \
-  -d '{"age":99,"educ":10,"black":1,"hispan":0,"married":0,"nodegree":1,"re74":2000,"re75":1500}' \
-  | python -m json.tool
-```
-
-La segunda llamada responde `{"estado": "abstencion", "motivo": "age=99 fuera de [18.0, 54.0]", ...}`
-sin ningún número.
-
-### 6.2.1 Efecto para un perfil nuevo
-
-```sh
-curl -s -X POST localhost:8000/efecto_individual \
-  -H "Content-Type: application/json" \
-  -d '{"bw":1.5,"b.head":0.5,"preterm":0.2,"birth.o":0.1,"nnhealth":-0.3,
-       "momage":0.4,"sex":0.1,"twin":-0.2,"b.marr":0.3,"mom.lths":-0.1,
-       "mom.hs":0.2,"mom.scoll":0.0,"cig":0.1,"first":0.0,"booze":-0.2,
-       "drugs":0.1,"work.dur":0.2,"prenatal":0.0,"ark":0.1,"ein":-0.1,
-       "har":0.0,"mia":0.2,"pen":0.0,"tex":0.1,"was":-0.2}' | jq .
-```
-
-```json
-{"estado": "respuesta", "efecto": 8.2, "unidad": "puntos de test cognitivo",
- "ic95": [5.7, 10.8], "ajuste_r2": 0.095, "confianza_discriminacion": "baja",
- "que_cubre_el_ic": "la proyección lineal, condicional a los scores AIPW; NO cubre el sesgo de especificación lineal ni es un CATE validado",
- "n_entrenamiento": 448, "aviso": null, "version": "v0001"}
-```
-
-Cómo funciona: `estimacion.modelo_individual` ajusta una **proyección lineal del score AIPW**
-sobre las covariables (coeficientes + matriz de covarianza, que se registran en la versión).
-El servicio evalúa esa proyección en el perfil y **se abstiene** si algún valor cae fuera del
-rango de entrenamiento; si el perfil está en el borde (|z| > 2,5) añade un `aviso`.
-
-### 6.2.2 Salida legible (`?formato=texto`)
-
-Las tres rutas aceptan `?formato=texto` y devuelven un informe alineado, en lugar de JSON:
-
-```sh
-curl -s "localhost:8000/efecto?formato=texto"
-curl -s -X POST "localhost:8000/consulta?formato=texto" \
-  -H "Content-Type: application/json" -d '{"bw":-1.5}'
-curl -s -X POST "localhost:8000/efecto_individual?formato=texto" \
-  -H "Content-Type: application/json" -d @perfil.json
-```
-
-```text
-EFECTO POR ESTRATO — versión v0001
-----------------------------------
-
-Estimando : media del efecto del programa en el estrato bw=0 (bw bajo (<= mediana de train))
-Efecto    : 3,2 puntos de test cognitivo
-IC 95 %   : 1,4 a 4,9
-Estrato   : bw = 0 (n = 224)
-Nota      : los intervalos de los estratos no se solapan: diferencia consistente con el corte declarado, pero no es un CATE
-Lectura   : El intervalo excluye el cero: efecto positivo estimado bajo los supuestos declarados.
-Alcance   : la media del efecto en este estrato; NO el ATE poblacional ni un efecto individual
-```
-
-El JSON incorpora los mismos juicios en campos propios: `efecto_texto`
-(«3,2 puntos de test cognitivo (IC 95 %: 1,4 a 4,9)») e `interpretacion` (si el intervalo
-excluye el cero). Las abstenciones también se leen así, con el motivo y sin ningún número.
-
-### 6.2.3 Formulario (para humano, no para máquina)
-
-**http://localhost:8000/** — un formulario con los 25 campos del escenario, ya rellenos con
-el punto medio del rango (y `bw` dentro del estrato alto). Al pulsar *Estimar* abre
-`/calcular?...` con el informe legible del perfil. Fuera de rango → abstención visible.
-
-Los campos usan el rango de entrenamiento como `min`/`max`, así que el navegador avisa
-antes de enviar; el servidor vuelve a verificar de todos modos. El paso es `step="any"`
-(y el rango se muestra debajo de cada campo): con un `step` fijo, la validación HTML exige
-que el valor sea múltiplo del paso desde el `min`, y rechaza números redondos como `0` o `1`
-porque el mínimo tiene decimales arbitrarios.
-
-`make humo` comprueba que el formulario tiene los 25 campos y que `/calcular` devuelve
-informe.
-
-`ajuste_r2` es la parte honesta: **0,095** en `ihdp` y **0,012** en `jobs`. Es decir, la
-proyección apenas distingue entre perfiles; el endpoint lo declara (`confianza_discriminacion`:
-*baja* / *muy baja*) en vez de presentar el número como un efecto individual fiable.
-
-En el bundle viajan 27 coeficientes y su covarianza, **no** los 448 pseudo-resultados: la
-regla del kit prohíbe `tau`, `y0` y `y1` en el artefacto.
-
-### 6.3 En contenedor (el bundle viaja, los datos no)
-
-```sh
-docker build -t puente:0.1.0 .
-docker run -d --name puente -p 8000:8000 puente:0.1.0
-curl -s localhost:8000/efecto | jq .
-docker inspect --format '{{.State.Health.Status}}' puente   # healthy
-```
-
-Tres trampas del camino, ya resueltas en el repo:
-
-| Síntoma | Causa | Arreglo aplicado |
-|---|---|---|
-| `FileNotFoundError: No encontré data_benchmark_causal/` | `rutas.py` resolvía `DATOS` al importar y el contenedor no trae el benchmark | `DATOS` tolera su ausencia: el servicio solo usa `artifacts/` |
-| `ModuleNotFoundError: No module named 'registro'` | `servicio_core` importa `champion` y el `Dockerfile` no copiaba `registro.py` | `COPY servicio.py servicio_core.py registro.py rutas.py` |
-| `PermissionError: /app/servicio.py` | los archivos están en modo `600` y la imagen corre como no-root | `RUN chmod -R a+rX /app` |
-
-La imagen pesa ~560 MB (base `python:3.13-slim` + numpy/scipy) y trae `HEALTHCHECK`
-contra `/salud`. Tras promover un `champion` nuevo hay que **reiniciar** el contenedor:
-el bundle se cachea en memoria al primer request.
+**Errores típicos:** devolver 4xx en la abstención; redondear distinto en cada llamada
+(rompe el determinismo); cargar el CSV en el servicio.
 
 ---
 
-## 7. Adaptar el escenario a `ihdp`
+## Parte 8 — El entregable: adaptar todo a `real/ihdp`
 
-El código es **paramétrico por escenario**: no se reescribe, se selecciona.
+La tarea es **cambiar de escenario sin reescribir el método**. El código quedó paramétrico
+(`SIC_ESCENARIO`), así que el trabajo es decidir y declarar.
 
-```sh
-make limpiar                                   # borra artifacts (regenerables)
-SIC_ESCENARIO=real/ihdp make demo
+### Paso 8.1 — Descubrir el escenario (sin mirar el efecto)
+
+```python
+import json, pathlib
+meta = json.loads((esc / "metadata.json").read_text())
+ident = json.loads((esc / "identification.json").read_text())
+meta["description"], meta["outcome"], ident["valid_adjustment_sets"][0]
 ```
 
-Cambios declarados (detalle y justificación en `BITACORA.md` §8):
+### Paso 8.2 — Declarar el esquema
 
-| Pieza | `jobs` | `ihdp` |
+`resultado = "outcome"`, **25 covariables** (`bw … was`). En el código: `RESULTADO` y
+`COVARIABLES` por escenario; `EsquemaCausal()` los toma de ahí.
+
+### Paso 8.3 — Declarar el corte **antes** de estimar
+
+| Decisión | Regla | Por qué |
 |---|---|---|
-| Resultado | `re78` | `outcome` |
-| Covariables | 8 | 25 (`bw … was`) |
-| Corte de heterogeneidad | `nodegree` | `bw` en la mediana de train |
-| Deriva | `age + 10` | `bw + 1` (covariables estandarizadas) |
-| Positividad | `re74` | `bw` (mayor |SMD| de tratamiento) |
-| `solape_min` / `smd_max` | 0,50 / 0,25 | 0,30 / 0,50 |
-| Trampa (ruido) | 500 USD | 1,0 punto |
+| Corte | `bw` en la mediana de train | es el eje clínico del IHDP; la mediana preserva tamaño en ambas hojas; **no** se eligió por ganancia de varianza |
 
-Salida esperada (resumen):
+### Paso 8.4 — Recalibrar umbrales con justificación
+
+| Umbral | jobs | ihdp | Justificación |
+|---|---|---|---|
+| `solape_min` | 0,50 | **0,30** | 25 covariables y P(D=1)=0,43 estrechan el soporte; 0,50 rechazaría poblaciones legítimas |
+| `smd_max` | 0,25 | **0,50** | máximo de 25 SMD tiene EE ≈ 0,096; el ruido esperado llega a 0,3–0,4 |
+| `psi_alerta` | 0,25 | 0,25 | convención; la deriva sintética cae muy por encima (0,88) |
+
+### Paso 8.5 — Adaptar ventanas y la trampa
+
+- Deriva: `bw + 1` (covariables estandarizadas, +1 ≈ una desviación estándar).
+- Positividad: eje `bw`, la covariable con mayor |SMD| de tratamiento en train.
+- Sana: 300 de 448 (mismo criterio que 700 de 1033).
+- Trampa: ruido reescalado a la unidad del resultado (σ = 1,0 punto).
+
+### Paso 8.6 — Generar y auditar
+
+```sh
+make limpiar && SIC_ESCENARIO=real/ihdp make demo
+```
 
 ```text
 esquema valida contra observed_train: OK (n = 448, tratados = 191)
 ATE OLS (25 controles) = 4.8 | SE = 0.5 | IC95 = [3.8, 5.8]
 AIPW cross-fitting K=5 = 5.2 | SE = 0.6 | IC95 = [3.9, 6.4]
-estrato bw=1 (bw alto (> mediana de train), n=224): efecto 7.2 IC95 [5.5, 8.8]
-estrato bw=0 (bw bajo (<= mediana de train), n=224): efecto 3.2 IC95 [1.4, 4.9]
+estrato bw=1 (bw alto, n=224): efecto 7.2 IC95 [5.5, 8.8]
+estrato bw=0 (bw bajo, n=224): efecto 3.2 IC95 [1.4, 4.9]
 [sana] pasa · [deriva] alerta (PSI de bw = 0.88) · [positividad] falla (solape 0%)
-/efecto: 200 efecto=5.2 ic95=[3.9, 6.4]
 HUMO: OK
 ```
 
----
-
-## 8. Auditar los artefactos
+**Auditoría:**
 
 ```sh
 cat artifacts/registro/champion
-cat artifacts/registro/v0001/manifest.json
 jq -r '.archivos | to_entries[] | "\(.value)  artifacts/registro/v0001/\(.key)"' \
-  artifacts/registro/v0001/manifest.json > /tmp/m.sha256
-shasum -a 256 -c /tmp/m.sha256
+  artifacts/registro/v0001/manifest.json > /tmp/v1.sha256
+shasum -a 256 -c /tmp/v1.sha256          # 2/2 OK
+jq -r '.dataset_sha256' artifacts/registro/v0001/manifest.json   # 9af86718…
 ```
 
-Esperado: `champion → v0001`, `dataset_sha256 = 9af86718…` (train de `ihdp`) y dos líneas
-`OK`. La versión es inmutable: se audita, no se edita.
+### Paso 8.7 — Escribir la pregunta propia
+
+`pregunta_ihdp.md` con el mismo formato: pregunta, estimando, población, supuestos con su
+clase y qué **no** afirma. **Cuidado con la redacción:** «de los niños que lo recibieron»
+describe el ATT, no el ATE que se estima. Escribir «efecto promedio en la población del
+estudio» o cambiar el estimando de forma explícita.
 
 ---
 
-## 9. Ejecutar el notebook
+## Parte 9 — Notebook y evidencias
 
 ```sh
-jupyter lab proyecto.ipynb     # kernel: "Python (SIC estudiante)"
+jupyter lab proyecto.ipynb        # kernel: "Python (SIC estudiante)"
 ```
 
-O sin interfaz:
+o sin interfaz:
 
 ```sh
 jupyter nbconvert --to notebook --execute --inplace \
   --ExecutePreprocessor.kernel_name=sic-estudiante proyecto.ipynb
 ```
 
-Esperado: 13 celdas de código, **0 errores**, 19 salidas, gráfico PNG con los dos
-estratos y sus IC.
+Esperado: 13 celdas de código, **0 errores**, 19 salidas, gráfico con los dos estratos y sus IC.
 
-> Si ejecutas el notebook, los checkpoints corren sobre `jobs` y **sobrescriben** los
-> artefactos. Al terminar, restaura el escenario de la entrega:
-> `make limpiar && SIC_ESCENARIO=real/ihdp make demo`.
+**Qué debe quedar escrito en el notebook:** las 3 respuestas de ventanas, la tabla de números
+de `ihdp`, las 5 respuestas de cierre y la salida de `make humo` sobre `ihdp`.
+
+> **Advertencia operativa:** los checkpoints del notebook corren sobre `jobs` y sobrescriben
+> los artefactos. Al terminar: `make limpiar && SIC_ESCENARIO=real/ihdp make demo`.
 
 ---
 
-## 10. Reproducción final y estado esperado
+## Parte 10 — Extensión: servicio utilizable (opcional, si hay tiempo)
+
+### 10.1 — Rutas adicionales
+
+| Ruta | Semántica |
+|---|---|
+| `GET /efecto` | ATE poblacional |
+| `POST /consulta` | media del **estrato** declarado |
+| `POST /efecto_individual` | proyección lineal del score para un perfil |
+| `?formato=texto` | informe legible en lugar de JSON |
+| `GET /` | formulario con las covariables del escenario |
+
+`/efecto_individual` ajusta `modelo_individual` (proyección del score sobre X) y registra
+coeficientes + covarianza; **no** guarda scores por unidad (la regla prohíbe `tau`/`y0`/`y1`
+en el bundle). Devuelve `ajuste_r2` y `confianza_discriminacion` porque la proyección apenas
+discrimina (0,095 en `ihdp`, 0,012 en `jobs`).
+
+### 10.2 — Contenedor
 
 ```sh
-git status --short                     # debe estar limpio
-make limpiar && SIC_ESCENARIO=real/ihdp make demo
-git diff --stat semana4-kit-original   # exactamente lo construido
-git tag -l                             # kit-original, ihdp-v1, entrega-v1, final, v1.0.0
+docker build -t puente:0.1.0 .
+docker run -d --name puente -p 8000:8000 puente:0.1.0
+docker inspect --format '{{.State.Health.Status}}' puente   # healthy
 ```
 
-| Verificación | Resultado esperado |
-|---|---|
-| Pipeline completo | verde en ≈ 1,5–2 s |
-| Manifiesto `v0001` | 2/2 `OK` · `dataset_sha256 = 9af86718…` |
-| Notebook | 19 salidas, 0 errores |
-| TODOs pendientes | 0 |
-| Tags | `semana4-kit-original` → `semana4-ihdp-v1` → `semana4-entrega-v1` → `semana4-final` |
+**Las tres trampas (buen ejercicio de depuración):**
+
+| Síntoma | Causa | Arreglo |
+|---|---|---|
+| `FileNotFoundError: No encontré data_benchmark_causal/` | `DATOS` se resolvía al importar y el contenedor no trae el benchmark | tolerar su ausencia: el servicio solo usa `artifacts/` |
+| `ModuleNotFoundError: No module named 'registro'` | `servicio_core` importa `champion` y el `Dockerfile` no copiaba `registro.py` | añadirlo al `COPY` |
+| `PermissionError: /app/servicio.py` | archivos en modo `600` con usuario no-root | `RUN chmod -R a+rX /app` |
 
 ---
 
-## 11. Problemas frecuentes
+## Parte 11 — Qué se evalúa (rúbrica formativa)
+
+| Criterio | Señal observable |
+|---|---|
+| Estimando declarado y cubierto | la tabla distingue ATE de estrato y dice qué cubre cada IC |
+| Reproducibilidad | `make demo` desde cero regenera los números |
+| Puerta honesta | la ventana de positividad bloquea y el motivo nombra la señal |
+| Abstención | `/consulta` fuera de soporte responde 200 **sin** número |
+| Corte pre-declarado | la regla está en la tarjeta, no elegida por ganancia |
+| Umbrales justificados | dos líneas por umbral, calibradas para `ihdp` |
+| Artefactos | `v0001` con manifiesto verificado y `champion` |
+| Prohibiciones | nada de `truth`, `y0`, `y1` ni `tau` en bundle o servicio |
+
+---
+
+## Parte 12 — Errores frecuentes (y qué enseñan)
 
 | Síntoma | Causa | Solución |
 |---|---|---|
-| `ModuleNotFoundError: fastapi` en `make humo` | El kernel o el `python3` no es el del entorno | Activar el entorno o registrarlo como `sic-estudiante` |
-| `/consulta` responde `abstencion` con un perfil válido | `SIC_ESCENARIO` no coincide con los artefactos del registro | `make limpiar` y regenerar con el escenario correcto |
-| `make ventanas` dice que falta `tarjeta.json` | No se ejecutó `make registrar` | El registro precede a la puerta y al servicio |
-| `ValueError: truth_train.csv` | Alguien reintrodujo la verdad en el paquete | Es la pared funcionando: retirar el archivo |
-| `docker build` falla con `docker.sock` | El daemon (colima/Docker Desktop) está apagado | `colima start` o dejar Docker fuera de alcance |
-| El notebook abre con otro kernel | `sic-estudiante` no registrado | Paso 1.3 |
+| `ModuleNotFoundError: fastapi` en `make humo` | kernel o `python3` distinto del entorno | activar el entorno o registrarlo como `sic-estudiante` |
+| `/consulta` se abstiene con un perfil válido | `SIC_ESCENARIO` ≠ artefactos del registro | `make limpiar` y regenerar con el escenario correcto |
+| `make ventanas` dice que falta `tarjeta.json` | no se ejecutó `make registrar` | el registro precede a la puerta y al servicio |
+| `ValueError: truth_train.csv` | alguien reintrodujo la verdad | es la pared funcionando: retirar el archivo |
+| `docker build` falla con `docker.sock` | daemon apagado | `colima start` |
+| El notebook abre con otro kernel | `sic-estudiante` sin registrar | Paso 1.2 |
+| El formulario rechaza los valores por defecto | `step` fijo con `min` decimal | `step="any"` |
 
 ---
 
-## 12. Qué queda fuera (por diseño)
+## Parte 13 — Fuera de alcance (por diseño)
 
 - Learners no lineales y *repeated cross-fitting*: eso es el proyecto final.
 - CATE continuo o políticas: el corte es de dos hojas y se informa como tal.
-- Autenticación, persistencia, monitorización en vivo.
-- `interventions.json` contiene `ate`/`att`: es el hueco de la pared; no se usa para
-  estimar, decidir ni calibrar.
+- Autenticación, TLS, persistencia, monitorización en vivo.
+- `interventions.json` contiene `ate`/`att`: es el hueco de la pared; no se usa para estimar,
+  decidir ni calibrar.
+- Un escenario por artefacto: cambiar de escenario exige regenerar y reiniciar el servicio.
