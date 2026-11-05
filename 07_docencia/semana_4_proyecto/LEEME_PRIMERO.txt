@@ -16,6 +16,6 @@ Pasos:
    (¿Sin make? Los objetivos son: python3 datos.py, python3 estimacion.py,
     python3 registro.py, python3 monitor.py, python3 humo.py.)
 
-4. Lee pregunta.md antes de escribir código.
+4. Lee pregunta_jobs.md antes de escribir código.
 
 La entrega está descrita en ENTREGA.md.

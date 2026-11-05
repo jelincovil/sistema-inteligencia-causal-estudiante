@@ -12,7 +12,7 @@ abstiene cuando el caso cae fuera del soporte de los datos.
 
 | Orden | Archivo | Para qué |
 |---|---|---|
-| 1 | `pregunta.md` · `pregunta_ihdp.md` | qué se estima y bajo qué supuestos (declarado **antes** de mirar datos) |
+| 1 | `pregunta_jobs.md` · `pregunta_ihdp.md` | qué se estima y bajo qué supuestos (declarado **antes** de mirar datos) |
 | 2 | `GUIA_CONSTRUCCION.md` | cómo está construido, bloque a bloque, con salidas esperadas |
 | 3 | `BITACORA.md` | qué se decidió, por qué y con qué evidencia (incluye hallazgos y límites) |
 | 4 | `data_benchmark_causal/.../datasets/dataset_y_metodo.typ` (o el `.pdf`) | ficha del dataset, del efecto y del método |

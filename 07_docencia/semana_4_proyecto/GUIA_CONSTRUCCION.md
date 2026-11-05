@@ -19,7 +19,7 @@ y una puerta `pasa / alerta / falla`— sobre dos escenarios sintéticos.
 
 **Las cinco ideas que hay que dejar instaladas:**
 
-1. El **estimando se declara antes** de mirar datos (`pregunta.md`).
+1. El **estimando se declara antes** de mirar datos (`pregunta_jobs.md`).
 2. La estimación viene con **incertidumbre** y con la declaración de qué cubre el IC.
 3. Un artefacto publicado se refiere a un **sujeto con hash**; si cambia, es otra versión.
 4. **Abstenerse es una respuesta** de primera clase, no un error.
@@ -83,7 +83,7 @@ jupyter kernelspec list
 
 ### Paso 2.1 — Leer la pregunta (10 min, sin teclado)
 
-Abrir `pregunta.md`: pregunta, estimando, población, supuestos con su clase y qué **no**
+Abrir `pregunta_jobs.md`: pregunta, estimando, población, supuestos con su clase y qué **no**
 afirma el prototipo. Discusión de clase: *¿la pregunta pide un promedio o un efecto
 individual?*
 

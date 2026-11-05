@@ -12,6 +12,6 @@ jupyter lab proyecto.ipynb     # o jupyter notebook
 make verificar                 # falla con TODO-1: así se empieza
 ```
 
-La pregunta causal y el estimando se declaran en `pregunta.md` — se lee antes
+La pregunta causal y el estimando se declaran en `pregunta_jobs.md` — se lee antes
 de tocar código. Los números esperados de los checkpoints están en el notebook;
 los tuyos, en la tabla de la sección 7.

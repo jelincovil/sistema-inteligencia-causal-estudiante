@@ -4,7 +4,7 @@ Registro del trabajo sobre el kit: qué se hizo, por qué, y la evidencia que lo
 Convención de cada entrada: **qué · por qué · evidencia**.
 
 Este archivo es el complemento del material del curso: `README.md` (mapa del kit),
-`ENTREGA.md` (checklist) y `pregunta.md` (estimando declarado) **no se modifican**;
+`ENTREGA.md` (checklist) y `pregunta_jobs.md` (estimando declarado) **no se modifican**;
 la bitácora registra lo que ocurrió al construirlo.
 
 ---
