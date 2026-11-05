@@ -91,8 +91,7 @@ def consulta(perfil: dict) -> dict:
                             "poblacional ni un efecto individual"),
         "estrato": {"variable": corte, "valor": int(clave),
                     "n": hoja["n"]},
-        "nota_heterogeneidad": ("los intervalos de los estratos se solapan: "
-                                "heterogeneidad sugerida, no concluyente"),
+        "nota_heterogeneidad": estratos["nota"],
         "version": b["version"],
     }
 

@@ -228,6 +228,27 @@ curl -s -X POST localhost:8000/consulta -H "Content-Type: application/json" \
 La segunda llamada responde `{"estado": "abstencion", "motivo": "age=99 fuera de [18.0, 54.0]", ...}`
 sin ningún número.
 
+### 6.3 En contenedor (el bundle viaja, los datos no)
+
+```sh
+docker build -t puente:0.1.0 .
+docker run -d --name puente -p 8000:8000 puente:0.1.0
+curl -s localhost:8000/efecto | jq .
+docker inspect --format '{{.State.Health.Status}}' puente   # healthy
+```
+
+Tres trampas del camino, ya resueltas en el repo:
+
+| Síntoma | Causa | Arreglo aplicado |
+|---|---|---|
+| `FileNotFoundError: No encontré data_benchmark_causal/` | `rutas.py` resolvía `DATOS` al importar y el contenedor no trae el benchmark | `DATOS` tolera su ausencia: el servicio solo usa `artifacts/` |
+| `ModuleNotFoundError: No module named 'registro'` | `servicio_core` importa `champion` y el `Dockerfile` no copiaba `registro.py` | `COPY servicio.py servicio_core.py registro.py rutas.py` |
+| `PermissionError: /app/servicio.py` | los archivos están en modo `600` y la imagen corre como no-root | `RUN chmod -R a+rX /app` |
+
+La imagen pesa ~560 MB (base `python:3.13-slim` + numpy/scipy) y trae `HEALTHCHECK`
+contra `/salud`. Tras promover un `champion` nuevo hay que **reiniciar** el contenedor:
+el bundle se cachea en memoria al primer request.
+
 ---
 
 ## 7. Adaptar el escenario a `ihdp`

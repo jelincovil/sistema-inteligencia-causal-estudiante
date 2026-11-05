@@ -157,8 +157,15 @@ def estratos_heterogeneidad(score: np.ndarray, col: dict,
         hojas[clave] = {"etiqueta": corte["etiquetas"][clave], "n": int(sel.sum()),
                         "efecto": media, "se": se,
                         "ic": [media - 1.96 * se, media + 1.96 * se]}
+    # La nota se deriva de los IC: no se afirma lo contrario de lo que muestran.
+    ic_alto, ic_bajo = hojas["1"]["ic"], hojas["0"]["ic"]
+    solapan = ic_alto[0] <= ic_bajo[1] and ic_bajo[0] <= ic_alto[1]
+    nota = ("los intervalos de los estratos se solapan: heterogeneidad sugerida, "
+            "no concluyente" if solapan else
+            "los intervalos de los estratos no se solapan: diferencia consistente "
+            "con el corte declarado, pero no es un CATE")
     return {"variable": variable, "umbral": umbral, "regla": corte["regla"],
-            "hojas": hojas}
+            "nota": nota, "hojas": hojas}
 
 
 # Alias histórico del kit (real/jobs usaba este nombre).

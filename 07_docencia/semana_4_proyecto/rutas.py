@@ -16,7 +16,14 @@ def raiz_repo() -> Path:
 
 
 ESCENARIO = os.environ.get("SIC_ESCENARIO", "real/jobs")  # p. ej.: SIC_ESCENARIO=real/ihdp
-DATOS = raiz_repo() / MARCA / "causal_benchmark_synthetic" / "datasets" / ESCENARIO
+
+# El servicio no lee CSV: en un contenedor el bundle viaja sin el benchmark.
+try:
+    _RAIZ = raiz_repo()
+except FileNotFoundError:  # sin data_benchmark_causal/ -> solo hay artefactos
+    _RAIZ = None
+DATOS = (_RAIZ / MARCA / "causal_benchmark_synthetic" / "datasets" / ESCENARIO
+         if _RAIZ else Path("/nonexistent") / ESCENARIO)
 ARTEFACTOS = Path(__file__).resolve().parent / "artifacts"
 REGISTRO = ARTEFACTOS / "registro"
 

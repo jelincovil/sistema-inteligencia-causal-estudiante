@@ -442,3 +442,33 @@ notebook abre con el kernel que pide su metadata sin tocar nada más.
 **Estado final.** Artefactos `ihdp` `v0001` con manifiesto verificado
 (`dataset_sha256 = 9af86718…`); árbol limpio; tags
 `semana4-kit-original` → `semana4-ihdp-v1` → `semana4-entrega-v1` → `semana4-final`.
+
+---
+
+## 11. Puesta en servicio (hallazgos 8–10)
+
+Al intentar correr el artefacto como servicio aparecieron tres defectos que impedían usarlo,
+los tres corregidos y verificados con el contenedor respondiendo:
+
+| # | Defecto | Arreglo |
+|---|---|---|
+| 8 | `rutas.py` resolvía `DATOS` al importar ⇒ en el contenedor (sin `data_benchmark_causal/`) fallaba el arranque | `DATOS` tolera la ausencia; el servicio solo necesita `artifacts/` |
+| 9 | `servicio_core` importa `registro`, que el `Dockerfile` no copiaba | se añade `registro.py` al `COPY`; imagen con usuario no-root y `HEALTHCHECK` |
+| 10 | `/consulta` afirmaba «los intervalos se solapan» incluso en `ihdp`, donde **no** se solapan (7,2 vs 3,2) | la nota se **deriva** de los IC en `estimacion.py` |
+
+Además, los archivos estaban en modo `600`: con usuario no-root la imagen no podía leerlos
+(`PermissionError`), resuelto con `chmod -R a+rX`.
+
+Verificación (contenedor real, `colima`):
+
+```text
+/salud  -> {"estado":"ok","version":"v0001","estimando":"ATE de treatment sobre outcome (efecto total)"}
+/efecto -> efecto 5.2, ic95 [3.9, 6.4], estimador AIPW cross-fitting K=5
+/consulta (dentro)  -> efecto 7.2, ic95 [5.5, 8.8], bw=1
+/consulta (fuera)   -> abstencion, bw=99 fuera de [-3.1332, 3.0532], sin número
+nota_heterogeneidad -> «no se solapan: diferencia consistente con el corte declarado»
+healthcheck -> healthy
+```
+
+Pendiente si el servicio sale del ámbito interno: verificación de hash al cargar el bundle,
+autenticación, TLS y métricas (ver §12 del `PLAN_DEMO_2H.md`).
