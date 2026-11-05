@@ -26,6 +26,7 @@ fieldset{border:1px solid #d9e2ec;border-radius:8px;padding:1rem;margin-top:1rem
 legend{padding:0 .4rem;color:#486581;font-size:.9rem}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:.6rem}
 label{display:flex;flex-direction:column;font-size:.78rem;color:#334e68;gap:.2rem}
+.rango{font-size:.68rem;color:#829ab1}
 input{font:inherit;padding:.35rem .45rem;border:1px solid #bcccdc;border-radius:6px}
 button{margin-top:1rem;font:inherit;padding:.55rem 1.1rem;border:0;border-radius:8px;
        background:#0e7490;color:#fff;cursor:pointer}
@@ -49,8 +50,11 @@ def formulario() -> str:
     campos = nucleo.campos_formulario()
     controles = "\n".join(
         f'<label>{html.escape(nombre)}'
-        f'<input name="{html.escape(nombre)}" type="number" step="0.001" '
-        f'value="{d["valor"]}" min="{d["min"]:.4f}" max="{d["max"]:.4f}" required></label>'
+        f'<input name="{html.escape(nombre)}" type="number" step="any" '
+        f'inputmode="decimal" value="{d["valor"]}" '
+        f'min="{d["min"]}" max="{d["max"]}" '
+        f'title="rango de entrenamiento: {d["min"]:.3f} a {d["max"]:.3f}" required>'
+        f'<span class="rango">{d["min"]:.2f} … {d["max"]:.2f}</span></label>'
         for nombre, d in campos.items())
     return f"""<!doctype html><html lang="es"><head><meta charset="utf-8">
 <title>Efecto por perfil — prototipo causal</title><style>{ESTILO}</style></head><body>

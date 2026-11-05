@@ -544,3 +544,9 @@ ya limite los valores.
 
 **Evidencia:** `GET /` → 200 con 25 `<input>`; `/calcular` con perfil válido → «EFECTO PARA
 UN PERFIL»; con `bw=99` → «ABSTENCIÓN». `make humo` lo cubre con dos comprobaciones.
+
+**Corrección (15):** los campos salieron con `step="0.001"` y un `min` de −3,133210…, así
+que la validación HTML exigía múltiplos exactos del paso desde el mínimo y **bloqueaba los
+valores por defecto**. Se cambió a `step="any"`, el `min`/`max` va con precisión completa y
+cada campo muestra su rango. Verificado: envío con los valores sugeridos → «9,1 puntos»;
+`bw=0` → respuesta válida.

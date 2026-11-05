@@ -288,7 +288,10 @@ el punto medio del rango (y `bw` dentro del estrato alto). Al pulsar *Estimar* a
 `/calcular?...` con el informe legible del perfil. Fuera de rango → abstención visible.
 
 Los campos usan el rango de entrenamiento como `min`/`max`, así que el navegador avisa
-antes de enviar; el servidor vuelve a verificar de todos modos.
+antes de enviar; el servidor vuelve a verificar de todos modos. El paso es `step="any"`
+(y el rango se muestra debajo de cada campo): con un `step` fijo, la validación HTML exige
+que el valor sea múltiplo del paso desde el `min`, y rechaza números redondos como `0` o `1`
+porque el mínimo tiene decimales arbitrarios.
 
 `make humo` comprueba que el formulario tiene los 25 campos y que `/calcular` devuelve
 informe.
