@@ -40,7 +40,7 @@ def efecto() -> dict:
         "estado": "respuesta",
         "estimando": b["tarjeta"]["estimando"],
         "efecto": round(e["ate_aipw"], 1),
-        "unidad": "USD de 1978",
+        "unidad": e["unidad"],
         "ic95": [round(x, 1) for x in e["ic_aipw"]],
         "que_cubre_el_ic": "el ATE poblacional (no un efecto individual)",
         "estimador": e["estimador_principal"],
@@ -65,24 +65,31 @@ def consulta(perfil: dict) -> dict:
             continue
         valor = float(perfil[covariable])
         if valor < lo or valor > hi:
-            motivos.append(f"{covariable}={valor:g} fuera de [{lo}, {hi}]")
+            motivos.append(f"{covariable}={valor:g} fuera de "
+                           f"[{round(lo, 4)}, {round(hi, 4)}]")
     if motivos:
         return {"estado": "abstencion", "motivo": "; ".join(motivos),
                 "version": b["version"]}
 
     estratos = b["estimacion"]["estratos"]
-    clave = str(int(perfil.get("nodegree", 1)))
+    corte = estratos["variable"]
+    if corte not in perfil:
+        return {"estado": "abstencion",
+                "motivo": (f"falta la covariable del corte de heterogeneidad "
+                           f"({corte}) para asignar el estrato"),
+                "version": b["version"]}
+    clave = "1" if float(perfil[corte]) > estratos["umbral"] else "0"
     hoja = estratos["hojas"][clave]
     return {
         "estado": "respuesta",
         "estimando": (f"media del efecto del programa en el estrato "
-                      f"{estratos['variable']}={clave} ({hoja['etiqueta']})"),
+                      f"{corte}={clave} ({hoja['etiqueta']})"),
         "efecto": round(hoja["efecto"], 1),
-        "unidad": "USD de 1978",
+        "unidad": b["estimacion"]["unidad"],
         "ic95": [round(x, 1) for x in hoja["ic"]],
         "que_cubre_el_ic": ("la media del efecto en este estrato; NO el ATE "
                             "poblacional ni un efecto individual"),
-        "estrato": {"variable": estratos["variable"], "valor": int(clave),
+        "estrato": {"variable": corte, "valor": int(clave),
                     "n": hoja["n"]},
         "nota_heterogeneidad": ("los intervalos de los estratos se solapan: "
                                 "heterogeneidad sugerida, no concluyente"),

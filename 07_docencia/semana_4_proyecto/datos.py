@@ -7,11 +7,22 @@ from __future__ import annotations
 import csv
 import hashlib
 import json
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 import numpy as np
 
-from rutas import DATOS
+from rutas import DATOS, ESCENARIO
+
+# Adaptación por escenario: el esquema se declara una vez y viaja con los datos.
+COVARIABLES = {
+    "real/jobs": ("age", "educ", "black", "hispan",
+                  "married", "nodegree", "re74", "re75"),
+    "real/ihdp": ("bw", "b.head", "preterm", "birth.o", "nnhealth", "momage",
+                  "sex", "twin", "b.marr", "mom.lths", "mom.hs", "mom.scoll",
+                  "cig", "first", "booze", "drugs", "work.dur", "prenatal",
+                  "ark", "ein", "har", "mia", "pen", "tex", "was"),
+}
+RESULTADO = {"real/jobs": "re78", "real/ihdp": "outcome"}
 
 
 # ---------------------------------------------------------------- esquema C-01
@@ -21,9 +32,8 @@ class EsquemaCausal:
     """Cada columna, un solo rol. El esquema viaja con los datos (C-01)."""
 
     tratamiento: str = "treatment"
-    resultado: str = "re78"
-    covariables: tuple = ("age", "educ", "black", "hispan",
-                         "married", "nodegree", "re74", "re75")
+    resultado: str = field(default_factory=lambda: RESULTADO[ESCENARIO])
+    covariables: tuple = field(default_factory=lambda: COVARIABLES[ESCENARIO])
 
     def columnas(self) -> list[str]:
         return [self.tratamiento, self.resultado, *self.covariables]

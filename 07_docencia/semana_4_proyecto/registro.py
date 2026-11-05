@@ -9,10 +9,16 @@ import json
 import shutil
 from pathlib import Path
 
-from rutas import DATOS, REGISTRO
+from rutas import DATOS, ESCENARIO, REGISTRO
 
 CAMPOS_TARJETA = ("estimando", "poblacion", "supuestos", "umbrales",
                   "semilla", "dataset_sha256", "estimador")
+
+# Umbrales recalibrados por escenario (justificación en BITACORA, sección 8).
+UMBRALES = {
+    "real/jobs": {"smd_max": 0.25, "psi_alerta": 0.25, "solape_min": 0.50},
+    "real/ihdp": {"smd_max": 0.50, "psi_alerta": 0.25, "solape_min": 0.30},
+}
 
 
 def sha256_archivo(ruta: Path) -> str:
@@ -43,15 +49,17 @@ def construir_tarjeta(estimacion: dict) -> dict:
     return {
         "estimando": estimacion["estimando"],
         "poblacion": (f"los {estimacion['n']} individuos de observed_train.csv del "
-                      "escenario (versión de entrenamiento, hash verificado)"),
+                      f"escenario {estimacion.get('escenario', ESCENARIO)} "
+                      "(versión de entrenamiento, hash verificado)"),
         "supuestos": supuestos,
-        "umbrales": {"smd_max": 0.25, "psi_alerta": 0.25, "solape_min": 0.50},
+        "umbrales": dict(UMBRALES[ESCENARIO]),
         "semilla": estimacion["semilla"],
         "dataset_sha256": estimacion["dataset_sha256"],
         "estimador": ("AIPW con cross-fitting K=5 (doblemente robusto); "
                       "OLS solo de referencia"),
         "heterogeneidad": {
             "corte": estimacion["estratos"]["variable"],
+            "umbral": estimacion["estratos"]["umbral"],
             "regla": estimacion["estratos"]["regla"],
             "que_cubre": "media de scores AIPW del estrato, no un CATE individual",
         },

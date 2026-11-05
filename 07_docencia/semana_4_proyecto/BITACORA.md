@@ -101,7 +101,7 @@ PATH=/opt/homebrew/Caskroom/miniforge/base/envs/temp_causal_env/bin:/usr/bin:/bi
 | 4 · tarjeta y registro | 9–13 | `registro.py` | cerrado (checkpoint 3 en verde) |
 | 5 · ventanas y puerta | 14–18 | `monitor.py` | cerrado (checkpoint 4 en verde) |
 | 6 · servicio | 19, 20 | `servicio_core.py` | cerrado (checkpoint 5 en verde) |
-| 7 · adaptación | — | esquema, corte, ventanas, umbrales | pendiente |
+| 7 · adaptación | — | esquema, corte, ventanas, umbrales | cerrado (demo ihdp en verde) |
 
 Cada bloque se cierra cuando su checkpoint coincide con la salida esperada del
 notebook **y** queda registrado aquí con su evidencia.
@@ -262,21 +262,94 @@ HUMO: OK
 # flujo completo (el criterio de la rúbrica)
 make demo
 
+# el mismo flujo sobre la entrega
+SIC_ESCENARIO=real/ihdp make demo
+
 # equivalencias si no hay make
 python3 datos.py && python3 estimacion.py && python3 registro.py \
   && python3 monitor.py && python3 humo.py
 ```
 
-`artifacts/` es generado (`make limpiar` lo borra) y se versiona solo al cerrar la
+`artifacts/` es generado (`make limpiar` lo borra) y se versiona al cerrar la
 entrega, porque `ENTREGA.md` lo exige.
+
+> **Acoplamiento a tener en cuenta:** el servicio lee el `champion` del registro, que
+> pertenece a un escenario. `SIC_ESCENARIO` y los artefactos deben coincidir; si no,
+> `humo` falla con una abstención por falta de la covariable del corte. No es un bug:
+> es el bundle de otro escenario.
 
 ---
 
 ## 8. Adaptación a `real/ihdp` (entrega)
 
-- **Esquema:** _pendiente_ (resultado `outcome`, 25 covariables desde `identification.json`).
-- **Corte de heterogeneidad:** _pendiente_ (regla declarada **antes** de mirar efectos).
-- **Ventanas:** _pendiente_ (covariable continua de `ihdp`, p. ej. `bw` o `momage`).
-- **Umbrales:** _pendiente_ (justificación en dos líneas por umbral).
-- **Pregunta y supuestos:** _pendiente_ (mismo formato que `pregunta.md`).
-- **Números:** _pendiente_ (tabla de la sección 7 del notebook).
+**Decisión de diseño:** la adaptación es **por escenario** (`SIC_ESCENARIO`), no un
+reemplazo destructivo. `COVARIABLES`/`RESULTADO` en `datos.py`, `CORTES` en
+`estimacion.py`, `CONFIG` en `monitor.py` y `UMBRALES` en `registro.py` seleccionan la
+configuración. Motivo: el notebook exige los cinco checkpoints de `jobs` **y** la
+tarea sobre `ihdp`; con un reemplazo, `jobs` dejaría de reproducirse. Verificado: tras
+la refactorización, `make demo` sobre `jobs` devuelve exactamente los mismos números.
+
+### 8.1 Esquema
+
+- `resultado = "outcome"`, `tratamiento = "treatment"`, **25 covariables** tomadas de
+  `identification.json` (`bw … was`). `n = 448` en train, 191 tratados (42,7 %).
+- Prefijos con punto (`b.head`, `mom.lths`, `b.marr`) se copian literalmente: son los
+  nombres del CSV.
+
+### 8.2 Corte de heterogeneidad (declarado antes de mirar efectos)
+
+- **Corte:** `bw` (peso al nacer) dicotomizado en la **mediana de train** (`−0,0133`).
+- **Regla:** es el eje clínico del IHDP (el bajo peso al nacer define la población del
+  estudio) y la mediana preserva tamaño en ambas hojas; **no** se eligió por ganancia
+  de varianza. Queda escrito en la tarjeta (`heterogeneidad.regla`) y el servicio lo
+  usa para asignar el estrato.
+
+### 8.3 Umbrales (recalibrados, con justificación)
+
+| Umbral | jobs | ihdp | Justificación |
+|---|---|---|---|
+| `solape_min` | 0,50 | **0,30** | Con 25 covariables y P(D=1)=0,43 el soporte se estrecha; exigir 0,50 rechazaría poblaciones legítimas. 0,30 sigue exigiendo ESS útil. Medido: sana 100 %, positividad 0 % → discrimina. |
+| `smd_max` | 0,25 | **0,50** | El máximo sobre 25 SMD tiene más ruido: EE(SMD) ≈ √(1/191 + 1/257) ≈ 0,096; el máximo esperado de 25 ≈ 3–4 EE ≈ 0,3–0,4. Medido: train 0,43 (por debajo), positividad 5,16 (muy por encima). |
+| `psi_alerta` | 0,25 | **0,25** | Umbral estándar de industria (0,10 moderado, 0,25 significativo) y la deriva sintética cae muy por encima. |
+
+### 8.4 Ventanas
+
+- **Sana:** 300 de 448 (≈2/3, mismo criterio que 700 de 1033 en `jobs`).
+- **Deriva:** `bw + 1,0` (las covariables de IHDP vienen estandarizadas, así que +1 ≈
+  una desviación estándar) → PSI 0,88 → **alerta**.
+- **Positividad:** eje `bw`, por ser la covariable con mayor |SMD| de tratamiento en
+  train (0,43): es la que gobierna la asignación. Tratados con `bw > p75` y controles
+  con `bw < p25` → 140 unidades, solape 0 % → **falla**. Criterio de **diseño** de la
+  ventana, no resultado del estimador.
+
+### 8.5 Trampa `score_post`
+
+El ruido estaba calibrado en dólares (σ = 500). En la escala de `outcome` eso aplastaba
+la señal y la trampa **no** colapsaba (4,8 ≈ OLS). Se reescala por escenario
+(σ = 1,0 punto) y vuelve a enseñar lo que debe: **−0,1**, el coeficiente se vacía.
+
+### 8.6 Números de `ihdp`
+
+| Pieza | Resultado |
+|---|---|
+| Diferencia cruda (train) | 10,3 puntos |
+| ATE OLS + IC95 | 4,8 [3,8; 5,8] (SE 0,5) |
+| **ATE AIPW (cross-fitting) + IC95** | **5,2 [3,9; 6,4]** (SE 0,6) |
+| ESS / n y rango de ê | 388 (0,87) · [0,071; 0,887] · solape 100 % |
+| Estrato `bw` alto (> mediana) | 7,2 [5,5; 8,8] (n = 224) |
+| Estrato `bw` bajo (≤ mediana) | 3,2 [1,4; 4,9] (n = 224) |
+| ¿Se solapan los intervalos? | **No** (7,2 vs 3,2; IC disjuntos) |
+| Ventana sana | `pasa` (PSI 0,02 · SMD 0,33 · solape 100 %) |
+| Ventana deriva | `alerta` — PSI de `bw` = 0,88 |
+| Ventana positividad | `falla` — solape 0 % (mínimo 30 %) |
+| Humo | `/efecto` 5,2 [3,9; 6,4] · `/consulta` 7,2 · fuera → abstención 200 |
+
+La referencia del DGP (~3,92) no se usó para estimar, decidir ni calibrar; solo se
+compara al final: el IC del AIPW la contiene. La pared se mantiene.
+
+### 8.7 Artefactos de la entrega
+
+`artifacts/estimacion.json` y `artifacts/registro/v0001/` (`estimacion.json`,
+`tarjeta.json`, `manifest.json`) + `champion` → `v0001`, generados con
+`SIC_ESCENARIO=real/ihdp make demo` desde cero (`make limpiar` previo). Versión
+inmutable: no se edita, se audita.

@@ -10,9 +10,34 @@ import numpy as np
 from scipy.optimize import minimize
 
 from datos import EsquemaCausal, leer
-from rutas import ARTEFACTOS
+from rutas import ARTEFACTOS, ESCENARIO
 
 SEMILLA = 4242
+
+# Corte de heterogeneidad por escenario: se declara ANTES de mirar los efectos.
+CORTES = {
+    "real/jobs": {
+        "variable": "nodegree", "umbral": 0.5,
+        "etiquetas": {"1": "sin título", "0": "con título"},
+        "regla": ("corte único por nodegree (título): criterio administrativo y de "
+                  "interpretabilidad, declarado antes de mirar los efectos; "
+                  "NO elegido por ganancia de varianza"),
+    },
+    "real/ihdp": {
+        "variable": "bw", "umbral": None,  # None -> mediana de la muestra de train
+        "etiquetas": {"1": "bw alto (> mediana de train)",
+                      "0": "bw bajo (<= mediana de train)"},
+        "regla": ("corte único por peso al nacer (bw) en la mediana de train: es el eje "
+                  "clínico del IHDP (bajo peso al nacer define la población del estudio), "
+                  "declarado antes de mirar los efectos y NO elegido por ganancia de "
+                  "varianza; la mediana preserva tamaño en ambas hojas"),
+    },
+}
+
+UNIDAD = {"real/jobs": "USD de 1978", "real/ihdp": "puntos de test cognitivo"}
+ETIQUETA_UNIDAD = {"real/jobs": "USD", "real/ihdp": "puntos"}
+# La trampa se escala con la unidad del resultado (no tiene sentido en puntos).
+RUIDO_TRAMPA = {"real/jobs": 500.0, "real/ihdp": 1.0}
 
 
 def ate_ols(col: dict, esquema: EsquemaCausal, extra=None) -> dict:
@@ -111,25 +136,33 @@ def aipw_crossfit(col: dict, esquema: EsquemaCausal, k: int = 5) -> dict:
             "scores": score}
 
 
-def estratos_nodegree(score: np.ndarray, col: dict, esquema: EsquemaCausal) -> dict:
+def estratos_heterogeneidad(score: np.ndarray, col: dict,
+                            esquema: EsquemaCausal) -> dict:
     """Un solo corte de heterogeneidad, pre-declarado en la tarjeta.
 
     No es un CATE: es la media de scores AIPW de cada estrato, con su IC.
     """
-    # El estrato NO es un CATE: es la media de scores AIPW del grupo, con su IC.
-    regla = ("corte único por nodegree (título): criterio administrativo y de "
-             "interpretabilidad, declarado antes de mirar los efectos; "
-             "NO elegido por ganancia de varianza")
+    corte = CORTES[ESCENARIO]
+    variable = corte["variable"]
+    umbral = corte["umbral"]
+    if umbral is None:
+        umbral = float(np.median(col[variable]))
+    grupo = (col[variable] > umbral).astype(int)
     hojas = {}
-    for valor, etiqueta in ((1, "sin título"), (0, "con título")):
-        sel = col["nodegree"] == valor
+    for clave in ("1", "0"):
+        sel = grupo == int(clave)
         s = score[sel]
         media = float(s.mean())
         se = float(s.std(ddof=1) / np.sqrt(len(s)))
-        hojas[str(valor)] = {"etiqueta": etiqueta, "n": int(sel.sum()),
-                             "efecto": media, "se": se,
-                             "ic": [media - 1.96 * se, media + 1.96 * se]}
-    return {"variable": "nodegree", "regla": regla, "hojas": hojas}
+        hojas[clave] = {"etiqueta": corte["etiquetas"][clave], "n": int(sel.sum()),
+                        "efecto": media, "se": se,
+                        "ic": [media - 1.96 * se, media + 1.96 * se]}
+    return {"variable": variable, "umbral": umbral, "regla": corte["regla"],
+            "hojas": hojas}
+
+
+# Alias histórico del kit (real/jobs usaba este nombre).
+estratos_nodegree = estratos_heterogeneidad
 
 
 def trampa_score_post(col: dict, esquema: EsquemaCausal) -> dict:
@@ -137,7 +170,7 @@ def trampa_score_post(col: dict, esquema: EsquemaCausal) -> dict:
     g = np.random.default_rng(SEMILLA)
     D, Y = col[esquema.tratamiento], col[esquema.resultado]
     # La trampa: una columna calculada CON el resultado (Cap. 6).
-    score = 0.6 * Y + 0.4 * D + g.normal(0, 500, len(Y))
+    score = 0.6 * Y + 0.4 * D + g.normal(0, RUIDO_TRAMPA[ESCENARIO], len(Y))
     return ate_ols(col, esquema, extra={"valores": score})
 
 
@@ -151,14 +184,16 @@ def estimar() -> dict:
     ajustado = ate_ols(col, esquema)
     trampa = trampa_score_post(col, esquema)
     aipw = aipw_crossfit(col, esquema)
-    estratos = estratos_nodegree(aipw["scores"], col, esquema)
+    estratos = estratos_heterogeneidad(aipw["scores"], col, esquema)
 
     e = propensity(X, D)
     solape = float(((e >= 0.05) & (e <= 0.95)).mean())
     smds = {c: smd(col[c], D) for c in esquema.covariables}
 
     return {
-        "estimando": "ATE de treatment sobre re78 (efecto total)",
+        "escenario": ESCENARIO,
+        "estimando": f"ATE de {esquema.tratamiento} sobre {esquema.resultado} (efecto total)",
+        "unidad": UNIDAD[ESCENARIO],
         "n": int(len(D)),
         "tratados": int(D.sum()),
         "diferencia_cruda": crude,
@@ -183,15 +218,18 @@ if __name__ == "__main__":
     ARTEFACTOS.mkdir(exist_ok=True)
     (ARTEFACTOS / "estimacion.json").write_text(
         json.dumps(r, indent=2, ensure_ascii=False))
-    print(f"diferencia cruda E[Y|D=1]-E[Y|D=0] = {r['diferencia_cruda']:.1f} USD")
-    print(f"ATE OLS (8 controles) = {r['ate_ols']:.1f} | SE = {r['se']:.1f} "
+    print(f"diferencia cruda E[Y|D=1]-E[Y|D=0] = {r['diferencia_cruda']:.1f} "
+          f"{ETIQUETA_UNIDAD[ESCENARIO]}")
+    print(f"ATE OLS ({len(EsquemaCausal().covariables)} controles) = {r['ate_ols']:.1f} "
+          f"| SE = {r['se']:.1f} "
           f"| IC95 = [{r['ic95'][0]:.1f}, {r['ic95'][1]:.1f}]")
     print(f"AIPW cross-fitting K=5 = {r['ate_aipw']:.1f} | SE = {r['se_aipw']:.1f} "
           f"| IC95 = [{r['ic_aipw'][0]:.1f}, {r['ic_aipw'][1]:.1f}]")
     print(f"trampa score_post      = {r['ate_trampa_score_post']:.1f}  "
           "<- el coeficiente se vació")
     for v, h in r["estratos"]["hojas"].items():
-        print(f"estrato nodegree={v} ({h['etiqueta']}, n={h['n']}): "
+        print(f"estrato {r['estratos']['variable']}={v} "
+              f"({h['etiqueta']}, n={h['n']}): "
               f"efecto {h['efecto']:.1f} IC95 [{h['ic'][0]:.1f}, {h['ic'][1]:.1f}]")
     print(f"ESS = {r['ess']:.0f} (ESS/n = {r['ess_sobre_n']:.2f}) | "
           f"rango e = [{r['rango_e'][0]:.3f}, {r['rango_e'][1]:.3f}] | "

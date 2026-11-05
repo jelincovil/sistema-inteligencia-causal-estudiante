@@ -12,9 +12,15 @@ import numpy as np
 from datos import EsquemaCausal, leer
 from estimacion import ess_kish, propensity, smd
 from registro import champion
-from rutas import REGISTRO
+from rutas import ESCENARIO, REGISTRO
 
 SEMILLA_VENTANA = 4242
+
+# Ventanas por escenario: qué covariable mueve la deriva y cuál ordena la positividad.
+CONFIG = {
+    "real/jobs": {"sana_n": 700, "deriva": ("age", 10.0), "positividad": "re74"},
+    "real/ihdp": {"sana_n": 300, "deriva": ("bw", 1.0), "positividad": "bw"},
+}
 
 
 def psi(ref: np.ndarray, nueva: np.ndarray, bins: int = 10, eps: float = 1e-4) -> float:
@@ -29,26 +35,29 @@ def psi(ref: np.ndarray, nueva: np.ndarray, bins: int = 10, eps: float = 1e-4) -
 
 def ventana_sana(train: dict, esquema: EsquemaCausal) -> dict:
     """Otra extracción de la misma población (submuestra sin reemplazo)."""
-    # Otra extracción de la misma población: 700 sin reemplazo, semilla fija.
+    # Otra extracción de la misma población: sin reemplazo, semilla fija.
     g = np.random.default_rng(SEMILLA_VENTANA)
-    idx = g.choice(len(train[esquema.tratamiento]), 700, replace=False)
+    n = len(train[esquema.tratamiento])
+    idx = g.choice(n, min(CONFIG[ESCENARIO]["sana_n"], n), replace=False)
     return {columna: valores[idx] for columna, valores in train.items()}
 
 
 def ventana_deriva(train: dict, esquema: EsquemaCausal) -> dict:
     """La población envejeció: la edad llega corrida diez años."""
     # Copia, no mutación: el train original queda intacto.
+    variable, corrimiento = CONFIG[ESCENARIO]["deriva"]
     ventana = {columna: valores.copy() for columna, valores in train.items()}
-    ventana["age"] = ventana["age"] + 10
+    ventana[variable] = ventana[variable] + corrimiento
     return ventana
 
 
 def ventana_positividad(train: dict, esquema: EsquemaCausal) -> dict:
     """La asignación se volvió casi determinista por ingreso previo (re74)."""
-    # Asignación casi determinista: tratados ricos (p75), controles pobres (p25).
-    D, re74 = train[esquema.tratamiento], train["re74"]
-    p25, p75 = np.percentile(re74, [25, 75])
-    seleccion = ((D == 1) & (re74 > p75)) | ((D == 0) & (re74 < p25))
+    # Asignación casi determinista: tratados altos (p75), controles bajos (p25).
+    D = train[esquema.tratamiento]
+    eje = train[CONFIG[ESCENARIO]["positividad"]]
+    p25, p75 = np.percentile(eje, [25, 75])
+    seleccion = ((D == 1) & (eje > p75)) | ((D == 0) & (eje < p25))
     return {columna: valores[seleccion] for columna, valores in train.items()}
 
 
