@@ -568,7 +568,7 @@ API y por formulario, con los mismos números que declara la documentación.
 | Formulario web | `GET /` con 25 campos validados + `GET /calcular` |
 | Contenedor | `puente:0.1.0` (`sha256:dbe3453abc5b`, 561 MB), no-root, `HEALTHCHECK` → `healthy` |
 | Pruebas | `make humo` verde, incluidos los dos casos de abstención |
-| Documentación | `BITACORA.md`, `GUIA_CONSTRUCCION.md` (guía), `pregunta_ihdp.md`, ficha Typst + PDF |
+| Documentación | `BITACORA.md`, `GUIA_CONSTRUCCION.md` (guía) + `.rtf` derivado, `pregunta_ihdp.md`, ficha Typst + PDF |
 
 **Límites conocidos de esta versión** (no son defectos ocultos, están declarados):
 proyección individual con `R² = 0,095`; sin verificación de hash al cargar el bundle; sin

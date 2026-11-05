@@ -1,0 +1,936 @@
+{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+{\*\listtable{\list\listtemplateid1{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelindent0{\leveltext\'01\u8226 ?;}{\levelnumbers;}\fi-360\li360\lin360 }{\listname ;}\listid1}
+{\list\listtemplateid2{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelindent0{\leveltext\'01\u8226 ?;}{\levelnumbers;}\fi-360\li360\lin360 }{\listname ;}\listid2}
+{\list\listtemplateid3{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelindent0{\leveltext\'01\u8226 ?;}{\levelnumbers;}\fi-360\li360\lin360 }{\listname ;}\listid3}
+{\list\listtemplateid4{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelindent0{\leveltext\'01\u8226 ?;}{\levelnumbers;}\fi-360\li360\lin360 }{\listname ;}\listid4}
+{\list\listtemplateid5{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelindent0{\leveltext\'01\u8226 ?;}{\levelnumbers;}\fi-360\li360\lin360 }{\listname ;}\listid5}
+}
+{\*\listoverridetable{\listoverride\listid1\listoverridecount0\ls1}{\listoverride\listid2\listoverridecount0\ls2}{\listoverride\listid3\listoverridecount0\ls3}{\listoverride\listid4\listoverridecount0\ls4}{\listoverride\listid5\listoverridecount0\ls5}}
+\widowctrl\hyphauto
+
+{\pard \qc \f0 \sa180 \li0 \fi0 \b \fs36 Gu\u237 ?a docente \u8212- construcci\u243 ?n de \u171 ?Puente\u187 ? (semana 4)\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \outlinelevel0 \b \fs34 Gu\u237 ?a docente \u8212- construcci\u243 ?n de \u171 ?Puente\u187 ? (semana 4)\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 Gu\u237 ?a para {\b construir} este repositorio desde el kit vac\u237 ?o y para {\b producir el entregable} sobre {\f1 \fs24 real/ihdp}. Cada paso declara el objetivo de aprendizaje, el concepto, qu\u233 ? se escribe, el comando, la salida esperada y el checkpoint de clase.\par}
+{\pard \ql \f0 \fs24 \sa180 \li720 \fi0 {\b Formato de la gu\u237 ?a.} Los pasos est\u225 ?n pensados para dos sesiones de 2 h m\u225 ?s la tarea: sesi\u243 ?n 1 = bloques 2 y 3; sesi\u243 ?n 2 = bloques 4, 5 y 6; tarea = adaptaci\u243 ?n a {\f1 \fs24 ihdp}. El pipeline completo corre en {\b \u8776 ? 2 s}: el tiempo de clase se gasta en decidir y leer, no en esperar.\par}
+{\pard \qc \f0 \fs24 \sa180 \li0 \fi0 \emdash\emdash\emdash\emdash\emdash\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \outlinelevel1 \b \fs32 Parte 0 \u8212- Antes de empezar (para el docente)\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 {\b Qu\u233 ? se construye:} un servicio causal local completo \u8212-estimador con incertidumbre, tarjeta de modelo, registro inmutable con hashes, servicio que se abstiene fuera de soporte y una puerta {\f1 \fs24 pasa / alerta / falla}\u8212- sobre dos escenarios sint\u233 ?ticos.\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 {\b Las cinco ideas que hay que dejar instaladas:}\par}
+{\pard \ql \f0 \fs24 \sa0 \li360 \fi-360\ls1\ilvl0\tx360 {\listtext\tab 1.\tab} El {\b estimando se declara antes} de mirar datos ({\f1 \fs24 pregunta.md}).\par}
+{\pard \ql \f0 \fs24 \sa0 \li360 \fi-360\ls1\ilvl0\tx360 {\listtext\tab 2.\tab} La estimaci\u243 ?n viene con {\b incertidumbre} y con la declaraci\u243 ?n de qu\u233 ? cubre el IC.\par}
+{\pard \ql \f0 \fs24 \sa0 \li360 \fi-360\ls1\ilvl0\tx360 {\listtext\tab 3.\tab} Un artefacto publicado se refiere a un {\b sujeto con hash}; si cambia, es otra versi\u243 ?n.\par}
+{\pard \ql \f0 \fs24 \sa0 \li360 \fi-360\ls1\ilvl0\tx360 {\listtext\tab 4.\tab} {\b Abstenerse es una respuesta} de primera clase, no un error.\par}
+{\pard \ql \f0 \fs24 \sa0 \li360 \fi-360\ls1\ilvl0\tx360 {\listtext\tab 5.\tab} Los {\b umbrales se declaran antes} del desenlace; moverlos despu\u233 ?s es elegir el resultado.\sa180\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 {\b Estado de arranque correcto:} {\f1 \fs24 make verificar} {\b falla} con {\f1 \fs24 TODO-1}.\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \f1 \fs24 git checkout semana4-kit-original   # opcional: ver el kit pr\u237 ?stino\line
+make verificar                       # NotImplementedError: TODO-1 pendiente de completar\par}
+{\pard \qc \f0 \fs24 \sa180 \li0 \fi0 \emdash\emdash\emdash\emdash\emdash\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \outlinelevel1 \b \fs32 Parte 1 \u8212- Preparaci\u243 ?n del entorno\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \outlinelevel2 \b \fs30 Paso 1.1 \u8212- Crear el entorno\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \f1 \fs24 cd semana_4_proyecto\line
+python3.13 -m venv .venv && . .venv/bin/activate\line
+python -m pip install -r requirements.txt\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 {\f1 \fs24 requirements.txt} cubre lo que el kit usa de verdad: {\f1 \fs24 numpy}, {\f1 \fs24 scipy}, {\f1 \fs24 fastapi}, {\f1 \fs24 uvicorn}, {\f1 \fs24 httpx} (pipeline y servicio), {\f1 \fs24 matplotlib} (gr\u225 ?fico del notebook), {\f1 \fs24 ipykernel} y {\f1 \fs24 jupyterlab}.\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 {\b Verificar:}\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \f1 \fs24 python -V\line
+python -c "import numpy, scipy, fastapi, matplotlib; print('ok')"\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \outlinelevel2 \b \fs30 Paso 1.2 \u8212- Registrar el kernel (una sola vez)\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \f1 \fs24 python -m ipykernel install --user --name sic-estudiante \\\line
+  --display-name "Python (SIC estudiante)"\line
+jupyter kernelspec list\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 {\b Concepto que hay que explicar:} las celdas {\f1 \fs24 !make} heredan el {\f1 \fs24 PATH} del kernel, as\u237 ? que {\b el kernel es el entorno del proyecto}. Con otro kernel, {\f1 \fs24 make humo} muere con {\f1 \fs24 ModuleNotFoundError: fastapi} aunque el paquete est\u233 ? instalado.\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \outlinelevel2 \b \fs30 Paso 1.3 \u8212- Mapa de la construcci\u243 ?n\par}
+{
+\trowd \trgaph120
+\clbrdrb\brdrs\cellx1728\clbrdrb\brdrs\cellx3456\clbrdrb\brdrs\cellx5184\clbrdrb\brdrs\cellx6912\clbrdrb\brdrs\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 Bloque\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 TODOs\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 Archivo\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 Concepto\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 Artefacto que produce\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx1728\cellx3456\cellx5184\cellx6912\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 2\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 1\u8211-3\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 {\f1 \fs24 datos.py}\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 Rol \u250 ?nico por columna, splits con hash, la pared\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 verificaci\u243 ?n en pantalla\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx1728\cellx3456\cellx5184\cellx6912\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 3\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 4\u8211-8, 21, 22\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 {\f1 \fs24 estimacion.py}\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 OLS, propensity, ESS, SMD, {\b AIPW cross-fitting}, estratos, trampa\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 {\f1 \fs24 artifacts/estimacion.json}\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx1728\cellx3456\cellx5184\cellx6912\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 4\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 9\u8211-13\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 {\f1 \fs24 registro.py}\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 Tarjeta, versi\u243 ?n inmutable, manifiesto, promoci\u243 ?n at\u243 ?mica\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 {\f1 \fs24 artifacts/registro/v0001/} + {\f1 \fs24 champion}\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx1728\cellx3456\cellx5184\cellx6912\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 5\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 14\u8211-18\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 {\f1 \fs24 monitor.py}\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 PSI, ventanas, puerta causal\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 estados por ventana\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx1728\cellx3456\cellx5184\cellx6912\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 6\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 19\u8211-20\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 {\f1 \fs24 servicio_core.py}\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 Bundle cacheado, abstenci\u243 ?n\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 {\f1 \fs24 /efecto}, {\f1 \fs24 /consulta}\par}
+\cell}
+}
+\intbl\row}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \par}
+{\pard \qc \f0 \fs24 \sa180 \li0 \fi0 \emdash\emdash\emdash\emdash\emdash\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \outlinelevel1 \b \fs32 Parte 2 \u8212- Entender el dato antes de escribir c\u243 ?digo\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \outlinelevel2 \b \fs30 Paso 2.1 \u8212- Leer la pregunta (10 min, sin teclado)\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 Abrir {\f1 \fs24 pregunta.md}: pregunta, estimando, poblaci\u243 ?n, supuestos con su clase y qu\u233 ? {\b no} afirma el prototipo. Discusi\u243 ?n de clase: {\i \u191 ?la pregunta pide un promedio o un efecto individual?}\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \outlinelevel2 \b \fs30 Paso 2.2 \u8212- Inventariar el escenario\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \f1 \fs24 ls data_benchmark_causal/causal_benchmark_synthetic/datasets/real/jobs/\line
+head -2 data_benchmark_causal/causal_benchmark_synthetic/datasets/real/jobs/observed_train.csv\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 {\b Qu\u233 ? hay y qu\u233 ? no:}\par}
+{
+\trowd \trgaph120
+\clbrdrb\brdrs\cellx4320\clbrdrb\brdrs\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 Archivo\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 Uso\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 {\f1 \fs24 observed_\{train,validation,test\}.csv}\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 datos; solo {\f1 \fs24 train} alimenta decisiones\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 {\f1 \fs24 splits.json}\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 hashes y recuentos de las particiones\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 {\f1 \fs24 metadata.json} / {\f1 \fs24 identification.json}\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 ficha y conjunto de ajuste v\u225 ?lido\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 {\f1 \fs24 interventions.json}\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 {\b contiene {\f1 \fs24 ate}/{\f1 \fs24 att}}: no se usa (hueco de la pared)\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 {\f1 \fs24 truth_*.csv}\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 {\b no existe}: eso es la pared\par}
+\cell}
+}
+\intbl\row}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \par}
+{\pard \qc \f0 \fs24 \sa180 \li0 \fi0 \emdash\emdash\emdash\emdash\emdash\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \outlinelevel1 \b \fs32 Parte 3 \u8212- Bloque 2: roles, hashes y la pared ({\f1 \fs24 datos.py})\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \outlinelevel2 \b \fs30 Paso 3.1 \u8212- {\f1 \fs24 TODO-1}: un rol por columna\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 {\b Concepto (C-01):} cada columna tiene {\i un} papel. Si {\f1 \fs24 re78} es resultado, no puede ser tambi\u233 ?n covariable; si {\f1 \fs24 treatment} no var\u237 ?a, no hay nada que estimar.\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \f1 \fs24 def validar(self, columnas_datos, valores_tratamiento):\line
+    esquema = self.columnas()\line
+    ausentes = [c for c in esquema if c not in columnas_datos]\line
+    if ausentes:\line
+        raise ValueError(f"columna(s) del esquema ausentes en los datos: \{ausentes\}")\line
+    dobles = sorted(\{c for c in esquema if esquema.count(c) > 1\})\line
+    if dobles:\line
+        raise ValueError(f"columna(s) con m\u225 ?s de un rol: \{dobles\}")\line
+    if np.unique(np.asarray(valores_tratamiento)).size < 2:\line
+        raise ValueError(f"el tratamiento '\{self.tratamiento\}' no var\u237 ?a en los datos")\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 {\b Ense\u241 ?ar:} el mensaje de error {\b nombra la culpable}. Un {\f1 \fs24 assert} gen\u233 ?rico no sirve en producci\u243 ?n: quien lo lea a las 3 a.m. tiene que saber qu\u233 ? arreglar.\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \outlinelevel2 \b \fs30 Paso 3.2 \u8212- {\f1 \fs24 TODO-2}: recomputar, no confiar\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \f1 \fs24 coincide = (hashlib.sha256((DATOS / f"observed_\{parte\}.csv").read_bytes()).hexdigest()\line
+            == declarados["splits"][parte]["file_sha256"])\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 {\b Concepto (C-10):} el productor declara hashes; el consumidor los {\b recomputa}. Es la diferencia entre creer y verificar.\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \outlinelevel2 \b \fs30 Paso 3.3 \u8212- {\f1 \fs24 TODO-3}: la pared\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \f1 \fs24 try:\line
+    with open(DATOS / "truth_train.csv"):\line
+        pass\line
+except FileNotFoundError:\line
+    print("  pared OK: truth_train.csv no existe en el paquete (reservado)")\line
+    return\line
+raise RuntimeError("pared rota: truth_train.csv S\u205 ? existe en el paquete")\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 {\b Concepto:} la pared no es una convenci\u243 ?n, es una comprobaci\u243 ?n ejecutable. Si alguien reintroduce la verdad, el programa falla.\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \outlinelevel2 \b \fs30 Checkpoint 1\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \f1 \fs24 make verificar\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \f1 \fs24 esquema valida contra observed_train: OK (n = 1033, tratados = 262)\line
+  train        hash OK  (1033 filas, semilla 20240701)\line
+  validation   hash OK  (344 filas, semilla 20240701)\line
+  test         hash OK  (345 filas, semilla 20240701)\line
+  pared OK: truth_train.csv no existe en el paquete (reservado)\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 {\b Prueba negativa de clase} (celda del notebook):\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \f1 \fs24 esquema.validar(["treatment", "re78", "age", "black"], [0, 1, 0, 1])\line
+# ValueError: columna(s) del esquema ausentes en los datos: ['educ', 'hispan', ...]\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 {\b Errores t\u237 ?picos:} hashear el texto normalizado en vez de los bytes; aceptar columnas ausentes sin nombrarlas; confundir \u171 ?no hay {\f1 \fs24 truth}\u187 ? con \u171 ?no hay verdad\u187 ?.\par}
+{\pard \qc \f0 \fs24 \sa180 \li0 \fi0 \emdash\emdash\emdash\emdash\emdash\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \outlinelevel1 \b \fs32 Parte 4 \u8212- Bloque 3: el efecto con incertidumbre ({\f1 \fs24 estimacion.py})\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \outlinelevel2 \b \fs30 Paso 4.1 \u8212- {\f1 \fs24 TODO-4}: la referencia ingenua (OLS)\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \f1 \fs24 beta = np.linalg.lstsq(M, Y, rcond=None)[0]\line
+residuo = Y - M @ beta\line
+sigma2 = float(residuo @ residuo / (n - M.shape[1]))\line
+cov = sigma2 * np.linalg.inv(M.T @ M)\line
+ate, se = float(beta[1]), float(np.sqrt(cov[1, 1]))\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 {\b Concepto:} el coeficiente del tratamiento es el ATE {\i bajo un modelo lineal}. Sirve como referencia, no como respuesta: si el AIPW y el OLS coinciden, gana confianza; si no, aparece una conversaci\u243 ?n.\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \outlinelevel2 \b \fs30 Paso 4.2 \u8212- {\f1 \fs24 TODO-5}: el propensity\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \f1 \fs24 def nll(w):\line
+    eta = Z @ w[1:] + w[0]\line
+    return float(np.sum(np.logaddexp(0, eta) - D * eta))\line
+r = minimize(nll, np.zeros(Z.shape[1] + 1), method="BFGS")\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 {\b Concepto:} {\f1 \fs24 \u234 ?(X)} es la probabilidad de tratamiento. Se estandarizan las covariables para que BFGS converja; {\f1 \fs24 logaddexp} evita desbordes.\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \outlinelevel2 \b \fs30 Paso 4.3 \u8212- {\f1 \fs24 TODO-6} y {\f1 \fs24 TODO-7}: ESS y SMD\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \f1 \fs24 e = np.clip(e, 1e-6, 1 - 1e-6)\line
+w = np.where(D == 1, 1 / e, 1 / (1 - e))\line
+ess = float(w.sum() ** 2 / np.sum(w ** 2))\line
+\line
+smd = float((v[D == 1].mean() - v[D == 0].mean())\line
+            / np.sqrt((v[D == 1].var() + v[D == 0].var()) / 2))\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 {\b Concepto:} el ESS dice cu\u225 ?ntas unidades \u171 ?cuentan\u187 ? de verdad; el SMD mide desequilibrio en unidades de desviaci\u243 ?n com\u250 ?n.\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \outlinelevel2 \b \fs30 Paso 4.4 \u8212- {\f1 \fs24 TODO-21}: {\b la pieza del d\u237 ?a} (AIPW con cross-fitting)\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \f1 \fs24 for fold in folds:\line
+    fuera = np.ones(n, bool); fuera[fold] = False\line
+    dentro = ~fuera\line
+    b1 = _ajustar_lineal(X[fuera & (D == 1)], Y[fuera & (D == 1)])\line
+    b0 = _ajustar_lineal(X[fuera & (D == 0)], Y[fuera & (D == 0)])\line
+    mu1[dentro] = np.column_stack([np.ones(dentro.sum()), X[dentro]]) @ b1\line
+    mu0[dentro] = np.column_stack([np.ones(dentro.sum()), X[dentro]]) @ b0\line
+    e[dentro] = _propensity_fit(X[fuera], D[fuera])(X[dentro])\line
+\line
+e = np.clip(e, 0.05, 0.95)                       # trimming declarado\line
+score = mu1 - mu0 + D * (Y - mu1) / e - (1 - D) * (Y - mu0) / (1 - e)\line
+ate, se = float(score.mean()), float(score.std(ddof=1) / np.sqrt(n))\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 {\b Tres conceptos que hay que verbalizar:}\par}
+{\pard \ql \f0 \fs24 \sa0 \li360 \fi-360\ls2\ilvl0\tx360 {\listtext\tab 1.\tab} {\b Ning\u250 ?n nuisance ve a la unidad que predice} (cross-fitting). Es la exigencia del cap. 9.\par}
+{\pard \ql \f0 \fs24 \sa0 \li360 \fi-360\ls2\ilvl0\tx360 {\listtext\tab 2.\tab} {\b Doble robustez:} basta que una de las dos piernas est\u233 ? bien especificada.\par}
+{\pard \ql \f0 \fs24 \sa0 \li360 \fi-360\ls2\ilvl0\tx360 {\listtext\tab 3.\tab} {\b El score es la influence function:} su media es el ATE y su desviaci\u243 ?n da el IC.\sa180\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \outlinelevel2 \b \fs30 Paso 4.5 \u8212- {\f1 \fs24 TODO-22}: estratos (y lo que {\b no} son)\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \f1 \fs24 sel = (col[variable] > umbral).astype(int) == int(clave)\line
+media = float(score[sel].mean())\line
+se = float(score[sel].std(ddof=1) / np.sqrt(sel.sum()))\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 {\b Concepto:} la media de scores AIPW dentro de una hoja es un efecto {\b de estrato}, no un CATE. El corte se declara antes y va en la tarjeta.\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \outlinelevel2 \b \fs30 Paso 4.6 \u8212- {\f1 \fs24 TODO-8}: la trampa de fuga\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \f1 \fs24 score = 0.6 * Y + 0.4 * D + g.normal(0, RUIDO_TRAMPA[ESCENARIO], len(Y))\line
+return ate_ols(col, esquema, extra=\{"valores": score\})\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 {\b Concepto:} una columna derivada del resultado {\b mejora} el ajuste y {\b vac\u237 ?a} el coeficiente del tratamiento. Ninguna m\u233 ?trica predictiva la detecta; solo el dise\u241 ?o.\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \outlinelevel2 \b \fs30 Checkpoint 2\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \f1 \fs24 make estimar\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \f1 \fs24 diferencia cruda E[Y|D=1]-E[Y|D=0] = 1600.8 USD\line
+ATE OLS (8 controles) = 1596.0 | SE = 301.6 | IC95 = [1004.8, 2187.3]\line
+AIPW cross-fitting K=5 = 1638.6 | SE = 325.0 | IC95 = [1001.6, 2275.7]\line
+trampa score_post      = 172.4  <- el coeficiente se vaci\u243 ?\line
+estrato nodegree=1 (sin t\u237 ?tulo, n=568): efecto 1060.1 IC95 [233.1, 1887.2]\line
+estrato nodegree=0 (con t\u237 ?tulo, n=465): efecto 2345.2 IC95 [1356.9, 3333.4]\line
+ESS = 729 (ESS/n = 0.71) | rango e = [0.092, 0.530] | solapamiento = 100%\line
+SMD m\u225 ?x = 0.19\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 {\b Pregunta de clase:} AIPW 1638,6 y OLS 1596,0 difieren en 42 USD con SE \u8776 ? 300. {\i \u191 ?Es una discrepancia preocupante o est\u225 ? dentro del ruido?}\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 {\b Errores t\u237 ?picos:} ajustar y predecir con el mismo pliegue; usar {\f1 \fs24 ddof=0} y sorprenderse del IC; {\b recortar {\f1 \fs24 \u234 ?} sin declararlo en la tarjeta} (el {\i trimming} es una decisi\u243 ?n, no un detalle de implementaci\u243 ?n); llamar CATE al estrato.\par}
+{\pard \qc \f0 \fs24 \sa180 \li0 \fi0 \emdash\emdash\emdash\emdash\emdash\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \outlinelevel1 \b \fs32 Parte 5 \u8212- Bloque 4: tarjeta, versi\u243 ?n y champion ({\f1 \fs24 registro.py})\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \outlinelevel2 \b \fs30 Paso 5.1 \u8212- {\f1 \fs24 TODO-9}: la tarjeta\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 Siete campos ({\f1 \fs24 CAMPOS_TARJETA}): {\f1 \fs24 estimando}, {\f1 \fs24 poblacion}, {\f1 \fs24 supuestos}, {\f1 \fs24 umbrales}, {\f1 \fs24 semilla}, {\f1 \fs24 dataset_sha256}, {\f1 \fs24 estimador}. Adem\u225 ?s {\f1 \fs24 heterogeneidad} con {\b corte, umbral y regla}.\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 {\b Concepto:} la tarjeta es el contrato p\u250 ?blico. Lo que no est\u225 ? ah\u237 ?, no est\u225 ? prometido.\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \outlinelevel2 \b \fs30 Paso 5.2 \u8212- {\f1 \fs24 TODO-10}: validar la tarjeta\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 Falta un campo o una clase de supuesto que no es {\f1 \fs24 observable}/{\f1 \fs24 no_observable} \u8594 ? error.\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \outlinelevel2 \b \fs30 Paso 5.3 \u8212- {\f1 \fs24 TODO-11}: el manifiesto\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \f1 \fs24 archivos = \{n: sha256_archivo(carpeta / n) for n in ("estimacion.json", "tarjeta.json")\}\line
+_escribir(carpeta / "manifest.json", \{\line
+    "version": version, "dataset_sha256": tarjeta["dataset_sha256"],\line
+    "puerta": estado_puerta, "archivos": archivos\})\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \outlinelevel2 \b \fs30 Paso 5.4 \u8212- {\f1 \fs24 TODO-12}: integridad que recomputa\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \f1 \fs24 return all(sha256_archivo(carpeta / n) == h for n, h in m["archivos"].items())\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \outlinelevel2 \b \fs30 Paso 5.5 \u8212- {\f1 \fs24 TODO-13}: promoci\u243 ?n at\u243 ?mica\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \f1 \fs24 if manifest["puerta"] == "falla":\line
+    raise RuntimeError(f"\{version\} tiene puerta 'falla': no se promueve")\line
+tmp = REGISTRO / "champion.tmp"\line
+tmp.write_text(version + "\\n")\line
+tmp.replace(REGISTRO / "champion")     # rename at\u243 ?mico, nunca editar en sitio\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \outlinelevel2 \b \fs30 Checkpoint 3\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \f1 \fs24 make registrar\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \f1 \fs24 registrada v0001 | integridad: OK\line
+mutaci\u243 ?n detectada: S\u205 ? (hash distinto del manifiesto -> bloqueado)\line
+champion -> v0001\line
+champion resuelve a: v0001\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 {\b Ense\u241 ?ar con la mutaci\u243 ?n:} un byte a\u241 ?adido a una copia rompe el hash. La afirmaci\u243 ?n publicada se refiere a un sujeto con hash; si el hash cambia, es otra cosa.\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 {\b Errores t\u237 ?picos:} escribir {\f1 \fs24 champion} en sitio (estado intermedio); omitir {\f1 \fs24 dataset_sha256}; promover una versi\u243 ?n en {\f1 \fs24 alerta} sin aceptaci\u243 ?n expl\u237 ?cita.\par}
+{\pard \qc \f0 \fs24 \sa180 \li0 \fi0 \emdash\emdash\emdash\emdash\emdash\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \outlinelevel1 \b \fs32 Parte 6 \u8212- Bloque 5: ventanas y puerta causal ({\f1 \fs24 monitor.py})\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \outlinelevel2 \b \fs30 Paso 6.1 \u8212- {\f1 \fs24 TODO-14}: PSI\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \f1 \fs24 cortes = np.unique(np.quantile(ref, np.linspace(0, 1, bins + 1)))\line
+a = np.histogram(ref, bins=cortes)[0] / len(ref)\line
+b = np.histogram(nueva, bins=cortes)[0] / len(nueva)\line
+return float(np.sum((np.clip(a, eps, None) - np.clip(b, eps, None))\line
+                    * np.log(np.clip(a, eps, None) / np.clip(b, eps, None))))\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 {\b Concepto:} los cortes son de la {\b referencia}; el {\f1 \fs24 clip} evita {\f1 \fs24 log(0)}. Bandas convencionales: <0,1 estable \u183 ? 0,1\u8211-0,25 moderado \u183 ? \u8805 ?0,25 significativo (es un punto de partida, no una ley).\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \outlinelevel2 \b \fs30 Paso 6.2 \u8212- {\f1 \fs24 TODO-15} a {\f1 \fs24 TODO-17}: las tres ventanas\par}
+{
+\trowd \trgaph120
+\clbrdrb\brdrs\cellx2880\clbrdrb\brdrs\cellx5760\clbrdrb\brdrs\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 Ventana\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 Construcci\u243 ?n\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 Qu\u233 ? ense\u241 ?a\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2880\cellx5760\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 {\f1 \fs24 sana}\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 submuestra sin reemplazo (700 de 1033)\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 el ruido de muestreo no debe alertar\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2880\cellx5760\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 {\f1 \fs24 deriva}\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 {\f1 \fs24 age + 10} sobre una {\b copia}\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 la poblaci\u243 ?n cambi\u243 ?, no la relaci\u243 ?n\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2880\cellx5760\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 {\f1 \fs24 positividad}\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 tratados con {\f1 \fs24 re74 > p75}, controles con {\f1 \fs24 re74 < p25}\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 el soporte se rompe\par}
+\cell}
+}
+\intbl\row}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \outlinelevel2 \b \fs30 Paso 6.3 \u8212- {\f1 \fs24 TODO-18}: la puerta\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \f1 \fs24 if solape < umbrales["solape_min"]:\line
+    estado = "falla"; motivo.append(f"solapamiento roto: \{solape:.0%\} \u8230 ?")\line
+elif psi_max > umbrales["psi_alerta"]:\line
+    estado = "alerta"; motivo.append(f"deriva: PSI de \{culpable\} = \{psi_max:.2f\} \u8230 ?")\line
+if estado == "pasa" and smd_max > umbrales["smd_max"]:\line
+    estado = "alerta"; motivo.append(...)\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 {\b Concepto:} prioridad {\f1 \fs24 falla > alerta}. Una alerta {\b nombra la covariable}; sin nombre no es accionable.\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \outlinelevel2 \b \fs30 Checkpoint 4\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \f1 \fs24 make ventanas\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \f1 \fs24 [sana        ] estado = pasa   | acci\u243 ?n: continuar\line
+[deriva      ] estado = alerta | acci\u243 ?n: alertar (revisar antes de reentrenar)\line
+              - deriva: PSI de age = 1.35 (umbral 0.25)\line
+[positividad ] estado = falla  | acci\u243 ?n: abstenerse (bloquear la promoci\u243 ?n)\line
+              - solapamiento roto: 0% de unidades con e en [0.05, 0.95] (m\u237 ?nimo 50%)\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 {\b Preguntas de clase (obligatorias en el notebook):}\par}
+{\pard \ql \f0 \fs24 \sa0 \li360 \fi-360\ls3\ilvl0\tx360 {\listtext\tab 1.\tab} En {\f1 \fs24 positividad}, {\f1 \fs24 ESS/n = 1.0}: \u191 ?por qu\u233 ? no es buena se\u241 ?al? {\i (Los pesos son casi constantes dentro de cada brazo; lo que se rompi\u243 ? es el solapamiento.)}\par}
+{\pard \ql \f0 \fs24 \sa0 \li360 \fi-360\ls3\ilvl0\tx360 {\listtext\tab 2.\tab} En {\f1 \fs24 deriva}, el SMD queda en 0,19: \u191 ?por qu\u233 ? no alerta por balance? {\i (El SMD de la puerta es interno a la ventana; envejecer a todos no cambia el contraste.)}\par}
+{\pard \ql \f0 \fs24 \sa0 \li360 \fi-360\ls3\ilvl0\tx360 {\listtext\tab 3.\tab} \u191 ?Qu\u233 ? acci\u243 ?n corresponde y qu\u233 ? {\b no} se puede afirmar sobre la causa?\sa180\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 {\b Errores t\u237 ?picos:} calcular los cortes del PSI con la ventana; confundir SMD interno con deriva; mover el umbral despu\u233 ?s de ver la ventana.\par}
+{\pard \qc \f0 \fs24 \sa180 \li0 \fi0 \emdash\emdash\emdash\emdash\emdash\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \outlinelevel1 \b \fs32 Parte 7 \u8212- Bloque 6: servicio y abstenci\u243 ?n ({\f1 \fs24 servicio_core.py})\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \outlinelevel2 \b \fs30 Paso 7.1 \u8212- {\f1 \fs24 TODO-19}: el bundle\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \f1 \fs24 if "bundle" not in _cache:\line
+    version = champion()\line
+    carpeta = REGISTRO / version\line
+    _cache["bundle"] = \{"version": version,\line
+                        "estimacion": json.loads((carpeta / "estimacion.json").read_text()),\line
+                        "tarjeta": json.loads((carpeta / "tarjeta.json").read_text())\}\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 {\b Concepto:} el bundle viaja; el servicio {\b no lee los CSV}. Por eso puede correr en un contenedor sin datos.\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \outlinelevel2 \b \fs30 Paso 7.2 \u8212- {\f1 \fs24 TODO-20}: la consulta y la abstenci\u243 ?n\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \f1 \fs24 motivos = [f"\{c\}=\{float(perfil[c]):g\} fuera de [\{round(lo, 4)\}, \{round(hi, 4)\}]"\line
+           for c, (lo, hi) in rangos.items() if c in perfil\line
+           and not (lo <= float(perfil[c]) <= hi)]\line
+if motivos:\line
+    return \{"estado": "abstencion", "motivo": "; ".join(motivos), "version": b["version"]\}\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 {\b Concepto:} abstenci\u243 ?n = HTTP {\b 200 sin ning\u250 ?n n\u250 ?mero}. No es un error del cliente ni del servidor: es una respuesta v\u225 ?lida.\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \outlinelevel2 \b \fs30 Checkpoint 5\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \f1 \fs24 make humo\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \f1 \fs24 /salud: 200 \{'estado': 'ok', 'version': 'v0001', ...\}\line
+/efecto: 200 efecto=1638.6 ic95=[1001.6, 2275.7] version=v0001\line
+/consulta dentro: 200 estado=respuesta efecto=1060.1\line
+/consulta fuera (age=99): 200 estado=abstencion motivo=age=99 fuera de [18.0, 54.0]\line
+determinismo: dos llamadas id\u233 ?nticas -> iguales\line
+HUMO: OK\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 {\b Errores t\u237 ?picos:} devolver 4xx en la abstenci\u243 ?n; redondear distinto en cada llamada (rompe el determinismo); cargar el CSV en el servicio.\par}
+{\pard \qc \f0 \fs24 \sa180 \li0 \fi0 \emdash\emdash\emdash\emdash\emdash\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \outlinelevel1 \b \fs32 Parte 8 \u8212- El entregable: adaptar todo a {\f1 \fs24 real/ihdp}\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 La tarea es {\b cambiar de escenario sin reescribir el m\u233 ?todo}. El c\u243 ?digo qued\u243 ? param\u233 ?trico ({\f1 \fs24 SIC_ESCENARIO}), as\u237 ? que el trabajo es decidir y declarar.\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \outlinelevel2 \b \fs30 Paso 8.1 \u8212- Descubrir el escenario (sin mirar el efecto)\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \f1 \fs24 import json, pathlib\line
+meta = json.loads((esc / "metadata.json").read_text())\line
+ident = json.loads((esc / "identification.json").read_text())\line
+meta["description"], meta["outcome"], ident["valid_adjustment_sets"][0]\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \outlinelevel2 \b \fs30 Paso 8.2 \u8212- Declarar el esquema\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 {\f1 \fs24 resultado = "outcome"}, {\b 25 covariables} ({\f1 \fs24 bw \u8230 ? was}). En el c\u243 ?digo: {\f1 \fs24 RESULTADO} y {\f1 \fs24 COVARIABLES} por escenario; {\f1 \fs24 EsquemaCausal()} los toma de ah\u237 ?.\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \outlinelevel2 \b \fs30 Paso 8.3 \u8212- Declarar el corte {\b antes} de estimar\par}
+{
+\trowd \trgaph120
+\clbrdrb\brdrs\cellx2880\clbrdrb\brdrs\cellx5760\clbrdrb\brdrs\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 Decisi\u243 ?n\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 Regla\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 Por qu\u233 ?\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2880\cellx5760\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 Corte\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 {\f1 \fs24 bw} en la mediana de train\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 es el eje cl\u237 ?nico del IHDP; la mediana preserva tama\u241 ?o en ambas hojas; {\b no} se eligi\u243 ? por ganancia de varianza\par}
+\cell}
+}
+\intbl\row}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \outlinelevel2 \b \fs30 Paso 8.4 \u8212- Recalibrar umbrales con justificaci\u243 ?n\par}
+{
+\trowd \trgaph120
+\clbrdrb\brdrs\cellx2160\clbrdrb\brdrs\cellx4320\clbrdrb\brdrs\cellx6480\clbrdrb\brdrs\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 Umbral\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 jobs\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 ihdp\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 Justificaci\u243 ?n\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2160\cellx4320\cellx6480\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 {\f1 \fs24 solape_min}\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 0,50\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 {\b 0,30}\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 25 covariables y P(D=1)=0,43 estrechan el soporte; 0,50 rechazar\u237 ?a poblaciones leg\u237 ?timas\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2160\cellx4320\cellx6480\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 {\f1 \fs24 smd_max}\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 0,25\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 {\b 0,50}\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 m\u225 ?ximo de 25 SMD tiene EE \u8776 ? 0,096; el ruido esperado llega a 0,3\u8211-0,4\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2160\cellx4320\cellx6480\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 {\f1 \fs24 psi_alerta}\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 0,25\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 0,25\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 convenci\u243 ?n; la deriva sint\u233 ?tica cae muy por encima (0,88)\par}
+\cell}
+}
+\intbl\row}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \outlinelevel2 \b \fs30 Paso 8.5 \u8212- Adaptar ventanas y la trampa\par}
+{\pard \ql \f0 \fs24 \sa0 \li360 \fi-360\ls4\ilvl0\tx360 {\listtext\tab \bullet \tab} Deriva: {\f1 \fs24 bw + 1} (covariables estandarizadas, +1 \u8776 ? una desviaci\u243 ?n est\u225 ?ndar).\par}
+{\pard \ql \f0 \fs24 \sa0 \li360 \fi-360\ls4\ilvl0\tx360 {\listtext\tab \bullet \tab} Positividad: eje {\f1 \fs24 bw}, la covariable con mayor |SMD| de tratamiento en train.\par}
+{\pard \ql \f0 \fs24 \sa0 \li360 \fi-360\ls4\ilvl0\tx360 {\listtext\tab \bullet \tab} Sana: 300 de 448 (mismo criterio que 700 de 1033).\par}
+{\pard \ql \f0 \fs24 \sa0 \li360 \fi-360\ls4\ilvl0\tx360 {\listtext\tab \bullet \tab} Trampa: ruido reescalado a la unidad del resultado (\u963 ? = 1,0 punto).\sa180\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \outlinelevel2 \b \fs30 Paso 8.6 \u8212- Generar y auditar\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \f1 \fs24 make limpiar && SIC_ESCENARIO=real/ihdp make demo\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \f1 \fs24 esquema valida contra observed_train: OK (n = 448, tratados = 191)\line
+ATE OLS (25 controles) = 4.8 | SE = 0.5 | IC95 = [3.8, 5.8]\line
+AIPW cross-fitting K=5 = 5.2 | SE = 0.6 | IC95 = [3.9, 6.4]\line
+estrato bw=1 (bw alto, n=224): efecto 7.2 IC95 [5.5, 8.8]\line
+estrato bw=0 (bw bajo, n=224): efecto 3.2 IC95 [1.4, 4.9]\line
+[sana] pasa \u183 ? [deriva] alerta (PSI de bw = 0.88) \u183 ? [positividad] falla (solape 0%)\line
+HUMO: OK\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 {\b Auditor\u237 ?a:}\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \f1 \fs24 cat artifacts/registro/champion\line
+jq -r '.archivos | to_entries[] | "\\(.value)  artifacts/registro/v0001/\\(.key)"' \\\line
+  artifacts/registro/v0001/manifest.json > /tmp/v1.sha256\line
+shasum -a 256 -c /tmp/v1.sha256          # 2/2 OK\line
+jq -r '.dataset_sha256' artifacts/registro/v0001/manifest.json   # 9af86718\u8230 ?\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \outlinelevel2 \b \fs30 Paso 8.7 \u8212- Escribir la pregunta propia\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 {\f1 \fs24 pregunta_ihdp.md} con el mismo formato: pregunta, estimando, poblaci\u243 ?n, supuestos con su clase y qu\u233 ? {\b no} afirma. {\b Cuidado con la redacci\u243 ?n:} \u171 ?de los ni\u241 ?os que lo recibieron\u187 ? describe el ATT, no el ATE que se estima. Escribir \u171 ?efecto promedio en la poblaci\u243 ?n del estudio\u187 ? o cambiar el estimando de forma expl\u237 ?cita.\par}
+{\pard \qc \f0 \fs24 \sa180 \li0 \fi0 \emdash\emdash\emdash\emdash\emdash\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \outlinelevel1 \b \fs32 Parte 9 \u8212- Notebook y evidencias\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \f1 \fs24 jupyter lab proyecto.ipynb        # kernel: "Python (SIC estudiante)"\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 o sin interfaz:\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \f1 \fs24 jupyter nbconvert --to notebook --execute --inplace \\\line
+  --ExecutePreprocessor.kernel_name=sic-estudiante proyecto.ipynb\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 Esperado: 13 celdas de c\u243 ?digo, {\b 0 errores}, 19 salidas, gr\u225 ?fico con los dos estratos y sus IC.\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 {\b Qu\u233 ? debe quedar escrito en el notebook:} las 3 respuestas de ventanas, la tabla de n\u250 ?meros de {\f1 \fs24 ihdp}, las 5 respuestas de cierre y la salida de {\f1 \fs24 make humo} sobre {\f1 \fs24 ihdp}.\par}
+{\pard \ql \f0 \fs24 \sa180 \li720 \fi0 {\b Advertencia operativa:} los checkpoints del notebook corren sobre {\f1 \fs24 jobs} y sobrescriben los artefactos. Al terminar: {\f1 \fs24 make limpiar && SIC_ESCENARIO=real/ihdp make demo}.\par}
+{\pard \qc \f0 \fs24 \sa180 \li0 \fi0 \emdash\emdash\emdash\emdash\emdash\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \outlinelevel1 \b \fs32 Parte 10 \u8212- Extensi\u243 ?n: servicio utilizable (opcional, si hay tiempo)\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \outlinelevel2 \b \fs30 10.1 \u8212- Rutas adicionales\par}
+{
+\trowd \trgaph120
+\clbrdrb\brdrs\cellx4320\clbrdrb\brdrs\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 Ruta\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 Sem\u225 ?ntica\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 {\f1 \fs24 GET /efecto}\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 ATE poblacional\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 {\f1 \fs24 POST /consulta}\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 media del {\b estrato} declarado\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 {\f1 \fs24 POST /efecto_individual}\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 proyecci\u243 ?n lineal del score para un perfil\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 {\f1 \fs24 ?formato=texto}\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 informe legible en lugar de JSON\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 {\f1 \fs24 GET /}\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 formulario con las covariables del escenario\par}
+\cell}
+}
+\intbl\row}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 {\f1 \fs24 /efecto_individual} ajusta {\f1 \fs24 modelo_individual} (proyecci\u243 ?n del score sobre X) y registra coeficientes + covarianza; {\b no} guarda scores por unidad (la regla proh\u237 ?be {\f1 \fs24 tau}/{\f1 \fs24 y0}/{\f1 \fs24 y1} en el bundle). Devuelve {\f1 \fs24 ajuste_r2} y {\f1 \fs24 confianza_discriminacion} porque la proyecci\u243 ?n apenas discrimina (0,095 en {\f1 \fs24 ihdp}, 0,012 en {\f1 \fs24 jobs}).\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \outlinelevel2 \b \fs30 10.2 \u8212- Contenedor\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \f1 \fs24 docker build -t puente:0.1.0 .\line
+docker run -d --name puente -p 8000:8000 puente:0.1.0\line
+docker inspect --format '\{\{.State.Health.Status\}\}' puente   # healthy\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 {\b Las tres trampas (buen ejercicio de depuraci\u243 ?n):}\par}
+{
+\trowd \trgaph120
+\clbrdrb\brdrs\cellx2880\clbrdrb\brdrs\cellx5760\clbrdrb\brdrs\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 S\u237 ?ntoma\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 Causa\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 Arreglo\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2880\cellx5760\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 {\f1 \fs24 FileNotFoundError: No encontr\u233 ? data_benchmark_causal/}\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 {\f1 \fs24 DATOS} se resolv\u237 ?a al importar y el contenedor no trae el benchmark\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 tolerar su ausencia: el servicio solo usa {\f1 \fs24 artifacts/}\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2880\cellx5760\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 {\f1 \fs24 ModuleNotFoundError: No module named 'registro'}\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 {\f1 \fs24 servicio_core} importa {\f1 \fs24 champion} y el {\f1 \fs24 Dockerfile} no copiaba {\f1 \fs24 registro.py}\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 a\u241 ?adirlo al {\f1 \fs24 COPY}\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2880\cellx5760\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 {\f1 \fs24 PermissionError: /app/servicio.py}\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 archivos en modo {\f1 \fs24 600} con usuario no-root\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 {\f1 \fs24 RUN chmod -R a+rX /app}\par}
+\cell}
+}
+\intbl\row}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \par}
+{\pard \qc \f0 \fs24 \sa180 \li0 \fi0 \emdash\emdash\emdash\emdash\emdash\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \outlinelevel1 \b \fs32 Parte 11 \u8212- Qu\u233 ? se eval\u250 ?a (r\u250 ?brica formativa)\par}
+{
+\trowd \trgaph120
+\clbrdrb\brdrs\cellx4320\clbrdrb\brdrs\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 Criterio\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 Se\u241 ?al observable\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 Estimando declarado y cubierto\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 la tabla distingue ATE de estrato y dice qu\u233 ? cubre cada IC\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 Reproducibilidad\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 {\f1 \fs24 make demo} desde cero regenera los n\u250 ?meros\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 Puerta honesta\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 la ventana de positividad bloquea y el motivo nombra la se\u241 ?al\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 Abstenci\u243 ?n\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 {\f1 \fs24 /consulta} fuera de soporte responde 200 {\b sin} n\u250 ?mero\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 Corte pre-declarado\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 la regla est\u225 ? en la tarjeta, no elegida por ganancia\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 Umbrales justificados\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 dos l\u237 ?neas por umbral, calibradas para {\f1 \fs24 ihdp}\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 Artefactos\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 {\f1 \fs24 v0001} con manifiesto verificado y {\f1 \fs24 champion}\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 Prohibiciones\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 nada de {\f1 \fs24 truth}, {\f1 \fs24 y0}, {\f1 \fs24 y1} ni {\f1 \fs24 tau} en bundle o servicio\par}
+\cell}
+}
+\intbl\row}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \par}
+{\pard \qc \f0 \fs24 \sa180 \li0 \fi0 \emdash\emdash\emdash\emdash\emdash\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \outlinelevel1 \b \fs32 Parte 12 \u8212- Errores frecuentes (y qu\u233 ? ense\u241 ?an)\par}
+{
+\trowd \trgaph120
+\clbrdrb\brdrs\cellx2880\clbrdrb\brdrs\cellx5760\clbrdrb\brdrs\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 S\u237 ?ntoma\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 Causa\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 Soluci\u243 ?n\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2880\cellx5760\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 {\f1 \fs24 ModuleNotFoundError: fastapi} en {\f1 \fs24 make humo}\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 kernel o {\f1 \fs24 python3} distinto del entorno\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 activar el entorno o registrarlo como {\f1 \fs24 sic-estudiante}\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2880\cellx5760\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 {\f1 \fs24 /consulta} se abstiene con un perfil v\u225 ?lido\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 {\f1 \fs24 SIC_ESCENARIO} \u8800 ? artefactos del registro\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 {\f1 \fs24 make limpiar} y regenerar con el escenario correcto\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2880\cellx5760\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 {\f1 \fs24 make ventanas} dice que falta {\f1 \fs24 tarjeta.json}\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 no se ejecut\u243 ? {\f1 \fs24 make registrar}\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 el registro precede a la puerta y al servicio\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2880\cellx5760\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 {\f1 \fs24 ValueError: truth_train.csv}\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 alguien reintrodujo la verdad\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 es la pared funcionando: retirar el archivo\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2880\cellx5760\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 {\f1 \fs24 docker build} falla con {\f1 \fs24 docker.sock}\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 daemon apagado\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 {\f1 \fs24 colima start}\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2880\cellx5760\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 El notebook abre con otro kernel\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 {\f1 \fs24 sic-estudiante} sin registrar\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 Paso 1.2\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2880\cellx5760\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 El formulario rechaza los valores por defecto\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 {\f1 \fs24 step} fijo con {\f1 \fs24 min} decimal\par}
+\cell}
+{{\pard\intbl \ql \f0 \fs24 \sa0 \li0 \fi0 {\f1 \fs24 step="any"}\par}
+\cell}
+}
+\intbl\row}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \par}
+{\pard \qc \f0 \fs24 \sa180 \li0 \fi0 \emdash\emdash\emdash\emdash\emdash\par}
+{\pard \ql \f0 \fs24 \sa180 \li0 \fi0 \outlinelevel1 \b \fs32 Parte 13 \u8212- Fuera de alcance (por dise\u241 ?o)\par}
+{\pard \ql \f0 \fs24 \sa0 \li360 \fi-360\ls5\ilvl0\tx360 {\listtext\tab \bullet \tab} Learners no lineales y {\i repeated cross-fitting}: eso es el proyecto final.\par}
+{\pard \ql \f0 \fs24 \sa0 \li360 \fi-360\ls5\ilvl0\tx360 {\listtext\tab \bullet \tab} CATE continuo o pol\u237 ?ticas: el corte es de dos hojas y se informa como tal.\par}
+{\pard \ql \f0 \fs24 \sa0 \li360 \fi-360\ls5\ilvl0\tx360 {\listtext\tab \bullet \tab} Autenticaci\u243 ?n, TLS, persistencia, monitorizaci\u243 ?n en vivo.\par}
+{\pard \ql \f0 \fs24 \sa0 \li360 \fi-360\ls5\ilvl0\tx360 {\listtext\tab \bullet \tab} {\f1 \fs24 interventions.json} contiene {\f1 \fs24 ate}/{\f1 \fs24 att}: es el hueco de la pared; no se usa para estimar, decidir ni calibrar.\par}
+{\pard \ql \f0 \fs24 \sa0 \li360 \fi-360\ls5\ilvl0\tx360 {\listtext\tab \bullet \tab} Un escenario por artefacto: cambiar de escenario exige regenerar y reiniciar el servicio.\sa180\par}
+}
