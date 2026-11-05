@@ -95,6 +95,14 @@ def main() -> int:
     ok &= (r7.status_code == 200 and "EFECTO PARA UN PERFIL" in r7.text)
     print(f"/efecto_individual?formato=texto: {r7.status_code} encabezado OK")
 
+    r8 = c.get("/")
+    ok &= r8.status_code == 200 and "<form" in r8.text and "Estimar" in r8.text
+    print(f"/ (formulario): {r8.status_code} — {r8.text.count('<input')} campos")
+
+    r9 = c.get("/calcular", params={k: v for k, v in dentro.items()})
+    ok &= r9.status_code == 200 and "EFECTO PARA UN PERFIL" in r9.text
+    print(f"/calcular: {r9.status_code} informe generado")
+
     print("\nHUMO:", "OK" if ok else "FALLÓ")
     return 0 if ok else 1
 

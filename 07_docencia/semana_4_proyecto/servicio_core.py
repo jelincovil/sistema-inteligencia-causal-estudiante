@@ -170,6 +170,18 @@ def consulta(perfil: dict) -> dict:
     }
 
 
+def campos_formulario() -> dict:
+    """Covariables del escenario con rango y valor sugerido (para el formulario)."""
+    est = _cargar()["estimacion"]
+    campos = {}
+    for covariable, (lo, hi) in est["rangos_covariables"].items():
+        umbral = est["estratos"]["umbral"]
+        sugerido = (umbral + (hi - umbral) / 2) if covariable == est["estratos"]["variable"] \
+            else (lo + hi) / 2
+        campos[covariable] = {"min": lo, "max": hi, "valor": round(sugerido, 2)}
+    return campos
+
+
 def efecto_individual(perfil: dict) -> dict:
     """Efecto esperado para un perfil nuevo, o abstención fuera de soporte.
 

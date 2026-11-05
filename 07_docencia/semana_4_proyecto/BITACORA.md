@@ -528,3 +528,19 @@ Alcance   : la media del efecto en este estrato; NO el ATE poblacional ni un efe
 
 Verificado en el contenedor (`?formato=texto` en `/efecto`, `/consulta` y
 `/efecto_individual`, incluida la abstención) y en `make humo`.
+
+---
+
+## 14. Formulario web
+
+**Qué:** `GET /` sirve un formulario con las 25 covariables (rango de entrenamiento como
+`min`/`max`, valores sugeridos en el punto medio) y `GET /calcular` devuelve el informe del
+perfil en HTML.
+
+**Por qué:** el JSON de entrada tiene sentido para un cliente; para una persona, 25 claves
+son una barrera. El formulario reutiliza exactamente el mismo `efecto_individual`, así que
+no duplica lógica ni relaja controles: el servidor revalida el soporte aunque el navegador
+ya limite los valores.
+
+**Evidencia:** `GET /` → 200 con 25 `<input>`; `/calcular` con perfil válido → «EFECTO PARA
+UN PERFIL»; con `bw=99` → «ABSTENCIÓN». `make humo` lo cubre con dos comprobaciones.

@@ -281,6 +281,18 @@ El JSON incorpora los mismos juicios en campos propios: `efecto_texto`
 («3,2 puntos de test cognitivo (IC 95 %: 1,4 a 4,9)») e `interpretacion` (si el intervalo
 excluye el cero). Las abstenciones también se leen así, con el motivo y sin ningún número.
 
+### 6.2.3 Formulario (para humano, no para máquina)
+
+**http://localhost:8000/** — un formulario con los 25 campos del escenario, ya rellenos con
+el punto medio del rango (y `bw` dentro del estrato alto). Al pulsar *Estimar* abre
+`/calcular?...` con el informe legible del perfil. Fuera de rango → abstención visible.
+
+Los campos usan el rango de entrenamiento como `min`/`max`, así que el navegador avisa
+antes de enviar; el servidor vuelve a verificar de todos modos.
+
+`make humo` comprueba que el formulario tiene los 25 campos y que `/calcular` devuelve
+informe.
+
 `ajuste_r2` es la parte honesta: **0,095** en `ihdp` y **0,012** en `jobs`. Es decir, la
 proyección apenas distingue entre perfiles; el endpoint lo declara (`confianza_discriminacion`:
 *baja* / *muy baja*) en vez de presentar el número como un efecto individual fiable.
