@@ -5,6 +5,7 @@ Se completa en vivo: la carga del bundle champion y la consulta con soporte.
 from __future__ import annotations
 
 import json
+import math
 
 from rutas import REGISTRO
 from registro import champion
@@ -96,6 +97,75 @@ def consulta(perfil: dict) -> dict:
     }
 
 
+def efecto_individual(perfil: dict) -> dict:
+    """Efecto esperado para un perfil nuevo, o abstención fuera de soporte.
+
+    Devuelve la proyección lineal del score AIPW sobre las covariables del perfil.
+    No es un CATE validado: el IC es condicional al modelo y al ajuste lineal.
+    """
+    b = _cargar()
+    est = b["estimacion"]
+    modelo = est.get("modelo_individual")
+    if modelo is None:
+        return {"estado": "abstencion",
+                "motivo": "el bundle de esta versión no trae modelo_individual",
+                "version": b["version"]}
+
+    covariables = list(modelo["coeficientes"])
+    faltan = [c for c in covariables if c not in perfil]
+    if faltan:
+        return {"estado": "abstencion",
+                "motivo": f"faltan covariables del perfil: {faltan}",
+                "version": b["version"]}
+
+    motivos = []
+    for covariable, (lo, hi) in est["rangos_covariables"].items():
+        valor = float(perfil[covariable])
+        if valor < lo or valor > hi:
+            motivos.append(f"{covariable}={valor:g} fuera de "
+                           f"[{round(lo, 4)}, {round(hi, 4)}]")
+    if motivos:
+        return {"estado": "abstencion", "motivo": "; ".join(motivos),
+                "version": b["version"]}
+
+    z = [(float(perfil[c]) - modelo["medias"][c]) / modelo["desviaciones"][c]
+         for c in covariables]
+    beta = [modelo["coeficientes"][c] for c in covariables]
+    tau = modelo["intercepto"] + sum(bj * zj for bj, zj in zip(beta, z))
+
+    # Varianza de la predicción: z' Cov(beta) z (incluye el intercepto).
+    v = [1.0, *z]
+    cov = modelo["cov_beta"]
+    var = sum(v[i] * cov[i][j] * v[j]
+              for i in range(len(v)) for j in range(len(v)))
+    se = float(math.sqrt(max(var, 0.0)))
+
+    aviso = None
+    if max(abs(zj) for zj in z) > 2.5:
+        aviso = ("perfil en el borde del soporte: la proyección lineal extrapola "
+                 "y el IC subestima la incertidumbre")
+
+    r2 = float(modelo["r2"])
+    discriminacion = ("muy baja" if r2 < 0.05 else
+                      "baja" if r2 < 0.15 else "moderada")
+
+    return {
+        "estado": "respuesta",
+        "estimando": ("efecto esperado del programa para un perfil con estas "
+                      "covariables (proyección lineal del score AIPW)"),
+        "efecto": round(float(tau), 1),
+        "unidad": est["unidad"],
+        "ic95": [round(float(tau - 1.96 * se), 1), round(float(tau + 1.96 * se), 1)],
+        "que_cubre_el_ic": ("la proyección lineal, condicional a los scores AIPW; "
+                            "NO cubre el sesgo de especificación lineal ni es un CATE validado"),
+        "ajuste_r2": round(r2, 3),
+        "confianza_discriminacion": discriminacion,
+        "n_entrenamiento": modelo["n"],
+        "aviso": aviso,
+        "version": b["version"],
+    }
+
+
 def efecto_lista_de_prueba() -> list[str]:
     """Auxiliar para el humo: las rutas que la prueba de humo ejercita."""
-    return ["/salud", "/efecto", "/consulta"]
+    return ["/salud", "/efecto", "/consulta", "/efecto_individual"]

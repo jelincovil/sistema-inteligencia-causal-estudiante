@@ -72,6 +72,19 @@ def main() -> int:
     ok &= r3.json() == j1
     print(f"determinismo: dos llamadas idénticas -> {'iguales' if r3.json() == j1 else 'DISTINTAS'}")
 
+    r4 = c.post("/efecto_individual", json=dentro)
+    j4 = r4.json()
+    ok &= r4.status_code == 200 and j4.get("estado") == "respuesta" and "efecto" in j4
+    print(f"/efecto_individual dentro: {r4.status_code} estado={j4.get('estado')} "
+          f"efecto={j4.get('efecto')} ic95={j4.get('ic95')} r2={j4.get('ajuste_r2')}")
+
+    r5 = c.post("/efecto_individual", json=fuera)
+    j5 = r5.json()
+    ok &= (r5.status_code == 200 and j5.get("estado") == "abstencion"
+           and "efecto" not in j5)
+    print(f"/efecto_individual fuera ({cambiada}={fuera[cambiada]:g}): "
+          f"{r5.status_code} estado={j5.get('estado')} (sin número)")
+
     print("\nHUMO:", "OK" if ok else "FALLÓ")
     return 0 if ok else 1
 

@@ -26,3 +26,13 @@ def efecto() -> dict:
 def consulta(perfil: dict) -> dict:
     """Perfil: {age, educ, black, hispan, married, nodegree, re74, re75}."""
     return nucleo.consulta(perfil)
+
+
+@app.post("/efecto_individual")
+def efecto_individual(perfil: dict) -> dict:
+    """Efecto esperado para un perfil nuevo (proyección lineal del score AIPW).
+
+    Perfil: todas las covariables del escenario. Fuera del soporte de
+    entrenamiento responde abstención (HTTP 200, sin número).
+    """
+    return nucleo.efecto_individual(perfil)

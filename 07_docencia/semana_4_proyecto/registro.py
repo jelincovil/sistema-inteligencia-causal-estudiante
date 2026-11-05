@@ -61,6 +61,13 @@ def construir_tarjeta(estimacion: dict) -> dict:
             "corte": estimacion["estratos"]["variable"],
             "umbral": estimacion["estratos"]["umbral"],
             "regla": estimacion["estratos"]["regla"],
+            "nota": estimacion["estratos"]["nota"],
+            "modelo_individual": {
+                "tipo": estimacion["modelo_individual"]["tipo"],
+                "r2": round(estimacion["modelo_individual"]["r2"], 3),
+                "que_cubre": ("proyección lineal del score AIPW: efecto esperado para un "
+                              "perfil, no un CATE validado"),
+            },
             "que_cubre": "media de scores AIPW del estrato, no un CATE individual",
         },
     }

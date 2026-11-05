@@ -472,3 +472,32 @@ healthcheck -> healthy
 
 Pendiente si el servicio sale del ámbito interno: verificación de hash al cargar el bundle,
 autenticación, TLS y métricas (ver §12 del `PLAN_DEMO_2H.md`).
+
+---
+
+## 12. Endpoint de efecto individual (API)
+
+**Qué:** `POST /efecto_individual` recibe un perfil completo de covariables y devuelve el
+efecto esperado para ese perfil, con IC, `ajuste_r2` y abstención fuera de soporte.
+
+**Cómo:** `estimacion.modelo_individual` ajusta una **proyección lineal del score AIPW**
+sobre las covariables y guarda intercepto, coeficientes, medias/desviaciones y la matriz de
+covarianza (27×27) en `estimacion.json`. El IC usa `z' Cov(β) z` incluyendo el intercepto.
+
+**Por qué así y no guardando los scores:** la regla de la entrega prohíbe `tau`, `y0` ni `y1`
+en el bundle. Un modelo de 27 coeficientes es auditable y no expone pseudo-resultados por
+unidad.
+
+**Límite declarado (y medido):** no es un CATE validado, y la proyección apenas discrimina:
+`r2 = 0,095` en `ihdp` y `0,012` en `jobs`. Por eso la respuesta incluye
+`confianza_discriminacion` (`baja` / `muy baja`) y `que_cubre_el_ic`. Es preferible un número
+con su advertencia que un número con apariencia de efecto individual.
+
+**Evidencia:**
+
+```text
+ihdp  perfil dentro -> 9.1 [6.1, 12.0] · r2 0.095 · "baja"
+jobs  perfil dentro -> 398.8 [-1663.3, 2461.0] · r2 0.012 · "muy baja"
+ahora fuera de rango -> abstencion (HTTP 200, sin número)
+contenedor rebuild -> healthy; /docs incluye la ruta nueva
+```

@@ -181,6 +181,37 @@ def trampa_score_post(col: dict, esquema: EsquemaCausal) -> dict:
     return ate_ols(col, esquema, extra={"valores": score})
 
 
+def modelo_individual(score: np.ndarray, col: dict, esquema: EsquemaCausal) -> dict:
+    """Proyección lineal del score AIPW sobre X: efecto esperado para un perfil.
+
+    No es un CATE validado: es la mejor aproximación lineal al score doblemente
+    robusto. Se registra el modelo (coeficientes y covarianza), nunca los scores
+    por unidad (la regla del kit prohíbe `tau` en el bundle).
+    """
+    X = np.column_stack([col[c] for c in esquema.covariables])
+    medias, desviaciones = X.mean(0), X.std(0)
+    Z = (X - medias) / desviaciones
+    M = np.column_stack([np.ones(len(score)), Z])
+    beta = np.linalg.lstsq(M, score, rcond=None)[0]
+    residuo = score - M @ beta
+    gl = len(score) - M.shape[1]
+    sigma2 = float(residuo @ residuo / gl)
+    cov_beta = sigma2 * np.linalg.pinv(M.T @ M)
+    ss_total = float(((score - score.mean()) ** 2).sum())
+    r2 = 1.0 - float(residuo @ residuo) / ss_total if ss_total > 0 else 0.0
+    return {
+        "tipo": "proyección lineal del score AIPW sobre las covariables",
+        "intercepto": float(beta[0]),
+        "coeficientes": {c: float(b) for c, b in zip(esquema.covariables, beta[1:])},
+        "medias": {c: float(m) for c, m in zip(esquema.covariables, medias)},
+        "desviaciones": {c: float(s) for c, s in zip(esquema.covariables, desviaciones)},
+        "cov_beta": [[float(v) for v in fila] for fila in cov_beta],
+        "r2": r2,
+        "n": int(len(score)),
+        "semilla": SEMILLA,
+    }
+
+
 def estimar() -> dict:
     esquema = EsquemaCausal()
     col = leer("train")
@@ -192,6 +223,7 @@ def estimar() -> dict:
     trampa = trampa_score_post(col, esquema)
     aipw = aipw_crossfit(col, esquema)
     estratos = estratos_heterogeneidad(aipw["scores"], col, esquema)
+    individual = modelo_individual(aipw["scores"], col, esquema)
 
     e = propensity(X, D)
     solape = float(((e >= 0.05) & (e <= 0.95)).mean())
@@ -208,6 +240,7 @@ def estimar() -> dict:
         "estimador_principal": "AIPW con cross-fitting (K=5, nuisances fuera de muestra)",
         "ate_aipw": aipw["ate"], "se_aipw": aipw["se"], "ic_aipw": aipw["ic"],
         "estratos": estratos,
+        "modelo_individual": individual,
         "ate_trampa_score_post": trampa["ate"],
         "ess": ess_kish(D, e), "ess_sobre_n": ess_kish(D, e) / len(D),
         "rango_e": [float(e.min()), float(e.max())],

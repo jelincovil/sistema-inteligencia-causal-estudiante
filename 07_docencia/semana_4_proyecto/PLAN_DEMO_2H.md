@@ -228,6 +228,37 @@ curl -s -X POST localhost:8000/consulta -H "Content-Type: application/json" \
 La segunda llamada responde `{"estado": "abstencion", "motivo": "age=99 fuera de [18.0, 54.0]", ...}`
 sin ningún número.
 
+### 6.2.1 Efecto para un perfil nuevo
+
+```sh
+curl -s -X POST localhost:8000/efecto_individual \
+  -H "Content-Type: application/json" \
+  -d '{"bw":1.5,"b.head":0.5,"preterm":0.2,"birth.o":0.1,"nnhealth":-0.3,
+       "momage":0.4,"sex":0.1,"twin":-0.2,"b.marr":0.3,"mom.lths":-0.1,
+       "mom.hs":0.2,"mom.scoll":0.0,"cig":0.1,"first":0.0,"booze":-0.2,
+       "drugs":0.1,"work.dur":0.2,"prenatal":0.0,"ark":0.1,"ein":-0.1,
+       "har":0.0,"mia":0.2,"pen":0.0,"tex":0.1,"was":-0.2}' | jq .
+```
+
+```json
+{"estado": "respuesta", "efecto": 8.2, "unidad": "puntos de test cognitivo",
+ "ic95": [5.7, 10.8], "ajuste_r2": 0.095, "confianza_discriminacion": "baja",
+ "que_cubre_el_ic": "la proyección lineal, condicional a los scores AIPW; NO cubre el sesgo de especificación lineal ni es un CATE validado",
+ "n_entrenamiento": 448, "aviso": null, "version": "v0001"}
+```
+
+Cómo funciona: `estimacion.modelo_individual` ajusta una **proyección lineal del score AIPW**
+sobre las covariables (coeficientes + matriz de covarianza, que se registran en la versión).
+El servicio evalúa esa proyección en el perfil y **se abstiene** si algún valor cae fuera del
+rango de entrenamiento; si el perfil está en el borde (|z| > 2,5) añade un `aviso`.
+
+`ajuste_r2` es la parte honesta: **0,095** en `ihdp` y **0,012** en `jobs`. Es decir, la
+proyección apenas distingue entre perfiles; el endpoint lo declara (`confianza_discriminacion`:
+*baja* / *muy baja*) en vez de presentar el número como un efecto individual fiable.
+
+En el bundle viajan 27 coeficientes y su covarianza, **no** los 448 pseudo-resultados: la
+regla del kit prohíbe `tau`, `y0` y `y1` en el artefacto.
+
 ### 6.3 En contenedor (el bundle viaja, los datos no)
 
 ```sh

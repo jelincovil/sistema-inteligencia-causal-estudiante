@@ -35,6 +35,12 @@
     "corte": "bw",
     "umbral": -0.01334726950142505,
     "regla": "corte único por peso al nacer (bw) en la mediana de train: es el eje clínico del IHDP (bajo peso al nacer define la población del estudio), declarado antes de mirar los efectos y NO elegido por ganancia de varianza; la mediana preserva tamaño en ambas hojas",
+    "nota": "los intervalos de los estratos no se solapan: diferencia consistente con el corte declarado, pero no es un CATE",
+    "modelo_individual": {
+      "tipo": "proyección lineal del score AIPW sobre las covariables",
+      "r2": 0.095,
+      "que_cubre": "proyección lineal del score AIPW: efecto esperado para un perfil, no un CATE validado"
+    },
     "que_cubre": "media de scores AIPW del estrato, no un CATE individual"
   }
 }
