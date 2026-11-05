@@ -70,9 +70,9 @@ Decisiones:
 
 - **No se crea `.venv` propio**: el env anterior ya cubre `requirements.txt` completo
   (incluido `fastapi`, que es lo único que falta en `causal_env` y en miniforge base).
-- **Kernel del notebook**: el `.ipynb` pide `sic-estudiante`, que no está registrado.
+- **Kernel del notebook**: el `.ipynb` pide `sic-estudiante`, que no estaba registrado.
   Como las celdas `!make` heredan el `PATH` del kernel, el kernel determina qué
-  `python3` ejecuta los scripts. Alias propuesto (un puntero, no una instalación):
+  `python3` ejecuta los scripts. Quedó registrado (un puntero, no una instalación):
 
 ```sh
 /opt/homebrew/Caskroom/miniforge/base/envs/temp_causal_env/bin/python \
@@ -409,3 +409,36 @@ PATH=/opt/homebrew/Caskroom/miniforge/base/envs/temp_causal_env/bin:/usr/bin:/bi
 /consulta fuera (age=99): 200 estado=abstencion motivo=age=99 fuera de [18.0, 54.0]
 HUMO: OK
 ```
+
+---
+
+## 10. Cierre
+
+**Plan de demostración.** `PLAN_DEMO_2H.md`: agenda de 2 h con puertas de salida, reglas
+de parada (D06), validación externa de los umbrales y guion de 10 minutos. Protocolos
+tomados de la memoria (mem0, `user_id=memo_enrique`): D06, D02, AC01/AC03, R02/E04/E03,
+DL04 y la separación de DoD (auditoría vs envío).
+
+**Ensayo cronometrado (dos veces, desde `make limpiar`):**
+
+| Ensayo | Tiempo | Resultado |
+|---|---|---|
+| A — `jobs` | **1,55 s** | 5/5 checkpoints · AIPW 1638.6 · ventanas `pasa/alerta/falla` · HUMO OK |
+| B — `ihdp` (estado final) | **1,52 s** | AIPW 5,2 [3,9; 6,4] · estratos 7,2 / 3,2 · ventanas `pasa/alerta/falla` · HUMO OK |
+
+Conclusión de calibración: el presupuesto de 2 h **no** se gasta en cómputo (≈2 s), sino en
+ensayo, guion y recorte de alcance.
+
+**Corrección de dependencias.** `requirements.txt` no cubría lo que el propio kit pide:
+se añadieron `matplotlib` (celda del gráfico), `ipykernel` (kernel del notebook) y
+`jupyterlab` (el `LEEME_PRIMERO` invoca `jupyter lab`). Sin ellas, una instalación limpia
+falla en la celda 11 y no hay kernel. Hallazgo 5, resuelto.
+
+**Pendiente para el usuario (fuera del alcance del trabajo):** mover el `tar.gz` del
+baseline de `/tmp` a `~/backups/`. El kernel `sic-estudiante` **ya quedó registrado**
+(`~/Library/Jupyter/kernels/sic-estudiante`, apuntando a `temp_causal_env`), así que el
+notebook abre con el kernel que pide su metadata sin tocar nada más.
+
+**Estado final.** Artefactos `ihdp` `v0001` con manifiesto verificado
+(`dataset_sha256 = 9af86718…`); árbol limpio; tags
+`semana4-kit-original` → `semana4-ihdp-v1` → `semana4-entrega-v1` → `semana4-final`.

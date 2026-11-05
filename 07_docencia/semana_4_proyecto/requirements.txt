@@ -3,3 +3,6 @@ scipy
 fastapi
 uvicorn
 httpx
+matplotlib
+ipykernel
+jupyterlab
