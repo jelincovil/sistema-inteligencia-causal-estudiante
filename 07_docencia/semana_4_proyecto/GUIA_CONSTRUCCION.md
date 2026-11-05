@@ -405,7 +405,7 @@ estratos y sus IC.
 git status --short                     # debe estar limpio
 make limpiar && SIC_ESCENARIO=real/ihdp make demo
 git diff --stat semana4-kit-original   # exactamente lo construido
-git tag -l                             # kit-original, ihdp-v1, entrega-v1, final
+git tag -l                             # kit-original, ihdp-v1, entrega-v1, final, v1.0.0
 ```
 
 | Verificación | Resultado esperado |

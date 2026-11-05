@@ -414,7 +414,7 @@ HUMO: OK
 
 ## 10. Cierre
 
-**Guía de construcción.** `PLAN_DEMO_2H.md` (contenido reemplazado por la guía):
+**Guía de construcción.** `GUIA_CONSTRUCCION.md`:
 instalación del entorno, verificación del contrato de datos, construcción bloque a bloque
 con salidas esperadas, adaptación a `ihdp`, auditoría de artefactos, notebook, servicio,
 reproducción final y problemas frecuentes.
@@ -441,7 +441,7 @@ notebook abre con el kernel que pide su metadata sin tocar nada más.
 
 **Estado final.** Artefactos `ihdp` `v0001` con manifiesto verificado
 (`dataset_sha256 = 9af86718…`); árbol limpio; tags
-`semana4-kit-original` → `semana4-ihdp-v1` → `semana4-entrega-v1` → `semana4-final`.
+`semana4-kit-original` → `semana4-ihdp-v1` → `semana4-entrega-v1` → `semana4-final` → `v1.0.0`.
 
 ---
 
@@ -471,7 +471,7 @@ healthcheck -> healthy
 ```
 
 Pendiente si el servicio sale del ámbito interno: verificación de hash al cargar el bundle,
-autenticación, TLS y métricas (ver §12 del `PLAN_DEMO_2H.md`).
+autenticación, TLS y métricas (ver §12 del `GUIA_CONSTRUCCION.md`).
 
 ---
 
@@ -567,7 +567,7 @@ API y por formulario, con los mismos números que declara la documentación.
 | Formulario web | `GET /` con 25 campos validados + `GET /calcular` |
 | Contenedor | `puente:0.1.0` (`sha256:dbe3453abc5b`, 561 MB), no-root, `HEALTHCHECK` → `healthy` |
 | Pruebas | `make humo` verde, incluidos los dos casos de abstención |
-| Documentación | `BITACORA.md`, `PLAN_DEMO_2H.md` (guía), `pregunta_ihdp.md`, ficha Typst + PDF |
+| Documentación | `BITACORA.md`, `GUIA_CONSTRUCCION.md` (guía), `pregunta_ihdp.md`, ficha Typst + PDF |
 
 **Límites conocidos de esta versión** (no son defectos ocultos, están declarados):
 proyección individual con `R² = 0,095`; sin verificación de hash al cargar el bundle; sin
