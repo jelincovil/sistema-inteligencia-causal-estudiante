@@ -7,16 +7,23 @@ from __future__ import annotations
 import json
 
 from rutas import REGISTRO
+from registro import champion
 
 _cache: dict = {}
 
 
 def _cargar() -> dict:
     """Lee la versión champion (una vez): estimacion + tarjeta del bundle."""
-    # TODO-19 (el bundle viaja): leer el alias champion, cargar estimacion.json
-    # y tarjeta.json de esa versión y cachearlos en _cache["bundle"].
-    # Pista: el servicio NO lee los CSV: solo los artefactos del registro.
-    raise NotImplementedError("TODO-19 pendiente de completar")
+    # El bundle viaja: el servicio NO lee los CSV, solo los artefactos con hash.
+    if "bundle" not in _cache:
+        version = champion()
+        carpeta = REGISTRO / version
+        _cache["bundle"] = {
+            "version": version,
+            "estimacion": json.loads((carpeta / "estimacion.json").read_text()),
+            "tarjeta": json.loads((carpeta / "tarjeta.json").read_text()),
+        }
+    return _cache["bundle"]
 
 
 def salud() -> dict:
@@ -32,10 +39,11 @@ def efecto() -> dict:
     return {
         "estado": "respuesta",
         "estimando": b["tarjeta"]["estimando"],
-        "efecto": round(e["ate_ols"], 1),
+        "efecto": round(e["ate_aipw"], 1),
         "unidad": "USD de 1978",
-        "ic95": [round(x, 1) for x in e["ic95"]],
+        "ic95": [round(x, 1) for x in e["ic_aipw"]],
         "que_cubre_el_ic": "el ATE poblacional (no un efecto individual)",
+        "estimador": e["estimador_principal"],
         "poblacion": b["tarjeta"]["poblacion"],
         "version": b["version"],
     }
@@ -50,14 +58,36 @@ def consulta(perfil: dict) -> dict:
     """
     b = _cargar()
     rangos = b["estimacion"]["rangos_covariables"]
-    # TODO-20 (la abstención y el estrato): para cada covariable del perfil
-    # fuera de su rango [lo, hi] del train, juntar el motivo; si hay alguno,
-    # devolver {"estado": "abstencion", "motivo": ..., "version": ...} SIN
-    # ningún número. Si no hay: el efecto del ESTRATO declarado en la tarjeta
-    # (estimacion["estratos"]["hojas"][str(int(perfil.get("nodegree", 1)))])
-    # con efecto, ic95, "que_cubre_el_ic", la nota de heterogeneidad y la
-    # versión — no el efecto poblacional.
-    raise NotImplementedError("TODO-20 pendiente de completar")
+    # Abstención de primera clase: fuera del soporte no se devuelve ningún número.
+    motivos = []
+    for covariable, (lo, hi) in rangos.items():
+        if covariable not in perfil:
+            continue
+        valor = float(perfil[covariable])
+        if valor < lo or valor > hi:
+            motivos.append(f"{covariable}={valor:g} fuera de [{lo}, {hi}]")
+    if motivos:
+        return {"estado": "abstencion", "motivo": "; ".join(motivos),
+                "version": b["version"]}
+
+    estratos = b["estimacion"]["estratos"]
+    clave = str(int(perfil.get("nodegree", 1)))
+    hoja = estratos["hojas"][clave]
+    return {
+        "estado": "respuesta",
+        "estimando": (f"media del efecto del programa en el estrato "
+                      f"{estratos['variable']}={clave} ({hoja['etiqueta']})"),
+        "efecto": round(hoja["efecto"], 1),
+        "unidad": "USD de 1978",
+        "ic95": [round(x, 1) for x in hoja["ic"]],
+        "que_cubre_el_ic": ("la media del efecto en este estrato; NO el ATE "
+                            "poblacional ni un efecto individual"),
+        "estrato": {"variable": estratos["variable"], "valor": int(clave),
+                    "n": hoja["n"]},
+        "nota_heterogeneidad": ("los intervalos de los estratos se solapan: "
+                                "heterogeneidad sugerida, no concluyente"),
+        "version": b["version"],
+    }
 
 
 def efecto_lista_de_prueba() -> list[str]:

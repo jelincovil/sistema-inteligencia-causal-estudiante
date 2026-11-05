@@ -97,10 +97,10 @@ PATH=/opt/homebrew/Caskroom/miniforge/base/envs/temp_causal_env/bin:/usr/bin:/bi
 | Bloque | TODOs | Archivo | Estado |
 |---|---|---|---|
 | 2 · roles y pared | 1, 2, 3 | `datos.py` | cerrado (checkpoint 1 en verde) |
-| 3 · efecto e incertidumbre | 4–8, 21, 22 | `estimacion.py` | pendiente |
-| 4 · tarjeta y registro | 9–13 | `registro.py` | pendiente |
-| 5 · ventanas y puerta | 14–18 | `monitor.py` | pendiente |
-| 6 · servicio | 19, 20 | `servicio_core.py` | pendiente |
+| 3 · efecto e incertidumbre | 4–8, 21, 22 | `estimacion.py` | cerrado (checkpoint 2 en verde) |
+| 4 · tarjeta y registro | 9–13 | `registro.py` | cerrado (checkpoint 3 en verde) |
+| 5 · ventanas y puerta | 14–18 | `monitor.py` | cerrado (checkpoint 4 en verde) |
+| 6 · servicio | 19, 20 | `servicio_core.py` | cerrado (checkpoint 5 en verde) |
 | 7 · adaptación | — | esquema, corte, ventanas, umbrales | pendiente |
 
 Cada bloque se cierra cuando su checkpoint coincide con la salida esperada del
@@ -144,27 +144,88 @@ esquema valida contra observed_train: OK (n = 1033, tratados = 262)
 
 ### Bloque 3 — `estimacion.py` (TODO-4…8, 21, 22)
 
-- **Qué:** _pendiente_
-- **Por qué:** _pendiente_
-- **Evidencia:** _pendiente_
+- **Qué:** OLS con SE clásico (`sigma2 * (M'M)⁻¹[1,1]`); logística por BFGS para el
+  propensity; ESS de Kish con `e` recortada a `[1e-6, 1-1e-6]`; SMD con desviación
+  común; trampa `score_post` (0,6·Y + 0,4·D + ruido N(0,500)); **AIPW con cross-fitting**
+  K=5 (outcome por brazo y propensity ajustados fuera del fold que predicen, trimming
+  `[0,05, 0,95]`, score = influence function del ATE); estratos `nodegree` con su IC.
+- **Por qué:** dos piernas estimadas fuera de muestra son la exigencia del Cap. 9:
+  ningún nuisance ve a la unidad que predice. El trimming es una decisión **declarada**,
+  no un ajuste a posteriori. El estrato promedia scores AIPW: es heterogeneidad
+  sugerida, no un CATE, y su IC se declara como tal.
+- **Evidencia:** salida idéntica a la esperada del notebook:
+
+```text
+diferencia cruda = 1600.8 USD
+ATE OLS (8 controles) = 1596.0 | SE = 301.6 | IC95 = [1004.8, 2187.3]
+AIPW cross-fitting K=5 = 1638.6 | SE = 325.0 | IC95 = [1001.6, 2275.7]
+trampa score_post      = 172.4  <- el coeficiente se vació
+nodegree=1 (n=568): 1060.1 IC95 [233.1, 1887.2]
+nodegree=0 (n=465): 2345.2 IC95 [1356.9, 3333.4]
+ESS = 729 (0.71) | rango e = [0.092, 0.530] | solapamiento = 100% | SMD máx = 0.19
+```
 
 ### Bloque 4 — `registro.py` (TODO-9…13)
 
-- **Qué:** _pendiente_
-- **Por qué:** _pendiente_
-- **Evidencia:** _pendiente_
+- **Qué:** tarjeta con los 7 campos de C-09 (supuestos clasificados
+  `observable`/`no_observable`, umbrales 0,25/0,25/0,50, heterogeneidad declarada);
+  validación de la tarjeta; manifiesto con `version`, `dataset_sha256`, `puerta` y hash
+  de cada JSON; `verificar_integridad` que recomputa; promoción atómica
+  (`champion.tmp` → `replace`), que rechaza `falla` y `alerta` sin aceptación explícita.
+- **Por qué:** la afirmación publicada se refiere a un sujeto con hash: si el hash no
+  coincide, la versión no es la misma. La versión es inmutable (nunca se edita en
+  sitio) y la promoción es un rename atómico: no hay estado intermedio.
+- **Evidencia:**
+
+```text
+registrada v0001 | integridad: OK
+mutación detectada: SÍ (hash distinto del manifiesto -> bloqueado)
+champion -> v0001
+champion resuelve a: v0001
+```
 
 ### Bloque 5 — `monitor.py` (TODO-14…18)
 
-- **Qué:** _pendiente_
-- **Por qué:** _pendiente_
-- **Evidencia:** _pendiente_
+- **Qué:** PSI con deciles de la referencia como cortes y `clip` en 1e-4; ventana sana
+  (submuestra de 700 sin reemplazo); deriva (`age + 10` sobre copia); positividad
+  (tratados con `re74 > p75`, controles con `re74 < p25`); puerta con prioridad
+  `falla` (soporte) > `alerta` (PSI o balance).
+- **Por qué:** el soporte es condición de identificación, no de calidad: si se rompe,
+  no hay número que reportar. La deriva y el desbalance son señales de proceso
+  (revisar antes de reentrenar), no fallos del estimando. La puerta nombra la
+  covariable culpable para que la alerta sea accionable.
+- **Evidencia:**
+
+```text
+[sana        ] pasa   | PSI máx 0.005 | SMD 0.21 | ESS/n 0.69 | solape 100%
+[deriva      ] alerta | PSI máx 1.347 | SMD 0.19 | ESS/n 0.71 | solape 100%
+              - deriva: PSI de age = 1.35 (umbral 0.25)
+[positividad ] falla  | PSI máx 3.237 | SMD 5.24 | ESS/n 1.0  | solape 0%
+              - solapamiento roto: 0% de unidades con e en [0.05, 0.95] (mínimo 50%)
+```
 
 ### Bloque 6 — `servicio_core.py` (TODO-19…20)
 
-- **Qué:** _pendiente_
-- **Por qué:** _pendiente_
-- **Evidencia:** _pendiente_
+- **Qué:** carga del bundle `champion` (estimación + tarjeta, cacheada, sin leer CSV);
+  `/consulta` devuelve el efecto del **estrato** declarado y, fuera del rango de
+  entrenamiento de cualquier covariable, se abstiene con HTTP 200 y sin ningún número.
+- **Por qué:** abstención de primera clase: «no sé» es una respuesta válida y no un
+  error 4xx/5xx. El servicio declara **qué cubre** su intervalo (media del estrato, no
+  ATE ni efecto individual) porque el mismo endpoint podría sugerir lo contrario.
+- **Corrección fuera de los TODOs (declarada):** `efecto()` servía `ate_ols`/`ic95`
+  mientras la tarjeta declara el AIPW como estimador principal y el notebook espera
+  `1638.6`. Se cambió a `ate_aipw`/`ic_aipw` y se añadió `estimador` a la respuesta.
+  Es el hallazgo 2, resuelto aquí.
+- **Evidencia:**
+
+```text
+/salud: 200 {'estado': 'ok', 'version': 'v0001', ...}
+/efecto: 200 efecto=1638.6 ic95=[1001.6, 2275.7] version=v0001
+/consulta dentro: 200 estado=respuesta efecto=1060.1
+/consulta fuera (age=99): 200 estado=abstencion motivo=age=99 fuera de [18.0, 54.0] (sin número)
+determinismo: dos llamadas idénticas -> iguales
+HUMO: OK
+```
 
 ---
 
@@ -174,9 +235,10 @@ esquema valida contra observed_train: OK (n = 1033, tratados = 262)
    `tau_summary` (media, desviación y cuantiles del efecto unitario) en ambos
    escenarios. La verdad poblacional viaja en el paquete: la regla «no se usa para
    estimar ni calibrar» es disciplina declarada, no garantía del sistema de archivos.
-2. **`/efecto` publica el OLS, no el AIPW**: `estimar()` guarda `ate_ols`/`ic95` y
-   `ate_aipw`/`ic_aipw` por separado; `servicio_core.efecto()` devuelve los primeros.
-   La tarjeta declara el AIPW como estimador principal.
+2. **`/efecto` publicaba el OLS, no el AIPW**: `estimar()` guarda `ate_ols`/`ic95` y
+   `ate_aipw`/`ic_aipw` por separado; `servicio_core.efecto()` devolvía los primeros
+   mientras la tarjeta declara el AIPW como principal. **Resuelto** en el bloque 6
+   (sirve `ate_aipw`/`ic_aipw` y declara `estimador`); ver evidencia allí.
 3. **`smd` del monitor mide balance interno de la ventana**, no deriva contra
    `train`: por eso `deriva` (edad +10 en ambos brazos) solo la detecta el PSI.
 4. **ESS/n ≈ 1 no es buena señal** en la ventana `positividad`: con asignación casi
