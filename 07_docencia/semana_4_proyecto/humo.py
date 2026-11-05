@@ -85,6 +85,16 @@ def main() -> int:
     print(f"/efecto_individual fuera ({cambiada}={fuera[cambiada]:g}): "
           f"{r5.status_code} estado={j5.get('estado')} (sin número)")
 
+    r6 = c.get("/efecto?formato=texto")
+    ok &= (r6.status_code == 200 and "IC 95" in r6.text
+           and r6.headers["content-type"].startswith("text/plain"))
+    print(f"/efecto?formato=texto: {r6.status_code} "
+          f"({len(r6.text.splitlines())} líneas) — lecturas legibles OK")
+
+    r7 = c.post("/efecto_individual?formato=texto", json=dentro)
+    ok &= (r7.status_code == 200 and "EFECTO PARA UN PERFIL" in r7.text)
+    print(f"/efecto_individual?formato=texto: {r7.status_code} encabezado OK")
+
     print("\nHUMO:", "OK" if ok else "FALLÓ")
     return 0 if ok else 1
 

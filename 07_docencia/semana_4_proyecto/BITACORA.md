@@ -501,3 +501,30 @@ jobs  perfil dentro -> 398.8 [-1663.3, 2461.0] · r2 0.012 · "muy baja"
 ahora fuera de rango -> abstencion (HTTP 200, sin número)
 contenedor rebuild -> healthy; /docs incluye la ruta nueva
 ```
+
+---
+
+## 13. Salidas legibles (formato estadístico)
+
+**Qué:** las tres rutas aceptan `?formato=texto` y devuelven un informe alineado; el JSON
+gana `tipo`, `efecto_texto` (número + unidad + IC en formato español) e `interpretacion`
+(si el intervalo excluye el cero).
+
+**Por qué:** un `8.2` suelto no es una salida estadística. El número solo significa algo con
+su unidad, su IC y una lectura explícita de si el cero queda fuera. Y en el caso individual,
+con la advertencia de que el R² es bajo.
+
+**Evidencia:**
+
+```text
+EFECTO POR ESTRATO — versión v0001
+Estimando : media del efecto del programa en el estrato bw=0 (bw bajo (<= mediana de train))
+Efecto    : 3,2 puntos de test cognitivo
+IC 95 %   : 1,4 a 4,9
+Estrato   : bw = 0 (n = 224)
+Lectura   : El intervalo excluye el cero: efecto positivo estimado bajo los supuestos declarados.
+Alcance   : la media del efecto en este estrato; NO el ATE poblacional ni un efecto individual
+```
+
+Verificado en el contenedor (`?formato=texto` en `/efecto`, `/consulta` y
+`/efecto_individual`, incluida la abstención) y en `make humo`.

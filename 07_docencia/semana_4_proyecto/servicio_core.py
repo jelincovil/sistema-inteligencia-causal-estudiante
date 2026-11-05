@@ -12,6 +12,67 @@ from registro import champion
 
 _cache: dict = {}
 
+TITULOS = {"poblacional": "EFECTO POBLACIONAL",
+           "estrato": "EFECTO POR ESTRATO",
+           "individual": "EFECTO PARA UN PERFIL"}
+
+
+def _num(x: float, decimales: int = 1) -> str:
+    """Formato español: 1.638,6 · 0,095."""
+    texto = f"{x:,.{decimales}f}"
+    return texto.replace(",", "\u00a0").replace(".", ",").replace("\u00a0", ".")
+
+
+def _lectura(efecto: float, ic: list, *, individual: bool = False,
+             r2: float | None = None) -> str:
+    excluye_cero = ic[0] > 0 or ic[1] < 0
+    if individual:
+        if not excluye_cero:
+            return ("El intervalo incluye el cero: con estos datos no se puede afirmar "
+                    "un efecto para este perfil.")
+        return ("El intervalo excluye el cero, pero la proyección apenas distingue entre "
+                f"perfiles (R² = {_num(r2 or 0.0, 3)}): tómalo como orientación, no como "
+                "efecto individual.")
+    if not excluye_cero:
+        return ("El intervalo incluye el cero: no hay evidencia de efecto con este "
+                "tamaño de muestra.")
+    return ("El intervalo excluye el cero: efecto positivo estimado bajo los supuestos "
+            "declarados.")
+
+
+def formatear(payload: dict) -> str:
+    """Version legible de una respuesta, alineada para leer en terminal."""
+    titulo = TITULOS.get(payload.get("tipo", ""), "RESPUESTA")
+    version = payload.get("version", "")
+    encabezado = f"{titulo} — versión {version}"
+    if payload.get("estado") != "respuesta":
+        return (f"{encabezado}\n" + "-" * len(encabezado) +
+                f"\n\nABSTENCIÓN: {payload.get('motivo')}\n"
+                "No se devuelve ningún número: la consulta no puede responderse con "
+                "la evidencia declarada.\n")
+
+    unidad = payload.get("unidad", "")
+    ic = payload["ic95"]
+    filas = [("Estimando", payload.get("estimando", "")),
+             ("Efecto", f"{_num(payload['efecto'])} {unidad}"),
+             ("IC 95 %", f"{_num(ic[0])} a {_num(ic[1])}")]
+    if payload.get("tipo") == "estrato":
+        estrato = payload["estrato"]
+        filas.append(("Estrato", f"{estrato['variable']} = {estrato['valor']} "
+                                  f"(n = {estrato['n']})"))
+        filas.append(("Nota", payload.get("nota_heterogeneidad", "")))
+    if payload.get("tipo") == "individual":
+        filas.append(("Ajuste", f"R² = {_num(payload.get('ajuste_r2', 0.0), 3)} "
+                                 f"(discriminación {payload.get('confianza_discriminacion')})"))
+        if payload.get("aviso"):
+            filas.append(("Aviso", payload["aviso"]))
+    filas.append(("Lectura", payload.get("interpretacion", "")))
+    filas.append(("Alcance", payload.get("que_cubre_el_ic", "")))
+
+    ancho = max(len(etiqueta) for etiqueta, _ in filas)
+    cuerpo = "\n".join(f"{etiqueta.ljust(ancho)} : {valor}" for etiqueta, valor in filas)
+    return f"{encabezado}\n" + "-" * len(encabezado) + f"\n\n{cuerpo}\n"
+
 
 def _cargar() -> dict:
     """Lee la versión champion (una vez): estimacion + tarjeta del bundle."""
@@ -37,12 +98,18 @@ def efecto() -> dict:
     """El efecto poblacional del prototipo, con su incertidumbre y su versión."""
     b = _cargar()
     e = b["estimacion"]
+    efecto = round(e["ate_aipw"], 1)
+    ic = [round(x, 1) for x in e["ic_aipw"]]
     return {
         "estado": "respuesta",
+        "tipo": "poblacional",
         "estimando": b["tarjeta"]["estimando"],
-        "efecto": round(e["ate_aipw"], 1),
+        "efecto": efecto,
         "unidad": e["unidad"],
-        "ic95": [round(x, 1) for x in e["ic_aipw"]],
+        "efecto_texto": (f"{_num(efecto)} {e['unidad']} "
+                         f"(IC 95 %: {_num(ic[0])} a {_num(ic[1])})"),
+        "ic95": ic,
+        "interpretacion": _lectura(efecto, ic),
         "que_cubre_el_ic": "el ATE poblacional (no un efecto individual)",
         "estimador": e["estimador_principal"],
         "poblacion": b["tarjeta"]["poblacion"],
@@ -69,25 +136,31 @@ def consulta(perfil: dict) -> dict:
             motivos.append(f"{covariable}={valor:g} fuera de "
                            f"[{round(lo, 4)}, {round(hi, 4)}]")
     if motivos:
-        return {"estado": "abstencion", "motivo": "; ".join(motivos),
-                "version": b["version"]}
+        return {"estado": "abstencion", "tipo": "estrato",
+                "motivo": "; ".join(motivos), "version": b["version"]}
 
     estratos = b["estimacion"]["estratos"]
     corte = estratos["variable"]
     if corte not in perfil:
-        return {"estado": "abstencion",
+        return {"estado": "abstencion", "tipo": "estrato",
                 "motivo": (f"falta la covariable del corte de heterogeneidad "
                            f"({corte}) para asignar el estrato"),
                 "version": b["version"]}
     clave = "1" if float(perfil[corte]) > estratos["umbral"] else "0"
     hoja = estratos["hojas"][clave]
+    efecto = round(hoja["efecto"], 1)
+    ic = [round(x, 1) for x in hoja["ic"]]
     return {
         "estado": "respuesta",
+        "tipo": "estrato",
         "estimando": (f"media del efecto del programa en el estrato "
                       f"{corte}={clave} ({hoja['etiqueta']})"),
-        "efecto": round(hoja["efecto"], 1),
+        "efecto": efecto,
         "unidad": b["estimacion"]["unidad"],
-        "ic95": [round(x, 1) for x in hoja["ic"]],
+        "efecto_texto": (f"{_num(efecto)} {b['estimacion']['unidad']} "
+                         f"(IC 95 %: {_num(ic[0])} a {_num(ic[1])})"),
+        "ic95": ic,
+        "interpretacion": _lectura(efecto, ic),
         "que_cubre_el_ic": ("la media del efecto en este estrato; NO el ATE "
                             "poblacional ni un efecto individual"),
         "estrato": {"variable": corte, "valor": int(clave),
@@ -107,14 +180,14 @@ def efecto_individual(perfil: dict) -> dict:
     est = b["estimacion"]
     modelo = est.get("modelo_individual")
     if modelo is None:
-        return {"estado": "abstencion",
+        return {"estado": "abstencion", "tipo": "individual",
                 "motivo": "el bundle de esta versión no trae modelo_individual",
                 "version": b["version"]}
 
     covariables = list(modelo["coeficientes"])
     faltan = [c for c in covariables if c not in perfil]
     if faltan:
-        return {"estado": "abstencion",
+        return {"estado": "abstencion", "tipo": "individual",
                 "motivo": f"faltan covariables del perfil: {faltan}",
                 "version": b["version"]}
 
@@ -125,8 +198,8 @@ def efecto_individual(perfil: dict) -> dict:
             motivos.append(f"{covariable}={valor:g} fuera de "
                            f"[{round(lo, 4)}, {round(hi, 4)}]")
     if motivos:
-        return {"estado": "abstencion", "motivo": "; ".join(motivos),
-                "version": b["version"]}
+        return {"estado": "abstencion", "tipo": "individual",
+                "motivo": "; ".join(motivos), "version": b["version"]}
 
     z = [(float(perfil[c]) - modelo["medias"][c]) / modelo["desviaciones"][c]
          for c in covariables]
@@ -151,11 +224,16 @@ def efecto_individual(perfil: dict) -> dict:
 
     return {
         "estado": "respuesta",
+        "tipo": "individual",
         "estimando": ("efecto esperado del programa para un perfil con estas "
                       "covariables (proyección lineal del score AIPW)"),
         "efecto": round(float(tau), 1),
         "unidad": est["unidad"],
+        "efecto_texto": (f"{_num(tau)} {est['unidad']} "
+                         f"(IC 95 %: {_num(tau - 1.96 * se)} a {_num(tau + 1.96 * se)})"),
         "ic95": [round(float(tau - 1.96 * se), 1), round(float(tau + 1.96 * se), 1)],
+        "interpretacion": _lectura(tau, [tau - 1.96 * se, tau + 1.96 * se],
+                                   individual=True, r2=r2),
         "que_cubre_el_ic": ("la proyección lineal, condicional a los scores AIPW; "
                             "NO cubre el sesgo de especificación lineal ni es un CATE validado"),
         "ajuste_r2": round(r2, 3),

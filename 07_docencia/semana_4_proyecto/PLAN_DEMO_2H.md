@@ -252,6 +252,35 @@ sobre las covariables (coeficientes + matriz de covarianza, que se registran en 
 El servicio evalúa esa proyección en el perfil y **se abstiene** si algún valor cae fuera del
 rango de entrenamiento; si el perfil está en el borde (|z| > 2,5) añade un `aviso`.
 
+### 6.2.2 Salida legible (`?formato=texto`)
+
+Las tres rutas aceptan `?formato=texto` y devuelven un informe alineado, en lugar de JSON:
+
+```sh
+curl -s "localhost:8000/efecto?formato=texto"
+curl -s -X POST "localhost:8000/consulta?formato=texto" \
+  -H "Content-Type: application/json" -d '{"bw":-1.5}'
+curl -s -X POST "localhost:8000/efecto_individual?formato=texto" \
+  -H "Content-Type: application/json" -d @perfil.json
+```
+
+```text
+EFECTO POR ESTRATO — versión v0001
+----------------------------------
+
+Estimando : media del efecto del programa en el estrato bw=0 (bw bajo (<= mediana de train))
+Efecto    : 3,2 puntos de test cognitivo
+IC 95 %   : 1,4 a 4,9
+Estrato   : bw = 0 (n = 224)
+Nota      : los intervalos de los estratos no se solapan: diferencia consistente con el corte declarado, pero no es un CATE
+Lectura   : El intervalo excluye el cero: efecto positivo estimado bajo los supuestos declarados.
+Alcance   : la media del efecto en este estrato; NO el ATE poblacional ni un efecto individual
+```
+
+El JSON incorpora los mismos juicios en campos propios: `efecto_texto`
+(«3,2 puntos de test cognitivo (IC 95 %: 1,4 a 4,9)») e `interpretacion` (si el intervalo
+excluye el cero). Las abstenciones también se leen así, con el motivo y sin ningún número.
+
 `ajuste_r2` es la parte honesta: **0,095** en `ihdp` y **0,012** en `jobs`. Es decir, la
 proyección apenas distingue entre perfiles; el endpoint lo declara (`confianza_discriminacion`:
 *baja* / *muy baja*) en vez de presentar el número como un efecto individual fiable.
