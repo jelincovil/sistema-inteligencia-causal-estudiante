@@ -25,19 +25,48 @@ def _escribir(ruta: Path, obj: dict) -> None:
 
 def construir_tarjeta(estimacion: dict) -> dict:
     """Model card mínima, con los umbrales que el monitor usará (calibrados)."""
-    # TODO-9 (la tarjeta): devolver el dict con los 7 campos de CAMPOS_TARJETA.
-    # supuestos: lista de {nombre, clase: observable|no_observable, tratamiento}.
-    # umbrales: {"smd_max": 0.25, "psi_alerta": 0.25, "solape_min": 0.50}.
-    # estimador: "AIPW con cross-fitting K=5 (doblemente robusto); OLS solo de
-    # referencia". heterogeneidad: corte "nodegree", regla pre-declarada por
-    # interpretabilidad (NO seleccionada por ganancia de varianza).
-    raise NotImplementedError("TODO-9 pendiente de completar")
+    # Tarjeta mínima: los siete campos de C-09, con los umbrales que el monitor usará.
+    supuestos = [
+        {"nombre": "no confusión condicional en las 8 covariables pre-tratamiento",
+         "clase": "no_observable",
+         "tratamiento": "se declara; la identificación lo exige y ningún dato lo verifica"},
+        {"nombre": "soporte común (0 < e(X) < 1)",
+         "clase": "observable",
+         "tratamiento": "se mide: rango de e, ESS de Kish y fracción en zona de solapamiento"},
+        {"nombre": "consistencia / SUTVA",
+         "clase": "no_observable",
+         "tratamiento": "se declara; heredado del diseño del escenario"},
+        {"nombre": "covariables medidas antes del tratamiento",
+         "clase": "observable",
+         "tratamiento": "el benchmark lo declara; la trampa score_post muestra qué pasa si no"},
+    ]
+    return {
+        "estimando": estimacion["estimando"],
+        "poblacion": (f"los {estimacion['n']} individuos de observed_train.csv del "
+                      "escenario (versión de entrenamiento, hash verificado)"),
+        "supuestos": supuestos,
+        "umbrales": {"smd_max": 0.25, "psi_alerta": 0.25, "solape_min": 0.50},
+        "semilla": estimacion["semilla"],
+        "dataset_sha256": estimacion["dataset_sha256"],
+        "estimador": ("AIPW con cross-fitting K=5 (doblemente robusto); "
+                      "OLS solo de referencia"),
+        "heterogeneidad": {
+            "corte": estimacion["estratos"]["variable"],
+            "regla": estimacion["estratos"]["regla"],
+            "que_cubre": "media de scores AIPW del estrato, no un CATE individual",
+        },
+    }
 
 
 def validar_tarjeta(tarjeta: dict) -> None:
-    # TODO-10: rechazar si falta algún campo de CAMPOS_TARJETA o si alguna
-    # clase de supuesto no es observable/no_observable (adenda de contratos).
-    raise NotImplementedError("TODO-10 pendiente de completar")
+    faltan = [c for c in CAMPOS_TARJETA if c not in tarjeta]
+    if faltan:
+        raise ValueError(f"tarjeta incompleta: falta(n) {faltan}")
+    for supuesto in tarjeta["supuestos"]:
+        if supuesto.get("clase") not in ("observable", "no_observable"):
+            raise ValueError(
+                f"supuesto '{supuesto.get('nombre')}': clase {supuesto.get('clase')!r} "
+                "no es observable ni no_observable")
 
 
 def siguiente_version() -> str:
@@ -53,25 +82,39 @@ def registrar(estimacion: dict, tarjeta: dict, estado_puerta: str = "pasa") -> s
     carpeta.mkdir(parents=True)
     _escribir(carpeta / "estimacion.json", estimacion)
     _escribir(carpeta / "tarjeta.json", tarjeta)
-    # TODO-11 (el manifiesto): manifest.json con version, dataset_sha256 (de la
-    # tarjeta), puerta = estado_puerta y archivos = {nombre: sha256} de los dos
-    # json recién escritos.
-    raise NotImplementedError("TODO-11 pendiente de completar")
+    # TODO-11: manifiesto con los hashes de lo que acaba de quedar escrito.
+    archivos = {nombre: sha256_archivo(carpeta / nombre)
+                for nombre in ("estimacion.json", "tarjeta.json")}
+    _escribir(carpeta / "manifest.json", {
+        "version": version,
+        "dataset_sha256": tarjeta["dataset_sha256"],
+        "puerta": estado_puerta,
+        "archivos": archivos,
+    })
+    return version
 
 
 def verificar_integridad(version: str) -> bool:
     carpeta = REGISTRO / version
     m = json.loads((carpeta / "manifest.json").read_text())
     # TODO-12: recomputar el hash de cada archivo y comparar con el manifiesto.
-    raise NotImplementedError("TODO-12 pendiente de completar")
+    return all(sha256_archivo(carpeta / nombre) == hash_declarado
+               for nombre, hash_declarado in m["archivos"].items())
 
 
 def promover(version: str, aceptar_alerta: bool = False) -> None:
     """Apunta champion a version. 'falla' nunca; 'alerta' solo si se acepta."""
-    # TODO-13 (la promoción): leer el manifest; rechazar si puerta == "falla";
-    # rechazar "alerta" sin aceptar_alerta=True; escribir champion.tmp y
-    # RENOMBRAR (tmp.replace), nunca editar in-place.
-    raise NotImplementedError("TODO-13 pendiente de completar")
+    # La promoción es atómica: se escribe el temporal y se renombra.
+    manifest = json.loads((REGISTRO / version / "manifest.json").read_text())
+    if manifest["puerta"] == "falla":
+        raise RuntimeError(f"{version} tiene puerta 'falla': no se promueve")
+    if manifest["puerta"] == "alerta" and not aceptar_alerta:
+        raise PermissionError(
+            f"{version} está en 'alerta': promueve con aceptar_alerta=True")
+    temporal = REGISTRO / "champion.tmp"
+    temporal.write_text(version + "\n")
+    temporal.replace(REGISTRO / "champion")
+    print(f"champion -> {version}")
 
 
 def champion() -> str:
