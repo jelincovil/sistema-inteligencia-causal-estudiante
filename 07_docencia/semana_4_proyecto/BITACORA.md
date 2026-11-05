@@ -41,8 +41,17 @@ Cómo comprobar el baseline en cualquier momento:
 
 ```sh
 git diff --stat semana4-kit-original          # cambios respecto al original
-shasum -a 256 -c BASELINE.sha256              # integridad archivo por archivo
+git worktree add /tmp/kit-original semana4-kit-original   # árbol prístino aparte
 git show semana4-kit-original:07_docencia/semana_4_proyecto/datos.py
+```
+
+`BASELINE.sha256` es la huella del **kit original**: verifica el árbol prístino, no el de
+trabajo. Ejecutado sobre el directorio de trabajo marca como `FAILED` exactamente los
+archivos que se tocaron — eso es lo que documenta, no un error:
+
+```sh
+cd /tmp/kit-original/07_docencia/semana_4_proyecto && shasum -a 256 -c BASELINE.sha256
+# 32/32 OK
 ```
 
 ---
