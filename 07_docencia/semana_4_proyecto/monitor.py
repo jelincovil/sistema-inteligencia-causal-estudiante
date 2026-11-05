@@ -29,8 +29,7 @@ def psi(ref: np.ndarray, nueva: np.ndarray, bins: int = 10, eps: float = 1e-4) -
 
 def ventana_sana(train: dict, esquema: EsquemaCausal) -> dict:
     """Otra extracción de la misma población (submuestra sin reemplazo)."""
-    # TODO-15: rng.choice(n, 700, replace=False) con semilla SEMILLA_VENTANA;
-    # devolver el dict con las columnas en esos índices.
+    # Otra extracción de la misma población: 700 sin reemplazo, semilla fija.
     g = np.random.default_rng(SEMILLA_VENTANA)
     idx = g.choice(len(train[esquema.tratamiento]), 700, replace=False)
     return {columna: valores[idx] for columna, valores in train.items()}
@@ -38,7 +37,7 @@ def ventana_sana(train: dict, esquema: EsquemaCausal) -> dict:
 
 def ventana_deriva(train: dict, esquema: EsquemaCausal) -> dict:
     """La población envejeció: la edad llega corrida diez años."""
-    # TODO-16: copia del train con age + 10 (cuidado de no mutar el original).
+    # Copia, no mutación: el train original queda intacto.
     ventana = {columna: valores.copy() for columna, valores in train.items()}
     ventana["age"] = ventana["age"] + 10
     return ventana
@@ -46,7 +45,7 @@ def ventana_deriva(train: dict, esquema: EsquemaCausal) -> dict:
 
 def ventana_positividad(train: dict, esquema: EsquemaCausal) -> dict:
     """La asignación se volvió casi determinista por ingreso previo (re74)."""
-    # TODO-17: quedarse con (tratados con re74 > p75) y (controles con re74 < p25).
+    # Asignación casi determinista: tratados ricos (p75), controles pobres (p25).
     D, re74 = train[esquema.tratamiento], train["re74"]
     p25, p75 = np.percentile(re74, [25, 75])
     seleccion = ((D == 1) & (re74 > p75)) | ((D == 0) & (re74 < p25))

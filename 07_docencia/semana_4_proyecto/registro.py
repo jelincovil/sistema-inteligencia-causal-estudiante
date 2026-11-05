@@ -82,7 +82,7 @@ def registrar(estimacion: dict, tarjeta: dict, estado_puerta: str = "pasa") -> s
     carpeta.mkdir(parents=True)
     _escribir(carpeta / "estimacion.json", estimacion)
     _escribir(carpeta / "tarjeta.json", tarjeta)
-    # TODO-11: manifiesto con los hashes de lo que acaba de quedar escrito.
+    # Manifiesto: hashes de lo que acaba de quedar escrito.
     archivos = {nombre: sha256_archivo(carpeta / nombre)
                 for nombre in ("estimacion.json", "tarjeta.json")}
     _escribir(carpeta / "manifest.json", {
@@ -97,7 +97,7 @@ def registrar(estimacion: dict, tarjeta: dict, estado_puerta: str = "pasa") -> s
 def verificar_integridad(version: str) -> bool:
     carpeta = REGISTRO / version
     m = json.loads((carpeta / "manifest.json").read_text())
-    # TODO-12: recomputar el hash de cada archivo y comparar con el manifiesto.
+    # Integridad: se recomputa, no se confía en el manifiesto.
     return all(sha256_archivo(carpeta / nombre) == hash_declarado
                for nombre, hash_declarado in m["archivos"].items())
 
