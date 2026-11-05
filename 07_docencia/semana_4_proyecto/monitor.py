@@ -19,29 +19,38 @@ SEMILLA_VENTANA = 4242
 
 def psi(ref: np.ndarray, nueva: np.ndarray, bins: int = 10, eps: float = 1e-4) -> float:
     """Population Stability Index entre una referencia y una ventana."""
-    # TODO-14 (deriva, Cap. 7): deciles de ref como cortes; frecuencias
-    # relativas a y b de ref y nueva en esos cortes (clip eps);
-    # devolver sum((a-b) * log(a/b)).
-    raise NotImplementedError("TODO-14 pendiente de completar")
+    # Deriva: los deciles de la referencia fijan los cortes; se comparan frecuencias.
+    cortes = np.unique(np.quantile(ref, np.linspace(0, 1, bins + 1)))
+    a = np.histogram(ref, bins=cortes)[0] / len(ref)
+    b = np.histogram(nueva, bins=cortes)[0] / len(nueva)
+    a, b = np.clip(a, eps, None), np.clip(b, eps, None)
+    return float(np.sum((a - b) * np.log(a / b)))
 
 
 def ventana_sana(train: dict, esquema: EsquemaCausal) -> dict:
     """Otra extracción de la misma población (submuestra sin reemplazo)."""
     # TODO-15: rng.choice(n, 700, replace=False) con semilla SEMILLA_VENTANA;
     # devolver el dict con las columnas en esos índices.
-    raise NotImplementedError("TODO-15 pendiente de completar")
+    g = np.random.default_rng(SEMILLA_VENTANA)
+    idx = g.choice(len(train[esquema.tratamiento]), 700, replace=False)
+    return {columna: valores[idx] for columna, valores in train.items()}
 
 
 def ventana_deriva(train: dict, esquema: EsquemaCausal) -> dict:
     """La población envejeció: la edad llega corrida diez años."""
     # TODO-16: copia del train con age + 10 (cuidado de no mutar el original).
-    raise NotImplementedError("TODO-16 pendiente de completar")
+    ventana = {columna: valores.copy() for columna, valores in train.items()}
+    ventana["age"] = ventana["age"] + 10
+    return ventana
 
 
 def ventana_positividad(train: dict, esquema: EsquemaCausal) -> dict:
     """La asignación se volvió casi determinista por ingreso previo (re74)."""
     # TODO-17: quedarse con (tratados con re74 > p75) y (controles con re74 < p25).
-    raise NotImplementedError("TODO-17 pendiente de completar")
+    D, re74 = train[esquema.tratamiento], train["re74"]
+    p25, p75 = np.percentile(re74, [25, 75])
+    seleccion = ((D == 1) & (re74 > p75)) | ((D == 0) & (re74 < p25))
+    return {columna: valores[seleccion] for columna, valores in train.items()}
 
 
 VENTANAS = {"sana": ventana_sana, "deriva": ventana_deriva,
@@ -65,10 +74,20 @@ def evaluar_ventana(train: dict, ventana: dict, esquema: EsquemaCausal,
 
     motivo = []
     estado = "pasa"
-    # TODO-18 (la puerta): falla si solape < umbrales["solape_min"];
-    # alerta si psi_max > umbrales["psi_alerta"] (nombrando la covariable)
-    # o si smd_max > umbrales["smd_max"] (solo si aún estaba en pasa).
-    raise NotImplementedError("TODO-18 pendiente de completar")
+    # La puerta: primero el soporte (falla), después deriva y balance (alerta).
+    if solape < umbrales["solape_min"]:
+        estado = "falla"
+        motivo.append(f"solapamiento roto: {solape:.0%} de unidades con e en "
+                      f"[0.05, 0.95] (mínimo {umbrales['solape_min']:.0%})")
+    elif psi_max > umbrales["psi_alerta"]:
+        estado = "alerta"
+        culpable = max(psis, key=psis.get)
+        motivo.append(f"deriva: PSI de {culpable} = {psi_max:.2f} "
+                      f"(umbral {umbrales['psi_alerta']})")
+    if estado == "pasa" and smd_max > umbrales["smd_max"]:
+        estado = "alerta"
+        motivo.append(f"balance: SMD máx = {smd_max:.2f} "
+                      f"(umbral {umbrales['smd_max']})")
 
     accion = {"pasa": "continuar", "alerta": "alertar (revisar antes de reentrenar)",
               "falla": "abstenerse (bloquear la promoción)"}[estado]
