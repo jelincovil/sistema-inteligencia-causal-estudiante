@@ -23,9 +23,19 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-mcp = ["mcp>=1.0", "pydantic>=2.5,<2.14"]
-test = ["pytest>=7.0"]
-full = ["mcp>=1.0", "pydantic>=2.5,<2.14", "pytest>=7.0"]
+mcp = [
+    "mcp>=1.0",
+    "pydantic>=2.5,<2.14",
+]
+test = [
+    "pytest>=7.0",
+    "pydantic>=2.5,<2.14",
+]
+full = [
+    "mcp>=1.0",
+    "pydantic>=2.5,<2.14",
+    "pytest>=7.0",
+]
 
 [project.scripts]
 mcp-causal = "mcp_causal.cli:main"

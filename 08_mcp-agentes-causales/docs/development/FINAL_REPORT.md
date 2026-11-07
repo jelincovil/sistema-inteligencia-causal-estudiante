@@ -38,7 +38,7 @@ Implementación completa del MCP causal según especificación `mcp_causal_desar
 | A17 | AIPW reproducible; recupera efecto | ✅ PASS |
 | A19 | Traversal rechazado; path security | ✅ PASS |
 | A23 | Versión consistente; fichas únicas | ✅ PASS |
-| A15 | Cliente MCP real (stdio) | ⚠️ PARCIAL |
+| A15 | Cliente MCP real (stdio) | ✅ PASS |
 | A16 | E2E completo con fallo de soporte | ⚠️ PARCIAL |
 | A20 | Instalación limpia desde wheel | ✅ PASS |
 | A21 | Docker disponible | ❌ NO DISPONIBLE (Docker no instalado en VM) |

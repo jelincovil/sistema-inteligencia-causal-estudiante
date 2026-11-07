@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "causal": {
+      "command": "mcp-causal",
+      "args": ["serve"],
+      "env": {
+        "MCP_CAUSAL_WORKSPACE": ".mcp_causal_workspace"
+      }
+    }
+  }
+}

@@ -1,12 +1,6 @@
-"""server.py — Servidor MCP causal con tools, resources y prompts.
-
-Protocolo stdio. Logs a stderr, stdout limpio para el protocolo.
-"""
-from __future__ import annotations
-
+"""server.py — Servidor MCP causal con tools, resources y prompts."""
 import json
-import sys
-from pathlib import Path
+import os
 
 from mcp.server.fastmcp import FastMCP
 
@@ -14,157 +8,105 @@ from . import __version__
 from .estimators import DGPSintetico, estimar_aipw
 from .knowledge import buscar_conocimiento, contar_fichas, obtener_ficha, listar_fichas
 from .models import (
-    Accion,
-    ClaimLevel,
-    ClaseSupuesto,
-    DeclaracionCausal,
-    ResultadoVerificacion,
-    Status,
-    Supuesto,
-    TipoEstimando,
+    Accion, ClaimLevel, ClaseSupuesto, DeclaracionCausal,
+    ResultadoVerificacion, Status, Supuesto, TipoEstimando,
 )
 from .projects import ProjectStore
 from .validators import (
-    evaluar_puerta,
-    validar_abstencion,
-    validar_equidad,
-    validar_esquema_roles,
-    validar_observabilidad,
-    validar_particion_pared,
-    validar_sensibilidad,
-    validar_validez_temporal,
-    validar_version_linaje,
+    evaluar_puerta, validar_abstencion, validar_equidad,
+    validar_esquema_roles, validar_observabilidad,
+    validar_particion_pared, validar_sensibilidad,
+    validar_validez_temporal, validar_version_linaje,
     validar_impacto_dano,
 )
 
 mcp = FastMCP("causal")
-
-# Workspace por defecto (se puede configurar por variable de entorno)
-import os
 _workspace = os.environ.get("MCP_CAUSAL_WORKSPACE", ".mcp_causal_workspace")
 _store = ProjectStore(_workspace)
 
 
-# ================================================================== TOOLS
+def _pj(texto, default=None):
+    if not texto:
+        return default if default is not None else {}
+    try:
+        return json.loads(texto)
+    except (json.JSONDecodeError, TypeError):
+        return default if default is not None else {}
+
 
 @mcp.tool()
-def declarar_estimando(
-    project_id: str,
-    tipo: str,
-    tratamiento: str,
-    resultado: str,
-    poblacion: str,
-    supuestos: list[dict],
-) -> dict:
-    """Q-01: Declara el estimando. Sin esto, nada más funciona."""
+def declarar_estimando(project_id: str, tipo: str, tratamiento: str,
+                       resultado: str, poblacion: str, supuestos_json: str) -> str:
+    """Q-01: Declara el estimando. supuestos_json: [{"nombre":"...","clase":"no_observable","criterio_revision":"..."}]"""
     try:
         tipo_enum = TipoEstimando(tipo)
     except ValueError:
-        return {"estado": "falla", "motivo": f"tipo de estimando inválido: {tipo}"}
+        return json.dumps({"estado": "falla", "motivo": f"tipo inválido: {tipo}"})
     supuestos_t = tuple(
-        Supuesto(
-            nombre=s["nombre"],
-            clase=ClaseSupuesto(s["clase"]),
-            justificacion=s.get("justificacion", ""),
-            criterio_revision=s.get("criterio_revision", ""),
-        )
-        for s in supuestos
+        Supuesto(nombre=s.get("nombre",""), clase=ClaseSupuesto(s.get("clase","no_observable")),
+                 criterio_revision=s.get("criterio_revision",""))
+        for s in _pj(supuestos_json, [])
     )
     try:
-        decl = DeclaracionCausal(
-            estimando=tipo_enum,
-            tratamiento=tratamiento,
-            resultado=resultado,
-            poblacion=poblacion,
-            supuestos=supuestos_t,
-        )
+        decl = DeclaracionCausal(estimando=tipo_enum, tratamiento=tratamiento,
+                                 resultado=resultado, poblacion=poblacion, supuestos=supuestos_t)
     except ValueError as e:
-        return {"estado": "falla", "motivo": str(e)}
+        return json.dumps({"estado": "falla", "motivo": str(e)})
     _store.guardar_declaracion(project_id, decl)
-    return {"estado": "pasa", "estimando": decl.to_dict(), "id": decl.id_estable}
+    return json.dumps({"estado": "pasa", "id": decl.id_estable}, ensure_ascii=False)
 
 
 @mcp.tool()
-def validar_esquema(project_id: str, esquema: dict) -> dict:
-    """C-01: Valida roles de columnas."""
-    r = validar_esquema_roles(esquema)
+def validar_esquema(project_id: str, esquema_json: str) -> str:
+    """C-01: Valida roles. esquema_json: {"tratamiento":"D","resultado":"Y","covariables":["X1"]}"""
+    r = validar_esquema_roles(_pj(esquema_json))
     r.project_id = project_id
     _store.guardar_verificacion(project_id, r)
-    return r.to_dict()
+    return json.dumps(r.to_dict(), ensure_ascii=False)
 
 
 @mcp.tool()
-def buscar(base: str, limite: int = 10) -> dict:
-    """Busca en la base de conocimiento."""
-    resultados = buscar_conocimiento(base, limite=limite)
-    return {"consulta": base, "resultados": resultados, "total": len(resultados)}
+def buscar(base: str, limite: int = 10) -> str:
+    """Busca en la base de conocimiento causal (25 fichas)."""
+    return json.dumps({"resultados": buscar_conocimiento(base, limite=limite)}, ensure_ascii=False)
 
 
 @mcp.tool()
-def estimar_ate(
-    project_id: str, X: list[list[float]], D: list[int], Y: list[float],
-    k_folds: int = 5, semilla: int = 4242,
-) -> dict:
-    """Estima ATE por AIPW con cross-fitting."""
-    X_np = np.array(X)
-    D_np = np.array(D)
-    Y_np = np.array(Y)
-    r = estimar_aipw(X_np, D_np, Y_np, k_folds=k_folds, semilla=semilla)
-    resultado = ResultadoVerificacion(
-        check_id="ate_aipw",
-        status=Status.PASS if r.ess_sobre_n > 0.1 else Status.WARN,
-        claim_level=ClaimLevel.COMPUTED,
-        recommended_action=Accion.CONTINUAR,
-        mensaje_humano=f"ATE={r.ate:.3f} SE={r.se:.3f} IC=[{r.ic[0]:.3f},{r.ic[1]:.3f}] ESS/n={r.ess_sobre_n:.2f}",
-    )
-    _store.guardar_verificacion(project_id, resultado)
-    return {
-        "ate": r.ate, "se": r.se, "ic": list(r.ic),
-        "ess_sobre_n": r.ess_sobre_n,
-        "rango_e": list(r.rango_propensidad),
-        "n": r.n, "tratados": r.n_tratados,
-    }
-
-
-@mcp.tool()
-def evaluar_puerta_causal(project_id: str, senales: dict, umbrales: dict) -> dict:
-    """C-06: Produce pasa/alerta/falla con motivo."""
-    r = evaluar_puerta(senales, umbrales)
+def evaluar_puerta_causal(project_id: str, senales_json: str, umbrales_json: str) -> str:
+    """C-06: pasa/alerta/falla. senales_json: {"solape":0.5,"psi":0.1,"smd_max":0.2}"""
+    r = evaluar_puerta(_pj(senales_json), _pj(umbrales_json))
     r.project_id = project_id
     _store.guardar_verificacion(project_id, r)
-    return r.to_dict()
+    return json.dumps(r.to_dict(), ensure_ascii=False)
 
 
 @mcp.tool()
-def abstenerse_soporte(perfil: dict, soporte: dict) -> dict:
-    """C-04: Dentro responde, fuera se abstiene sin número."""
-    r = validar_abstencion(perfil, soporte)
-    return r.to_dict()
+def abstenerse_soporte(perfil_json: str, soporte_json: str) -> str:
+    """C-04: Dentro responde, fuera se abstiene. perfil_json: {"age":30} soporte_json: {"age":[18,54]}"""
+    r = validar_abstencion(_pj(perfil_json), _pj(soporte_json))
+    return json.dumps(r.to_dict(), ensure_ascii=False)
 
 
 @mcp.tool()
-def crear_proyecto(project_id: str, nombre: str) -> dict:
+def crear_proyecto(project_id: str, nombre: str) -> str:
     """Crea un proyecto nuevo."""
     try:
-        return _store.crear_proyecto(project_id, nombre)
+        return json.dumps(_store.crear_proyecto(project_id, nombre), ensure_ascii=False)
     except ValueError as e:
-        return {"estado": "falla", "motivo": str(e)}
+        return json.dumps({"estado": "falla", "motivo": str(e)})
 
 
 @mcp.tool()
-def consultar_proyecto(project_id: str) -> dict:
-    """Consulta un proyecto con su declaración y verificaciones."""
+def consultar_proyecto(project_id: str) -> str:
+    """Consulta un proyecto con declaración y verificaciones."""
     r = _store.consultar_proyecto(project_id)
-    if r is None:
-        return {"estado": "no_encontrado", "project_id": project_id}
-    return r
+    return json.dumps(r if r else {"estado": "no_encontrado"}, ensure_ascii=False, default=str)
 
 
 @mcp.tool()
-def ejecutar_verificacion(
-    project_id: str, tipo: str, parametros: dict
-) -> dict:
-    """Ejecuta un verificador de contrato por tipo."""
+def ejecutar_verificacion(project_id: str, tipo: str, parametros_json: str) -> str:
+    """Ejecuta un verificador. tipo: esquema_roles, validez_temporal, observabilidad, sensibilidad, etc."""
+    parametros = _pj(parametros_json)
     validadores = {
         "esquema_roles": validar_esquema_roles,
         "validez_temporal": validar_validez_temporal,
@@ -179,110 +121,87 @@ def ejecutar_verificacion(
     }
     fn = validadores.get(tipo)
     if fn is None:
-        return {"estado": "falla", "motivo": f"verificador desconocido: {tipo}"}
+        return json.dumps({"estado": "falla", "motivo": f"desconocido: {tipo}"})
     try:
-        r = fn(**parametros) if not isinstance(parametros.get("umbrales", None), dict) else fn(**parametros)
+        r = fn(**parametros)
     except TypeError as e:
-        return {"estado": "falla", "motivo": f"parámetros inválidos: {e}"}
+        return json.dumps({"estado": "falla", "motivo": str(e)})
     r.project_id = project_id
     _store.guardar_verificacion(project_id, r)
-    return r.to_dict()
+    return json.dumps(r.to_dict(), ensure_ascii=False)
 
 
 @mcp.tool()
-def consultar_evidencia(project_id: str) -> dict:
-    """Consulta la evidencia registrada de un proyecto."""
-    return {"project_id": project_id, "evidencia": _store.obtener_evidencia(project_id)}
+def consultar_evidencia(project_id: str) -> str:
+    """Consulta la evidencia registrada."""
+    return json.dumps({"evidencia": _store.obtener_evidencia(project_id)}, ensure_ascii=False)
 
 
 @mcp.tool()
-def emitir_tarjeta(project_id: str) -> dict:
-    """C-05: Emite la tarjeta del modelo desde el proyecto."""
+def emitir_tarjeta(project_id: str) -> str:
+    """C-05: Emite la tarjeta del modelo."""
     proyecto = _store.consultar_proyecto(project_id)
     if proyecto is None:
-        return {"estado": "falla", "motivo": "proyecto no encontrado"}
+        return json.dumps({"estado": "falla", "motivo": "no encontrado"})
     decl = proyecto.get("declaracion")
     if decl is None:
-        return {"estado": "falla", "motivo": "proyecto sin declaración"}
-    verificaciones = proyecto.get("verificaciones", [])
-    tiene_no_obs = any(
-        s.get("clase") == "no_observable" for s in decl.get("supuestos", [])
-    )
-    if not tiene_no_obs:
-        return {"estado": "falla", "motivo": "sin supuestos no observables"}
-    tarjeta = {
-        "project_id": project_id,
-        "estimando": decl,
-        "verificaciones": verificaciones,
-        "estado_promocion": _store.estado_promocion(project_id),
-    }
-    resultado = ResultadoVerificacion(
-        check_id="tarjeta_c05",
-        status=Status.PASS,
-        claim_level=ClaimLevel.COMPUTED,
-        recommended_action=Accion.CONTINUAR,
-        mensaje_humano="Tarjeta válida con supuestos clasificados",
-    )
+        return json.dumps({"estado": "falla", "motivo": "sin declaración"})
+    if not any(s.get("clase") == "no_observable" for s in decl.get("supuestos", [])):
+        return json.dumps({"estado": "falla", "motivo": "sin no observables"})
+    tarjeta = {"project_id": project_id, "estimando": decl,
+               "verificaciones": proyecto.get("verificaciones", []),
+               "promocion": _store.estado_promocion(project_id)}
+    resultado = ResultadoVerificacion(check_id="tarjeta_c05", status=Status.PASS,
+                                       claim_level=ClaimLevel.COMPUTED,
+                                       recommended_action=Accion.CONTINUAR)
     _store.guardar_verificacion(project_id, resultado)
-    return {"estado": "pasa", "tarjeta": tarjeta}
+    return json.dumps({"estado": "pasa", "tarjeta": tarjeta}, ensure_ascii=False, default=str)
 
 
-# =============================================================== RESOURCES
+@mcp.tool()
+def generar_y_estimar(project_id: str, n: int = 2000, tau: float = 0.5,
+                      k_folds: int = 5, semilla: int = 4242) -> str:
+    """Genera DGP sintético y estima ATE por AIPW con cross-fitting."""
+    dgp = DGPSintetico(n=n, tau=tau, semilla=semilla)
+    X, D, Y = dgp.generar()
+    r = estimar_aipw(X, D, Y, k_folds=k_folds, semilla=semilla)
+    resultado = ResultadoVerificacion(check_id="ate_aipw",
+                                       status=Status.PASS if r.ess_sobre_n > 0.1 else Status.WARN,
+                                       claim_level=ClaimLevel.COMPUTED,
+                                       recommended_action=Accion.CONTINUAR,
+                                       mensaje_humano=f"ATE={r.ate:.3f}")
+    _store.guardar_verificacion(project_id, resultado)
+    return json.dumps({"ate": r.ate, "se": r.se, "ic": list(r.ic),
+                       "ess_sobre_n": r.ess_sobre_n, "n": r.n}, ensure_ascii=False)
+
+
+# === RESOURCES ===
 
 @mcp.resource("causal://knowledge/{ficha_id}")
-def obtener_ficha_resource(ficha_id: str) -> str:
-    """Recupera una ficha de conocimiento por URI."""
+def ficha_resource(ficha_id: str) -> str:
     ficha = obtener_ficha(ficha_id)
-    if ficha is None:
-        return json.dumps({"error": f"ficha '{ficha_id}' no encontrada"})
-    return json.dumps(ficha, ensure_ascii=False, indent=2)
+    return json.dumps(ficha if ficha else {"error": "no encontrada"}, ensure_ascii=False)
 
 
 @mcp.resource("causal://knowledge")
-def listar_fichas_resource() -> str:
-    """Lista todas las fichas disponibles."""
+def fichas_resource() -> str:
     fichas = [{"id": fid, "titulo": obtener_ficha(fid)["titulo"]} for fid in listar_fichas()]
-    return json.dumps({"total": contar_fichas(), "fichas": fichas}, ensure_ascii=False, indent=2)
+    return json.dumps({"total": contar_fichas(), "fichas": fichas}, ensure_ascii=False)
 
 
-# ================================================================ PROMPTS
+# === PROMPTS ===
 
 @mcp.prompt()
-def diseñar_sistema(pregunta: str) -> str:
-    """Prompt para diseñar un sistema causal desde una pregunta."""
+def disenar_sistema(pregunta: str) -> str:
     fichas = buscar_conocimiento(pregunta, limite=5)
-    contexto = "\n".join(f"- {f['id']}: {f['titulo']}" for f in fichas)
-    return f"""Estoy diseñando un sistema causal para: {pregunta}
-
-Fichas relevantes:
-{contexto}
-
-Pasos a seguir:
-1. Declarar el estimando (tipo, tratamiento, resultado, población, supuestos)
-2. Diseñar el esquema de roles (C-01)
-3. Planificar las particiones y la pared (C-10)
-4. Auditar la validez temporal de las features (C-03)
-5. Elegir estimador y verificar sus exigencias (C-12)
-
-Usa las tools del MCP para cada paso. Registra toda evidencia."""
+    ctx = "\n".join(f"- {f['id']}: {f['titulo']}" for f in fichas)
+    return f"Estoy diseñando un sistema causal para: {pregunta}\n\nFichas:\n{ctx}\n\nUsa las tools del MCP paso a paso."
 
 
 @mcp.prompt()
 def investigar_alerta(motivo: str) -> str:
-    """Prompt para investigar una alerta del monitor."""
-    return f"""El monitor produjo una alerta: {motivo}
+    return f"El monitor alertó: {motivo}\n\nConsulta el proyecto, lee las fichas, decide la acción."
 
-Pasos de investigación:
-1. Consultar el proyecto y sus verificaciones
-2. Leer las fichas de monitoreo y sensibilidad
-3. Determinar si la identificación está comprometida
-4. Decidir la acción: continuar, alertar, revisar, abstenerse o reentrenar
-5. Registrar la decisión con evidencia
-
-No reentrenes sin revisar la identificación primero."""
-
-
-# ================================================================== MAIN
 
 def main() -> int:
     mcp.run()
