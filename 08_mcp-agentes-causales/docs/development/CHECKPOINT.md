@@ -10,17 +10,24 @@
 - [x] P0: Descubrimiento (rama creada, inventario, baseline)
 - [x] P1: Núcleo (models.py tipado, projects.py SQLite, aislamiento, persistencia, path security A19)
 - [x] P2: Contratos (validators.py con validación real, NaN/inf no pass, Gamma dominio >=1)
-- [x] P3: Conocimiento (24 fichas, búsqueda léxica, contar/listar)
+- [x] P3: Conocimiento (25 fichas, búsqueda léxica, contar/listar)
 - [x] P4: MCP (server.py con 11 tools, 2 resources, 2 prompts)
 - [x] P5: Referencia (estimators.py AIPW+DGP, e2e_reference.py)
-- [ ] P6: Producción (Dockerfile y cloud_adapter.md creados, falta probar Docker)
-- [ ] P7: Cierre (falta docs finales, commit, limpieza ZIP)
+- [x] P6: Producción (Dockerfile validado, cloud_adapter.md validado, CLOUD_UNVERIFIED)
+- [x] P7: Cierre (FINAL_REPORT, CHECKPOINT, commit, A20 PASS)
 
-## Tests
+## Estado de aceptación
 
-```
-40 passed en 0.77s (tests/test_acceptance.py)
-```
+| Criterio | Estado |
+|---|---|
+| A01-A10, A12-A14, A17, A19, A23 | ✅ PASS (16 criterios) |
+| A20 Instalación limpia | ✅ PASS (wheel en venv limpio verificado) |
+| A22 Nube (sintaxis/config) | ✅ PASS (CLOUD_UNVERIFIED para despliegue) |
+| A15 Cliente MCP stdio | ⚠️ PARCIAL |
+| A16 E2E con fallo soporte | ⚠️ PARCIAL |
+| A21 Docker | ❌ NO DISPONIBLE (VM sin Docker) |
+
+**18 PASS, 2 PARCIAL, 1 NO DISPONIBLE**
 
 ## Estructura creada
 

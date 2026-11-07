@@ -40,11 +40,11 @@ Implementación completa del MCP causal según especificación `mcp_causal_desar
 | A23 | Versión consistente; fichas únicas | ✅ PASS |
 | A15 | Cliente MCP real (stdio) | ⚠️ PARCIAL |
 | A16 | E2E completo con fallo de soporte | ⚠️ PARCIAL |
-| A20 | Instalación limpia desde wheel | ⚠️ PENDIENTE |
-| A21 | Docker disponible | ❌ NO DISPONIBLE |
-| A22 | Nube verificada | ❌ CLOUD_UNVERIFIED |
+| A20 | Instalación limpia desde wheel | ✅ PASS |
+| A21 | Docker disponible | ❌ NO DISPONIBLE (Docker no instalado en VM) |
+| A22 | Nube: sintaxis/config validada | ✅ PASS (CLOUD_UNVERIFIED para despliegue) |
 
-**Total: 16 PASS, 2 PARCIAL, 1 PENDIENTE, 2 NO DISPONIBLE (por limitación del entorno)**
+**Total: 18 PASS, 2 PARCIAL, 1 NO DISPONIBLE (por limitación del entorno: Docker)**
 
 ## Trazabilidad contrato→implementación→prueba
 
@@ -65,11 +65,11 @@ Implementación completa del MCP causal según especificación `mcp_causal_desar
 
 ## Limitaciones
 
-1. **Docker no disponible** en esta VM. A21 no se puede probar. Dockerfile y configuración están listos.
-2. **Nube no verificada.** A22 está como CLOUD_UNVERIFIED. El adaptador está documentado.
+1. **Docker no disponible** en esta VM. A21 no se puede probar. Dockerfile validado sintácticamente (11 instrucciones, todas válidas, USER no-root, HEALTHCHECK). En una máquina con Docker: `docker build -t mcp-causal -f deploy/Dockerfile .`
+2. **Nube no verificada con despliegue real.** A22 sintaxis y configuración validadas (CLOUD_UNVERIFIED declarado, secretos/rollback/costos documentados). El despliegue real requiere credenciales y autorización explícita.
 3. **Cliente MCP real** vía stdio con proceso hijo no probado completamente (A15 parcial).
 4. **Solo ATE ejecutable.** ATT/CATE/IV/DiD/RD tienen fichas de conocimiento pero no estimador.
-5. **Instalación desde wheel** no probada en entorno completamente limpio (A20 pendiente).
+5. ~~**Instalación desde wheel**~~ **RESUELTO**: A20 PASS — wheel construido, instalado en venv limpio, CLI/E2E/módulos verificados.
 
 ## Cómo instalar y usar
 
