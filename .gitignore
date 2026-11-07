@@ -21,3 +21,6 @@ __pycache__/
 
 # artefactos del prototipo de docencia (regenerables con make demo)
 07_docencia/**/artifacts/
+08_mcp-agentes-causales/build/
+08_mcp-agentes-causales/dist/
+08_mcp-agentes-causales/*.egg-info/
