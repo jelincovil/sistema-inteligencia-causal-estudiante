@@ -1,0 +1,12 @@
+{
+  "id": "C-15",
+  "titulo": "Evaluación de impacto de daño",
+  "capitulo": 15,
+  "operaciones": ["evaluar_dano", "estimar_costo_error", "declarar_margen"],
+  "entrada": { "efecto": "estimación + IC", "poblacion_excluida": "C-14", "costo_error": "parámetro de decisión", "margen_aceptable": "float" },
+  "salida": { "dano_esperado": "float", "margen_disponible": "float", "recomendacion": "continuar|alertar|abstenerse" },
+  "invariantes": ["daño estimado con IC del efecto", "margen declarado antes de estimar", "conexión con sensibilidad C-08", "aparece en tarjeta C-05" ],
+  "fallos": ["daño sin IC", "margen post-hoc", "sin conexión a sensibilidad", "no aparece en tarjeta"],
+  "aceptacion": { "procedimiento": "si efecto 1596±584 y margen 800: daño esperado 2376 cruza margen → abstenerse", "semilla": 20260715, "script": "Causal_AI/scripts/cap15_tarjeta.py" },
+  "criterios_calidad": ["Q-02", "Q-07"]
+}

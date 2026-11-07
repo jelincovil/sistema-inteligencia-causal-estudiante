@@ -1,0 +1,12 @@
+{
+  "id": "C-07",
+  "titulo": "Monitoreo causal",
+  "capitulo": 14,
+  "operaciones": ["evaluar_ventana", "calibrar_umbrales"],
+  "entrada": { "referencia": "datos train con hash", "ventana": "datos recientes", "tarjeta": "C-05", "reestimar": "función pipeline" },
+  "salida": { "senales": "i/ii/iii/iv con valor+umbral+estado", "accion": "una sola de las cinco" },
+  "invariantes": ["referencia fija", "umbral con tasa y fecha", "propensity de referencia no reajustado", "efecto reestimado con dos SE", "reporte determinista", "ventana pequeña=sin evidencia"],
+  "fallos": ["umbral heredado", "reajustar propensity", "punto vs intervalo", "solo efecto o solo marginales"],
+  "aceptacion": { "procedimiento": "4 cambios: shift 100%i, regla 100%ii, instrumento 100%iii, efecto 95%iv, ninguno ≤5%", "semilla": 20260714, "script": "Causal_AI/scripts/cap14_monitor.py" },
+  "criterios_calidad": ["Q-06"]
+}

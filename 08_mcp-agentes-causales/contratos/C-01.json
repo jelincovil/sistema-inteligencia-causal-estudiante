@@ -1,0 +1,12 @@
+{
+  "id": "C-01",
+  "titulo": "Esquema de roles causales",
+  "capitulo": 3,
+  "operaciones": ["declarar", "validar", "proyectar", "escribir", "leer"],
+  "entrada": { "tratamiento": "str", "resultado": "str", "covariables": ["str"], "instrumentos": ["str?"] },
+  "salida": { "X": "matriz", "D": "vector", "Y": "vector", "serializado": "json" },
+  "invariantes": ["1 columna=1 rol", ">=1 covariable", "tabla valida: columnas presentes + D varía", "orden covariables respetado", "roundtrip escribir/leer idéntico", "inmutable", "declarar != verificar (C-03)"],
+  "fallos": ["columna renombrada", "doble rol", "D constante por filtro", "desincronía esquema/datos", "post-tratamiento pasa"],
+  "aceptacion": { "procedimiento": "4 fallos inducidos deben nombrarla columna + roundtrip + caso dos_definiciones", "semilla": 11, "script": "Causal_AI/scripts/cap03_dos_definiciones.py" },
+  "criterios_calidad": ["Q-01"]
+}

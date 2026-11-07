@@ -1,0 +1,12 @@
+{
+  "id": "C-02",
+  "titulo": "Comparación de poblaciones",
+  "capitulo": 7,
+  "operaciones": ["comparar", "medir_psi", "medir_smd", "medir_ess"],
+  "entrada": { "ref": "distribución referencia", "ventana": "distribución nueva", "umbrales": "psi/smd/ess" },
+  "salida": { "psi": "float", "smd": "dict", "ess": "float", "estado": "pasa/alerta/falla" },
+  "invariantes": ["mide magnitud no p-valor", "calibrado antes de mirar", "dos señales mínimo"],
+  "fallos": ["umbral post-hoc", "solo p-valor", "ignorar faltantes diferenciales"],
+  "aceptacion": { "procedimiento": "Hölm 2.02→0.04, deriva PSI 1.35, faltantes 9.6x invisible a SMD", "semilla": 20240701, "script": "Causal_AI/scripts/cap07_calidad.py" },
+  "criterios_calidad": ["Q-04"]
+}

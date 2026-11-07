@@ -1462,3 +1462,29 @@ rambachan2023more:
   issue: 5
   page-range: 2555-2591
   date: 2023
+
+# --- Edición de ingeniería de datos (añadidas para main_de.typ) ---
+kleppmann2017:
+  type: book
+  author: Kleppmann, Martin
+  title: "Designing Data-Intensive Applications: The Big Ideas Behind Reliable, Scalable, and Maintainable Systems"
+  publisher: O'Reilly Media
+  date: 2017
+
+reis2022fundamentals:
+  type: book
+  author: ["Reis, Joe", "Housley, Matt"]
+  title: "Fundamentals of Data Engineering: Plan and Build Robust Data Systems"
+  publisher: O'Reilly Media
+  date: 2022
+
+hill2011bayesian:
+  type: article
+  author: Hill, Jennifer
+  title: "Bayesian Nonparametric Modeling for Causal Inference"
+  parent:
+    title: Journal of Computational and Graphical Statistics
+  volume: 20
+  issue: 1
+  page-range: 217-240
+  date: 2011

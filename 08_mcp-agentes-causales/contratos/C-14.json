@@ -1,0 +1,12 @@
+{
+  "id": "C-14",
+  "titulo": "Declaración de población excluida",
+  "capitulo": 15,
+  "operaciones": ["declarar_excluidos", "cuantificar_exclusion", "justificar_corte"],
+  "entrada": { "estimando": "población declarada", "soporte": "rangos por covariable", "datos": "tabla observada" },
+  "salida": { "n_excluidos": "int", "fraccion_excluida": "float", "perfil_excluido": "dict", "motivo": "str" },
+  "invariantes": ["exclusión declarada antes de estimar", "fracción y perfil reportados", "motivo no es 'por ganancia'", "aparece en tarjeta C-05", "servicio C-04 se abstiene ahí" ],
+  "fallos": ["excluir y no declarar", "decir 'ATE de la población completa' tras recorte", "motivo post-hoc", "perfil excluido oculto"],
+  "aceptacion": { "procedimiento": "trimming 42% conserva, 57.5% excluye: declarado con perfil y motivo", "semilla": 20260701, "script": "Causal_AI/scripts/cap09_exigencias.py" },
+  "criterios_calidad": ["Q-02", "Q-07"]
+}

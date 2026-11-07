@@ -1,0 +1,12 @@
+{
+  "id": "C-11",
+  "titulo": "Benchmark y DGP como producto",
+  "capitulo": 8,
+  "operaciones": ["publicar", "verificar", "declarar_regimen_pared"],
+  "entrada": { "dgp": "definición + semilla", "regimen": "pared fisica vs rol" },
+  "salida": { "escenario": "observed+identification+hash", "pared": "0 truth en paquete" },
+  "invariantes": ["semilla declarada", "0 truth en observed", "estado identificabilidad explícito", "pared documentada"],
+  "fallos": ["columna truth filtrada", "estado no_identifiable oculto", "semilla no reproducible"],
+  "aceptacion": { "procedimiento": "0 truth_*.csv en 5 escenarios, 5 estados verificados", "semilla": 543, "script": "Causal_AI/scripts/cap08_benchmark.py" },
+  "criterios_calidad": ["Q-05"]
+}

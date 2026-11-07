@@ -1,0 +1,12 @@
+{
+  "id": "C-10",
+  "titulo": "Partición versionada y pared evaluación",
+  "capitulo": 5,
+  "operaciones": ["dividir", "describir", "verificar", "etiquetar_pared"],
+  "entrada": { "tabla_hash": "str", "semilla": "int", "proporciones": [0.6,0.2,0.2], "metodo": "estratificado|aleatorio" },
+  "salida": { "indices": "bloques", "metadatos": "semilla+hash+lado_pared" },
+  "invariantes": ["determinista dada semilla", "disjuntos y completos", "viaja con hash tabla", "test mide 1 vez", "cambiar semilla = nueva versión", "estratificación declarada"],
+  "fallos": ["reusar semilla buena", "solape por join", "barajar tras separar por tiempo", "validación usada como test"],
+  "aceptacion": { "procedimiento": "misma semilla misma huella, splits.json validado, selección en test penalizada", "semilla": 20240701, "script": "Causal_AI/scripts/cap05_splits.py" },
+  "criterios_calidad": ["Q-05"]
+}

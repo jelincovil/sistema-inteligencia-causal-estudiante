@@ -1,0 +1,12 @@
+{
+  "id": "C-13",
+  "titulo": "Auditoría de equidad causal",
+  "capitulo": 15,
+  "operaciones": ["auditar_equidad", "comparar_grupos", "reportar_brecha"],
+  "entrada": { "efectos_por_grupo": "dict con efecto+SE por grupo protegido", "atributo_protegido": "str", "umbral_brecha": "float" },
+  "salida": { "brecha_max": "float", "grupos_alerta": "list", "paridad": "dict" },
+  "invariantes": ["efecto por grupo con IC", "brecha medida no p-valor", "grupo de referencia declarado", "umbral pre-declarado", "corte no elegido por ganancia"],
+  "fallos": ["comparar sin IC", "umbral post-hoc", "corte elegido por máxima diferencia", "ocultar grupo excluido"],
+  "aceptacion": { "procedimiento": "nodegree vs black en real/jobs: 1060/2345 con IC que se solapan vs black con mayor ganancia pero rechazado por equidad", "semilla": 20260710, "script": "Causal_AI/scripts/cap10_heterogeneidad.py" },
+  "criterios_calidad": ["Q-02", "Q-04"]
+}

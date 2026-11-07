@@ -1,0 +1,12 @@
+{
+  "id": "C-06",
+  "titulo": "Compuerta de registro causal",
+  "capitulo": 12,
+  "operaciones": ["evaluar", "promover", "bloquear", "aceptar_alerta"],
+  "entrada": { "version_candidata": "bundle C-12", "senales": "C-02 solape/PSI/SMD", "umbrales": "tarjeta C-05" },
+  "salida": { "estado": "pasa|alerta|falla", "motivo": "señal+valor+umbral", "champion": "alias o bloqueo" },
+  "invariantes": ["falla nunca llega a champion", "alerta solo con aceptación explícita", "motivo nombra señal y valor", "umbrales de tarjeta no post-hoc", "decisión con hash y estado"],
+  "fallos": ["promover falla", "ajustar umbral post-hoc", "promoción sin motivo", "reentrenar en vez de revisar"],
+  "aceptacion": { "procedimiento": "v0001 pasa, v0002 alerta deriva, v0003 falla solape 0%", "semilla": 20260712, "script": "Causal_AI/scripts/cap12_puerta.py" },
+  "criterios_calidad": ["Q-06"]
+}
