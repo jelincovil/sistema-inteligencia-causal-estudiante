@@ -1,0 +1,57 @@
+{
+  "id": "aipw_dml",
+  "titulo": "AIPW y DML: estimación doblemente robusta",
+  "pregunta_operativa": "¿Cómo estimo el ATE con ML sin perder inferencia válida?",
+  "alcance": "Estimación AIPW con cross-fitting para ATE.",
+  "condiciones": [
+    "Supuestos de identificación declarados",
+    "Partición de folds"
+  ],
+  "principios": [
+    "El score ortogonal de Neyman permite nuisance con ML",
+    "El cross-fitting elimina el sobreajuste del nuisance",
+    "La doble robustez: si una pierna falla, la otra sostiene"
+  ],
+  "pasos": [
+    "Declarar el estimando y los supuestos",
+    "Particionar en K folds con semilla",
+    "Por fold: ajustar outcome y propensity fuera, predecir dentro",
+    "Calcular el score AIPW por unidad",
+    "Promediar para el ATE, SE por influencia"
+  ],
+  "evidencia_requerida": [
+    "scores_aipw",
+    "ess_solape",
+    "comparacion_learners"
+  ],
+  "fallos": [
+    "Sin cross-fitting: sesgo por sobreajuste",
+    "Ambos nuisances mal"
+  ],
+  "alternativas": [
+    "PLR de Robinson",
+    "IRM interactivo"
+  ],
+  "ejemplo": "real/jobs: AIPW K=5 semilla 4242, ATE 1638.6 SE 325.0.",
+  "limitaciones": [
+    "No garantiza cobertura del intervalo sin condiciones de tasa"
+  ],
+  "fuentes": [
+    {
+      "cita": "Chernozhukov et al 2018",
+      "url": "https://doi.org/10.1111/rssb.12261",
+      "tipo": "articulo"
+    }
+  ],
+  "fecha_revision": "2026-11-07",
+  "contratos_relacionados": [
+    "C-12"
+  ],
+  "criterios_relacionados": [
+    "Q-04"
+  ],
+  "etiquetas": [
+    "estimación",
+    "dml"
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "id": "incidentes_rollback",
+  "titulo": "Incidentes y rollback",
+  "pregunta_operativa": "¿Qué hago cuando el monitor alerta?",
+  "alcance": "Procedimiento de respuesta a incidentes y reversión segura.",
+  "condiciones": [
+    "Monitor en producción",
+    "Registro con versiones"
+  ],
+  "principios": [
+    "Las señales orientan revisión, no prueban la causa",
+    "El rollback apunta a una versión anterior íntegra",
+    "Toda decisión de rollback queda registrada"
+  ],
+  "pasos": [
+    "Leer la acción del monitor (alertar/abstenerse/revisar)",
+    "Si abstenerse: detener servicio inmediatamente",
+    "Si revisar: investigar identificación antes de tocar el modelo",
+    "Si rollback: apuntar champion a versión anterior"
+  ],
+  "evidencia_requerida": [
+    "accion_registrada",
+    "version_rollback"
+  ],
+  "fallos": [
+    "Reentrenar sin revisar identificación",
+    "Rollback sin registro"
+  ],
+  "alternativas": [
+    "Canary: servir versión vieja a fracción del tráfico"
+  ],
+  "ejemplo": "Ventana de positividad: falla → champion vuelve a v0000.",
+  "limitaciones": [
+    "El rollback no arregla el problema de datos subyacente"
+  ],
+  "fuentes": [
+    {
+      "cita": "Sculley et al 2015",
+      "url": "https://doi.org/10.5555/2969442.2969461",
+      "tipo": "articulo"
+    }
+  ],
+  "fecha_revision": "2026-11-07",
+  "contratos_relacionados": [
+    "C-06",
+    "C-07"
+  ],
+  "criterios_relacionados": [
+    "Q-06"
+  ],
+  "etiquetas": [
+    "operación",
+    "incidente"
+  ]
+}

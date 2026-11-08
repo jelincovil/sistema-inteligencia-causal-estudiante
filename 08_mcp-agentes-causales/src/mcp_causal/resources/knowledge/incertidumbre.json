@@ -1,0 +1,51 @@
+{
+  "id": "incertidumbre",
+  "titulo": "Incertidumbre: qué cubre el intervalo",
+  "pregunta_operativa": "¿Qué afirma exactamente mi IC del 95%?",
+  "alcance": "Interpretación correcta de intervalos de confianza causales.",
+  "condiciones": [
+    "Estimación con SE calculado"
+  ],
+  "principios": [
+    "El IC cubre el estimando poblacional, no efectos individuales",
+    "Un IC del CATE no es un IC del efecto individual",
+    "La cobertura asintótica requiere condiciones de tasa"
+  ],
+  "pasos": [
+    "Declarar qué objeto cubre el intervalo",
+    "Reportar el SE y el método de cálculo",
+    "No confundir IC del ATE con IC de predicción individual"
+  ],
+  "evidencia_requerida": [
+    "ic_con_objeto_declarado"
+  ],
+  "fallos": [
+    "Presentar IC del ATE como efecto individual"
+  ],
+  "alternativas": [
+    "Intervalos simultáneos para múltiples comparaciones"
+  ],
+  "ejemplo": "ATE 1596.0 [1004.8, 2187.3]: cubre el efecto promedio, no el de María.",
+  "limitaciones": [
+    "La cobertura exacta no está garantizada en muestras finitas"
+  ],
+  "fuentes": [
+    {
+      "cita": "Imbens & Rubin 2015",
+      "url": "https://doi.org/10.1017/CBO9781139025751",
+      "tipo": "libro"
+    }
+  ],
+  "fecha_revision": "2026-11-07",
+  "contratos_relacionados": [
+    "C-12",
+    "C-05"
+  ],
+  "criterios_relacionados": [
+    "Q-01"
+  ],
+  "etiquetas": [
+    "estimación",
+    "interpretación"
+  ]
+}

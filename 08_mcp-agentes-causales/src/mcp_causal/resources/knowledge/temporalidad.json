@@ -1,0 +1,54 @@
+{
+  "id": "temporalidad",
+  "titulo": "Validez temporal y control de fuga",
+  "pregunta_operativa": "¿Cuándo se midió cada feature y es anterior al tratamiento?",
+  "alcance": "Auditoría de features contra marcas de tiempo.",
+  "condiciones": [
+    "Marcas de tiempo por feature",
+    "Momento del tratamiento conocido"
+  ],
+  "principios": [
+    "Lo no verificable como pre-tratamiento queda fuera",
+    "La fecha de ingesta no es la fecha de medición",
+    "Dos especificaciones cuando hay rol ambiguo"
+  ],
+  "pasos": [
+    "Listar features candidatas con su timestamp",
+    "Verificar cada una contra el momento del tratamiento",
+    "Clasificar: pre-tratamiento, post-tratamiento, sin verificar",
+    "Reportar ambas especificaciones si hay ambigüedad"
+  ],
+  "evidencia_requerida": [
+    "auditoria_temporal",
+    "especificaciones"
+  ],
+  "fallos": [
+    "Feature derivada del resultado",
+    "Timestamp de ingesta usado como medición"
+  ],
+  "alternativas": [
+    "As-of join para point-in-time correctness"
+  ],
+  "ejemplo": "score_post = 0.6*re78 + 0.4*D: derivada del resultado, bloqueada.",
+  "limitaciones": [
+    "La auditoría confía en el rol declarado"
+  ],
+  "fuentes": [
+    {
+      "cita": "Huyen 2022",
+      "url": "https://doi.org/10.1093/oso/9780199642611.001.0001",
+      "tipo": "libro"
+    }
+  ],
+  "fecha_revision": "2026-11-07",
+  "contratos_relacionados": [
+    "C-03"
+  ],
+  "criterios_relacionados": [
+    "Q-03"
+  ],
+  "etiquetas": [
+    "ingeniería",
+    "fuga"
+  ]
+}

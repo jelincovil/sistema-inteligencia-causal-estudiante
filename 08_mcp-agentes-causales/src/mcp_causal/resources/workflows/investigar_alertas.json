@@ -1,0 +1,34 @@
+{
+  "id": "investigar_alertas",
+  "titulo": "Investigar alertas",
+  "descripcion": "Procedimiento ante una alerta del monitor.",
+  "precondiciones": [
+    "Alerta registrada"
+  ],
+  "pasos": [
+    {
+      "accion": "consultar",
+      "tool": "consultar_proyecto",
+      "describe": "Revisión y evidencia de la alerta"
+    },
+    {
+      "accion": "diagnosticar",
+      "tool": "ejecutar_verificacion",
+      "describe": "Placebo/control/sensibilidad"
+    },
+    {
+      "accion": "revisar",
+      "tool": "aceptar_advertencia",
+      "describe": "Aceptación ligada a revisión concreta"
+    }
+  ],
+  "decisiones": [
+    "Revisión sin evidencia renovada no aplica"
+  ],
+  "salida": "Alerta investigada con decisión registrada.",
+  "ruta_fallo": "Re-evaluar con evidencia vigente.",
+  "contratos": [
+    "C-07",
+    "C-08"
+  ]
+}

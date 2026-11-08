@@ -1,0 +1,55 @@
+{
+  "id": "trimming_poblacion",
+  "titulo": "Trimming y cambio de población",
+  "pregunta_operativa": "Si recorto por soporte, ¿sobre quién vale mi efecto?",
+  "alcance": "Declaración del cambio de estimando tras trimming.",
+  "condiciones": [
+    "Trimming aplicado o considerado"
+  ],
+  "principios": [
+    "El trimming cambia el estimando, no solo la varianza",
+    "Reportar el ATE recortado como poblacional completo es falso",
+    "La ficha debe documentar la población post-trimming"
+  ],
+  "pasos": [
+    "Calcular qué fracción se excluye",
+    "Declarar el nuevo estimando y su población",
+    "Registrar en la ficha del modelo",
+    "El servicio se abstiene donde el efecto no aplica"
+  ],
+  "evidencia_requerida": [
+    "estimando_post_trimming",
+    "fraccion_excluida"
+  ],
+  "fallos": [
+    "Recortar y no declarar",
+    "Decir 'ATE completo' tras recorte"
+  ],
+  "alternativas": [
+    "No recortar y reportar mayor varianza"
+  ],
+  "ejemplo": "Trimming 42% conserva: el ATE vale sobre el 42% con soporte, no sobre el 100%.",
+  "limitaciones": [
+    "La decisión de recortar es del dominio, no del pipeline"
+  ],
+  "fuentes": [
+    {
+      "cita": "Crump et al 2009",
+      "url": "https://doi.org/10.1111/j.1541-0420.2008.01143.x",
+      "tipo": "articulo"
+    }
+  ],
+  "fecha_revision": "2026-11-07",
+  "contratos_relacionados": [
+    "C-12",
+    "C-14"
+  ],
+  "criterios_relacionados": [
+    "Q-04",
+    "Q-07"
+  ],
+  "etiquetas": [
+    "diagnóstico",
+    "estimando"
+  ]
+}

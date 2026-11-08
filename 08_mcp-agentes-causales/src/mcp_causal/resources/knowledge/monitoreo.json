@@ -1,0 +1,54 @@
+{
+  "id": "monitoreo",
+  "titulo": "Monitoreo causal en producción",
+  "pregunta_operativa": "¿Sigue siendo válido el efecto que sirvo?",
+  "alcance": "Cuatro señales causal-aware sobre ventanas de producción.",
+  "condiciones": [
+    "Referencia fija",
+    "Pipeline de re-estimación disponible"
+  ],
+  "principios": [
+    "Drift marginal no basta: vigilar mecanismo de asignación",
+    "El efecto se reestima, no se predice",
+    "Una sola acción, no cuatro semáforos"
+  ],
+  "pasos": [
+    "Comparar ventana contra referencia fija",
+    "Puntuar propensity de referencia en ventana",
+    "Reestimar efecto y contrastar formalmente",
+    "Producir una acción del vocabulario de cinco"
+  ],
+  "evidencia_requerida": [
+    "senales_ventana",
+    "accion_producida"
+  ],
+  "fallos": [
+    "Reajustar propensity en ventana",
+    "Solo monitorear marginales"
+  ],
+  "alternativas": [
+    "Monitoreo genérico de MLOps como complemento"
+  ],
+  "ejemplo": "Regla X1→X2: señal (ii) detecta sin mover marginales.",
+  "limitaciones": [
+    "La confusión no observada no tiene señal"
+  ],
+  "fuentes": [
+    {
+      "cita": "Sculley et al 2015",
+      "url": "https://doi.org/10.5555/2969442.2969461",
+      "tipo": "articulo"
+    }
+  ],
+  "fecha_revision": "2026-11-07",
+  "contratos_relacionados": [
+    "C-07"
+  ],
+  "criterios_relacionados": [
+    "Q-06"
+  ],
+  "etiquetas": [
+    "operación",
+    "monitoreo"
+  ]
+}

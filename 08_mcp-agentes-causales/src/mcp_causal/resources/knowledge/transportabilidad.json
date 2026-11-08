@@ -1,0 +1,52 @@
+{
+  "id": "transportabilidad",
+  "titulo": "Transportabilidad y validez externa",
+  "pregunta_operativa": "¿El efecto de mi muestra vale en la población objetivo?",
+  "alcance": "Condiciones para transportar efectos entre poblaciones.",
+  "condiciones": [
+    "Efecto estimado en muestra fuente",
+    "Población objetivo definida"
+  ],
+  "principios": [
+    "La validez externa no se hereda del tamaño de muestra",
+    "Transportar requiere supuestos sobre qué difiere",
+    "El soporte de covariables limita dónde se puede extrapolar"
+  ],
+  "pasos": [
+    "Comparar distribución de covariables fuente vs objetivo",
+    "Identificar qué mecanismos podrían diferir",
+    "Declarar el dominio de validez del efecto"
+  ],
+  "evidencia_requerida": [
+    "comparacion_poblaciones",
+    "dominio_validez"
+  ],
+  "fallos": [
+    "Asumir que el efecto transporta sin evidencia"
+  ],
+  "alternativas": [
+    "Re-ponderar por propensión de participación"
+  ],
+  "ejemplo": "Efecto de NSW: no transporta a CPS sin re-ponderar.",
+  "limitaciones": [
+    "La validez externa es un juicio de dominio, no un test"
+  ],
+  "fuentes": [
+    {
+      "cita": "Bareinboim & Pearl 2013",
+      "url": "https://doi.org/10.1145/2487575.2487645",
+      "tipo": "articulo"
+    }
+  ],
+  "fecha_revision": "2026-11-07",
+  "contratos_relacionados": [
+    "C-14"
+  ],
+  "criterios_relacionados": [
+    "Q-02"
+  ],
+  "etiquetas": [
+    "validez",
+    "generalización"
+  ]
+}

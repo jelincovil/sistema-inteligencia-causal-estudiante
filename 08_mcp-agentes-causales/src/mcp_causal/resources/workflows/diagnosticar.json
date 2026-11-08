@@ -1,0 +1,33 @@
+{
+  "id": "diagnosticar",
+  "titulo": "Diagnosticar sin verdad",
+  "descripcion": "Placebo, control negativo y sensibilidad; diagnósticos no prueban ausencia de confusión.",
+  "precondiciones": [
+    "Estimación disponible"
+  ],
+  "pasos": [
+    {
+      "accion": "placebo",
+      "tool": "ejecutar_verificacion",
+      "describe": "Permutar tratamiento, ATE debe ir a 0"
+    },
+    {
+      "accion": "control_negativo",
+      "tool": "ejecutar_verificacion",
+      "describe": "Outcome que no debe moverse"
+    },
+    {
+      "accion": "sensibilidad",
+      "tool": "ejecutar_verificacion",
+      "describe": "Gamma de Rosenbaum (dominio ≥1)"
+    }
+  ],
+  "decisiones": [
+    "Si placebo rechaza, revisar identificación"
+  ],
+  "salida": "p_placebo, ATE control negativo, Gamma con interpretación.",
+  "ruta_fallo": "No usar diagnóstico como prueba de causalidad.",
+  "contratos": [
+    "C-08"
+  ]
+}

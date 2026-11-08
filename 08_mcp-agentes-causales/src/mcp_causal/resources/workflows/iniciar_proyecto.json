@@ -1,0 +1,28 @@
+{
+  "id": "iniciar_proyecto",
+  "titulo": "Iniciar un proyecto causal",
+  "descripcion": "Crear expediente y declarar estimando antes de mirar datos.",
+  "precondiciones": [
+    "Pregunta causal formulada"
+  ],
+  "pasos": [
+    {
+      "accion": "crear_proyecto",
+      "tool": "crear_proyecto",
+      "describe": "Crear expediente aislado"
+    },
+    {
+      "accion": "declarar_estimando",
+      "tool": "declarar_estimando",
+      "describe": "Tipo, tratamiento, resultado, población, supuestos"
+    }
+  ],
+  "decisiones": [
+    "Si falta supuesto no observable, el proyecto no avanza"
+  ],
+  "salida": "Declaración causal válida registrada.",
+  "ruta_fallo": "Corregir declaración y re-declarar.",
+  "contratos": [
+    "C-09"
+  ]
+}

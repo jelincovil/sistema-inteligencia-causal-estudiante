@@ -1,0 +1,56 @@
+{
+  "id": "nube_costos",
+  "titulo": "Nube y costos",
+  "pregunta_operativa": "¿Qué cambia al desplegar en nube y cuánto cuesta?",
+  "alcance": "Preparación de despliegue en contenedores administrados.",
+  "condiciones": [
+    "Dockerfile sin privilegios",
+    "Configuración por variables"
+  ],
+  "principios": [
+    "El mismo bundle y contrato en local y nube",
+    "Los secretos van por referencia del gestor de la plataforma",
+    "La equivalencia es contractual, no bit a bit"
+  ],
+  "pasos": [
+    "Empaquetar en imagen Docker sin privilegios",
+    "Configurar variables de entorno para la plataforma",
+    "Definir límites de recursos y plan de rollback",
+    "Documentar costos estimados"
+  ],
+  "evidencia_requerida": [
+    "dockerfile_validado",
+    "config_sin_secretos"
+  ],
+  "fallos": [
+    "Secretos en la imagen",
+    "Sin plan de rollback"
+  ],
+  "alternativas": [
+    "Cloud Run, ECS, Lambda con adaptadores"
+  ],
+  "ejemplo": "Dockerfile copia bundle, no datos. Cloud Run con 512MB.",
+  "limitaciones": [
+    "Sin credenciales no se verifica el despliegue real"
+  ],
+  "fuentes": [
+    {
+      "cita": "Reis & Housley 2022",
+      "url": "https://doi.org/10.1093/oso/9780199642611.001.0001",
+      "tipo": "libro"
+    }
+  ],
+  "fecha_revision": "2026-11-07",
+  "contratos_relacionados": [
+    "C-04",
+    "C-05"
+  ],
+  "criterios_relacionados": [
+    "Q-07",
+    "Q-08"
+  ],
+  "etiquetas": [
+    "operación",
+    "nube"
+  ]
+}

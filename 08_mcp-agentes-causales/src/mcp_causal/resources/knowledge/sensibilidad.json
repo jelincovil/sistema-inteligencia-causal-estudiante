@@ -1,0 +1,54 @@
+{
+  "id": "sensibilidad",
+  "titulo": "Análisis de sensibilidad Rosenbaum",
+  "pregunta_operativa": "¿Cuánto confusor oculto haría cruzar el cero?",
+  "alcance": "Cuantificación de robustez frente a confusión no medida.",
+  "condiciones": [
+    "Efecto estimado con SE",
+    "Método de sensibilidad elegido"
+  ],
+  "principios": [
+    "Gamma mide la fuerza del confusor que revertiría la conclusión",
+    "Gamma de Rosenbaum tiene dominio >= 1",
+    "La sensibilidad acota, no prueba ausencia de confusión"
+  ],
+  "pasos": [
+    "Calcular Gamma con el método elegido",
+    "Reportar Gamma con su interpretación",
+    "Declarar el criterio de revisión asociado"
+  ],
+  "evidencia_requerida": [
+    "gamma_reportada",
+    "interpretacion"
+  ],
+  "fallos": [
+    "Gamma < 1 con método Rosenbaum",
+    "No interpretar Gamma"
+  ],
+  "alternativas": [
+    "E-value",
+    "Control negativo como proxy"
+  ],
+  "ejemplo": "Gamma 0.8: un confusor moderado hace cruzar el cero. Poco robusto.",
+  "limitaciones": [
+    "La interpretación de Gamma depende del contexto"
+  ],
+  "fuentes": [
+    {
+      "cita": "Rosenbaum 2002",
+      "url": "https://doi.org/10.1007/978-1-4757-4132-7",
+      "tipo": "libro"
+    }
+  ],
+  "fecha_revision": "2026-11-07",
+  "contratos_relacionados": [
+    "C-08"
+  ],
+  "criterios_relacionados": [
+    "Q-02"
+  ],
+  "etiquetas": [
+    "diagnóstico",
+    "confusión"
+  ]
+}

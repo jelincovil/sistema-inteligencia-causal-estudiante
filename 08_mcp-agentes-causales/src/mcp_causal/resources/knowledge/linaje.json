@@ -1,0 +1,55 @@
+{
+  "id": "linaje",
+  "titulo": "Linaje, versionado y reproducibilidad",
+  "pregunta_operativa": "¿Puedo reconstruir qué datos y código produjeron este número?",
+  "alcance": "Registro de versiones con hash y alias champion.",
+  "condiciones": [
+    "Artefactos con hash SHA-256",
+    "Registro local persistente"
+  ],
+  "principios": [
+    "El hash es identidad, no paranoia",
+    "Las versiones son inmutables",
+    "El alias champion se escribe atómicamente"
+  ],
+  "pasos": [
+    "Hash de cada artefacto (datos, código, config)",
+    "Registrar versión con manifest",
+    "Promover solo con puerta en pasa",
+    "Invalidar verificaciones al cambiar artefactos"
+  ],
+  "evidencia_requerida": [
+    "manifest_con_hash",
+    "champion_resuelto"
+  ],
+  "fallos": [
+    "Editar in-place",
+    "Tabla sustituida sin registro"
+  ],
+  "alternativas": [
+    "MLflow",
+    "DVC cuando el equipo lo soporta"
+  ],
+  "ejemplo": "v0001 con hash cd5a772e... de observed_train.csv.",
+  "limitaciones": [
+    "El hash verifica integridad, no veracidad causal"
+  ],
+  "fuentes": [
+    {
+      "cita": "Kleppmann 2017",
+      "url": "https://doi.org/10.1093/oso/9780199642611.001.0001",
+      "tipo": "libro"
+    }
+  ],
+  "fecha_revision": "2026-11-07",
+  "contratos_relacionados": [
+    "C-09"
+  ],
+  "criterios_relacionados": [
+    "Q-08"
+  ],
+  "etiquetas": [
+    "ingeniería",
+    "versionado"
+  ]
+}

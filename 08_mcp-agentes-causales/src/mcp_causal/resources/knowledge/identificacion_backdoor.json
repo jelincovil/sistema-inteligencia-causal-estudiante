@@ -1,0 +1,63 @@
+{
+  "id": "identificacion_backdoor",
+  "titulo": "Identificación por criterio de puerta trasera",
+  "pregunta_operativa": "¿Qué conjunto de covariables bloquea los caminos espurios?",
+  "alcance": "Selección de conjuntos de ajuste legítimos mediante DAG.",
+  "condiciones": [
+    "DAG propuesto",
+    "Conjunto de covariables candidatas"
+  ],
+  "principios": [
+    "El criterio de puerta trasera determina qué controlar",
+    "Controlar un collider abre un camino espurio",
+    "Controlar un mediador bloquea parte del efecto"
+  ],
+  "pasos": [
+    "Dibujar el DAG con las variables relevantes",
+    "Identificar caminos de puerta trasera de D a Y",
+    "Verificar qué conjunto bloquea todos los caminos",
+    "Registrar el conjunto de ajuste en el esquema"
+  ],
+  "evidencia_requerida": [
+    "dag_referencia",
+    "conjunto_ajuste"
+  ],
+  "fallos": [
+    "Controlar post-tratamiento",
+    "Omitir confusor clave"
+  ],
+  "alternativas": [
+    "Front-door",
+    "IV",
+    "DiD cuando aplica"
+  ],
+  "ejemplo": "En real/jobs: controlar por age, educ, black, hispan, married, nodegree, re74, re75.",
+  "limitaciones": [
+    "El DAG es una suposición, no un dato"
+  ],
+  "fuentes": [
+    {
+      "cita": "Pearl 2009",
+      "url": "https://doi.org/10.1145/1644001.1644020",
+      "tipo": "articulo"
+    },
+    {
+      "cita": "Bareinboim et al 2025",
+      "url": "https://doi.org/10.1145/3732543",
+      "tipo": "articulo"
+    }
+  ],
+  "fecha_revision": "2026-11-07",
+  "contratos_relacionados": [
+    "C-01",
+    "C-03"
+  ],
+  "criterios_relacionados": [
+    "Q-01",
+    "Q-02"
+  ],
+  "etiquetas": [
+    "fundamento",
+    "identificación"
+  ]
+}

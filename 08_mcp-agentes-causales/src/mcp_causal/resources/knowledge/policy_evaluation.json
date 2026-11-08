@@ -1,0 +1,53 @@
+{
+  "id": "policy_evaluation",
+  "titulo": "Evaluación de políticas",
+  "pregunta_operativa": "¿Quién tratar y con qué presupuesto?",
+  "alcance": "Valor de política y comparación con baselines.",
+  "condiciones": [
+    "CATE estimado OOS",
+    "Regla de decisión declarada"
+  ],
+  "principios": [
+    "El valor de política se estima OOS con IPW",
+    "Comparar con aleatorio y tratar-a-todos",
+    "El umbral se declara antes de mirar el valor"
+  ],
+  "pasos": [
+    "Declarar el umbral de tratamiento",
+    "Estimar V(pi) por IPW OOS",
+    "Comparar con aleatorio y todos",
+    "Reportar proporción tratada"
+  ],
+  "evidencia_requerida": [
+    "valor_ipw_oos",
+    "comparacion_baselines"
+  ],
+  "fallos": [
+    "Elegir umbral maximizando valor in-sample"
+  ],
+  "alternativas": [
+    "Policy óptima con restricciones de presupuesto"
+  ],
+  "ejemplo": "tau>0: valor 0.55 vs aleatorio 0.07, trata 60%.",
+  "limitaciones": [
+    "El valor IPW hereda la calidad del propensity"
+  ],
+  "fuentes": [
+    {
+      "cita": "Athey & Wager 2021",
+      "url": "https://doi.org/10.1073/pnas.1900467118",
+      "tipo": "articulo"
+    }
+  ],
+  "fecha_revision": "2026-11-07",
+  "contratos_relacionados": [
+    "C-12"
+  ],
+  "criterios_relacionados": [
+    "Q-04"
+  ],
+  "etiquetas": [
+    "estimación",
+    "política"
+  ]
+}

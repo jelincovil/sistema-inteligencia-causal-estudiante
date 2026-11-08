@@ -1,0 +1,53 @@
+{
+  "id": "did",
+  "titulo": "Diferencias en diferencias",
+  "pregunta_operativa": "¿Puedo comparar antes y después entre grupos?",
+  "alcance": "DiD con tendencias paralelas.",
+  "condiciones": [
+    "Datos de panel pre y post",
+    "Grupo de control comparable"
+  ],
+  "principios": [
+    "Las tendencias paralelas son el supuesto clave",
+    "El control sintético es una extensión",
+    "Los tests de placebo temporal validan el supuesto"
+  ],
+  "pasos": [
+    "Verificar tendencias pre-tratamiento paralelas",
+    "Estimar el efecto DiD",
+    "Test de placebo con periodo pre falsificado"
+  ],
+  "evidencia_requerida": [
+    "tendencias_paralelas",
+    "placebo_temporal"
+  ],
+  "fallos": [
+    "Tendencias no paralelas ignoradas"
+  ],
+  "alternativas": [
+    "Control sintético",
+    "Rambachan & Roth para tendencias"
+  ],
+  "ejemplo": "Texas 1993: expansión carcelaria, DiD con condados de control.",
+  "limitaciones": [
+    "El supuesto de tendencias no es comprobable post-tratamiento"
+  ],
+  "fuentes": [
+    {
+      "cita": "Rambachan & Roth 2023",
+      "url": "https://doi.org/10.1093/restud/rdad018",
+      "tipo": "articulo"
+    }
+  ],
+  "fecha_revision": "2026-11-07",
+  "contratos_relacionados": [
+    "C-08"
+  ],
+  "criterios_relacionados": [
+    "Q-02"
+  ],
+  "etiquetas": [
+    "identificación",
+    "panel"
+  ]
+}

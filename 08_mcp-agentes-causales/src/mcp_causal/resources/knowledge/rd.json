@@ -1,0 +1,52 @@
+{
+  "id": "rd",
+  "titulo": "Discontinuidad de regresión",
+  "pregunta_operativa": "¿Hay un corte administrativo que asigne el tratamiento?",
+  "alcance": "RDD con validación de continuidad y ancho de banda.",
+  "condiciones": [
+    "Variable de forzamiento con umbral",
+    "Continuidad en el umbral"
+  ],
+  "principios": [
+    "La comparación es local al umbral",
+    "El ancho de banda se elige con método, no a ojo",
+    "Los tests de McCrary validan la densidad"
+  ],
+  "pasos": [
+    "Verificar densidad de la variable de forzamiento",
+    "Elegir ancho de banda (Imbens-Kalyanaraman o CV)",
+    "Estimar el efecto local en el umbral"
+  ],
+  "evidencia_requerida": [
+    "test_mccrary",
+    "ancho_de_banda_justificado"
+  ],
+  "fallos": [
+    "Ancho de banda elegido post-hoc"
+  ],
+  "alternativas": [
+    "RDD difuso cuando hay no cumplimiento"
+  ],
+  "ejemplo": "Lee et al 2004: elecciones reñidas, umbral en 50%.",
+  "limitaciones": [
+    "El efecto es local al umbral, no poblacional"
+  ],
+  "fuentes": [
+    {
+      "cita": "Imbens & Lemieux 2008",
+      "url": "https://doi.org/10.1016/j.jeconom.2007.05.001",
+      "tipo": "articulo"
+    }
+  ],
+  "fecha_revision": "2026-11-07",
+  "contratos_relacionados": [
+    "C-08"
+  ],
+  "criterios_relacionados": [
+    "Q-02"
+  ],
+  "etiquetas": [
+    "identificación",
+    "rd"
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "id": "supuestos_no_observables",
+  "titulo": "Supuestos no observables: cómo declararlos y acotarlos",
+  "pregunta_operativa": "¿Qué supuestos no puedo verificar y qué hago con ellos?",
+  "alcance": "Clasificación y tratamiento de supuestos no observables.",
+  "condiciones": [
+    "Al menos un supuesto identificado como no observable"
+  ],
+  "principios": [
+    "Todo sistema causal descansa en al menos un supuesto no observable",
+    "Un supuesto no observable sin criterio de revisión es una deuda",
+    "La sensibilidad acota, no prueba"
+  ],
+  "pasos": [
+    "Listar todos los supuestos del diseño",
+    "Clasificar cada uno como observable o no observable",
+    "Para cada no observable: justificar, acotar con sensibilidad, programar revisión",
+    "Registrar en la tarjeta del modelo"
+  ],
+  "evidencia_requerida": [
+    "supuestos_clasificados",
+    "sensibilidad"
+  ],
+  "fallos": [
+    "Ocultar supuestos no observables",
+    "Sin criterio de revisión"
+  ],
+  "alternativas": [
+    "Holdout aleatorizado cuando es posible"
+  ],
+  "ejemplo": "No confusión condicional: declarada, con Gamma de Rosenbaum como cota.",
+  "limitaciones": [
+    "La sensibilidad es una cota bajo supuestos del modelo"
+  ],
+  "fuentes": [
+    {
+      "cita": "Rosenbaum 2002",
+      "url": "https://doi.org/10.1007/978-1-4757-4132-7",
+      "tipo": "libro"
+    }
+  ],
+  "fecha_revision": "2026-11-07",
+  "contratos_relacionados": [
+    "C-05",
+    "C-08"
+  ],
+  "criterios_relacionados": [
+    "Q-02"
+  ],
+  "etiquetas": [
+    "fundamento",
+    "gobernanza"
+  ]
+}

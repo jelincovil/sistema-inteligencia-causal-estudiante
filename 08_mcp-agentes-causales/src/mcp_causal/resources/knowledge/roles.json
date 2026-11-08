@@ -1,0 +1,54 @@
+{
+  "id": "roles",
+  "titulo": "Roles causales de columnas",
+  "pregunta_operativa": "¿Qué columna es tratamiento, resultado, covariable o instrumento?",
+  "alcance": "Declaración y validación del esquema de roles.",
+  "condiciones": [
+    "Tabla de datos disponible",
+    "Pregunta causal formulada"
+  ],
+  "principios": [
+    "Cada columna tiene exactamente un rol",
+    "El esquema viaja con los datos",
+    "Declarar no es verificar: el C-01 no comprueba causalidad"
+  ],
+  "pasos": [
+    "Identificar tratamiento y resultado por nombre",
+    "Listar covariables candidatas",
+    "Validar que ninguna columna tiene doble rol",
+    "Serializar el esquema para el registro"
+  ],
+  "evidencia_requerida": [
+    "esquema_roles",
+    "validacion_estructura"
+  ],
+  "fallos": [
+    "Tratamiento colado entre covariables",
+    "Columna renombrada"
+  ],
+  "alternativas": [
+    "Esquemas múltiples para estimandos distintos"
+  ],
+  "ejemplo": "real/jobs: treatment, re78, 8 covariables pre-tratamiento.",
+  "limitaciones": [
+    "El C-01 no detecta post-tratamiento (eso es C-03)"
+  ],
+  "fuentes": [
+    {
+      "cita": "Kleppmann 2017",
+      "url": "https://doi.org/10.1093/oso/9780199642611.001.0001",
+      "tipo": "libro"
+    }
+  ],
+  "fecha_revision": "2026-11-07",
+  "contratos_relacionados": [
+    "C-01"
+  ],
+  "criterios_relacionados": [
+    "Q-01"
+  ],
+  "etiquetas": [
+    "ingeniería",
+    "esquema"
+  ]
+}
