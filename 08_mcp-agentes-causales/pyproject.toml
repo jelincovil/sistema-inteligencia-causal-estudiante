@@ -24,7 +24,7 @@ dependencies = [
 
 [project.optional-dependencies]
 mcp = [
-    "mcp>=1.0",
+    "mcp>=1.0,<2",
     "pydantic>=2.5,<2.14",
 ]
 test = [
@@ -32,7 +32,7 @@ test = [
     "pydantic>=2.5,<2.14",
 ]
 full = [
-    "mcp>=1.0",
+    "mcp>=1.0,<2",
     "pydantic>=2.5,<2.14",
     "pytest>=7.0",
 ]

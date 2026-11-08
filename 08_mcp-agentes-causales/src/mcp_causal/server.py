@@ -159,14 +159,13 @@ def emitir_tarjeta(project_id: str) -> str:
 
 
 @mcp.tool()
-@mcp.tool()
 def consultar_elegibilidad(project_id: str, perfil: str = "aprobar_bundle_causal") -> str:
-    return evaluar_elegibilidad(project_id, perfil)
+    return __import__('json').dumps(_store.estado_promocion(project_id, perfil), ensure_ascii=False)
 
 
 @mcp.tool()
 def registrar_artefacto_tool(project_id: str, artifact_path: str) -> str:
-    return registrar_evidencia(project_id, artifact_path)
+    return __import__('json').dumps(_store.registrar_artefacto(project_id, __import__('pathlib').Path(artifact_path)).__dict__, ensure_ascii=False, default=str)
 
 
 @mcp.tool()
