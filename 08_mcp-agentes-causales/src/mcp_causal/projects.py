@@ -57,6 +57,9 @@ CREATE TABLE IF NOT EXISTS verificaciones (
     limitations TEXT,
     recommended_action TEXT NOT NULL,
     mensaje_humano TEXT DEFAULT '',
+    revision_declaracion TEXT DEFAULT '',
+    perfil_version TEXT DEFAULT '',
+    aceptacion_revision TEXT DEFAULT '',
     result_json TEXT NOT NULL,
     FOREIGN KEY (project_id) REFERENCES proyectos(project_id),
     PRIMARY KEY (project_id, check_id)
@@ -73,6 +76,16 @@ CREATE TABLE IF NOT EXISTS dependencias (
 
 CREATE INDEX IF NOT EXISTS idx_evidencia_proyecto ON evidencia(project_id);
 CREATE INDEX IF NOT EXISTS idx_verif_proyecto ON verificaciones(project_id);
+CREATE TABLE IF NOT EXISTS aceptaciones (
+    project_id TEXT NOT NULL,
+    check_id TEXT NOT NULL,
+    revision_declaracion TEXT NOT NULL,
+    revisor TEXT DEFAULT '',
+    aceptado_en TEXT NOT NULL,
+    FOREIGN KEY (project_id) REFERENCES proyectos(project_id),
+    PRIMARY KEY (project_id, check_id, revision_declaracion)
+);
+
 CREATE INDEX IF NOT EXISTS idx_dep_artifact ON dependencias(project_id, artifact_id);
 """
 
@@ -336,6 +349,22 @@ class ProjectStore:
 
     # ------------------------------------------------------------- invalidación
 
+    def aceptar_advertencia(self, project_id: str, check_id: str, revisor: str = "") -> dict:
+        """Acepta explícitamente una advertencia para la revisión vigente."""
+        with self._lock, self._conn() as conn:
+            row = conn.execute("SELECT declaracion_json FROM proyectos WHERE project_id=?", (project_id,)).fetchone()
+            if row is None or row[0] is None:
+                raise ValueError("Proyecto sin declaración")
+            import hashlib as _h, json as _j, datetime as _dt, zoneinfo as _z
+            rev = _j.dumps({"project_id": project_id, "declaracion": _j.loads(row[0])}, sort_keys=True)
+            rev_hash = _h.sha256(rev.encode()).hexdigest()[:12]
+            # Solo si el check está en warn
+            st = conn.execute("SELECT status FROM verificaciones WHERE project_id=? AND check_id=?", (project_id, check_id)).fetchone()
+            if st is None or st[0] != "warn":
+                raise ValueError(f"Check {check_id} no está en warn")
+            conn.execute("INSERT OR REPLACE INTO aceptaciones (project_id, check_id, revision_declaracion, revisor, aceptado_en) VALUES (?,?,?, ?, datetime('now'))", (project_id, check_id, rev_hash, revisor))
+        return {"project_id": project_id, "check_id": check_id, "revision": rev_hash, "estado": "aceptado"}
+
     def invalidar_por_artefacto(self, project_id: str, artifact_id: str) -> list[str]:
         """Invalida verificaciones que dependen de un artefacto cambiado.
 
@@ -355,28 +384,47 @@ class ProjectStore:
                 )
         return invalidados
 
-    def estado_promocion(self, project_id: str) -> dict:
-        """Evalúa si el proyecto es elegible para promoción.
-
-        Reglas (02_ARQUITECTURA.md):
-        - fallo requerido → bloqueado
-        - evidencia requerida ausente/obsoleta → unknown y bloqueado
-        - advertencia → revisión explícita registrada
-        - todo requerido válido → elegible
-        """
-        verificaciones = self.listar_verificaciones(project_id)
-        if not verificaciones:
-            return {"estado": "bloqueado", "motivo": "sin verificaciones"}
-        tiene_fallo = any(v["status"] == "fail" for v in verificaciones)
-        tiene_unknown = any(v["status"] == "unknown" for v in verificaciones)
-        tiene_warn = any(v["status"] == "warn" for v in verificaciones)
-        if tiene_fallo:
-            return {"estado": "bloqueado", "motivo": "verificación en fallo"}
-        if tiene_unknown:
-            return {"estado": "bloqueado", "motivo": "verificación con estado unknown"}
-        if tiene_warn:
-            return {
-                "estado": "requiere_revision",
-                "motivo": "advertencia pendiente de aceptación explícita",
-            }
-        return {"estado": "elegible", "motivo": "todas las verificaciones en pass"}
+    def estado_promocion(self, project_id: str, perfil: str = "aprobar_bundle_causal") -> dict:
+        """Evalúa elegibilidad según el perfil de requisitos versionado."""
+        from .perfiles import PERFILES
+        # consultar_conocimiento no exige declaración
+        if perfil == "consultar_conocimiento":
+            return {"estado": "elegible", "perfil": perfil, "motivo": "sin requisitos"}
+        with self._lock, self._conn() as conn:
+            row = conn.execute("SELECT declaracion_json FROM proyectos WHERE project_id=?", (project_id,)).fetchone()
+        if row is None or row[0] is None:
+            return {"estado": "bloqueado", "perfil": perfil, "motivo": "sin declaración causal válida"}
+        from .models import ClaseSupuesto, Supuesto, TipoEstimando
+        import json as _j
+        data = _j.loads(row[0])
+        try:
+            supuestos = tuple(Supuesto(nombre=s["nombre"], clase=ClaseSupuesto(s["clase"]), justificacion=s.get("justificacion",""), criterio_revision=s.get("criterio_revision","")) for s in data.get("supuestos", []))
+            decl = __import__("mcp_causal.models", fromlist=["DeclaracionCausal"]).DeclaracionCausal(estimando=TipoEstimando(data["estimando"]), tratamiento=data["tratamiento"], resultado=data["resultado"], poblacion=data["poblacion"], supuestos=supuestos)
+        except Exception as e:
+            return {"estado": "bloqueado", "perfil": perfil, "motivo": f"declaración inválida: {e}"}
+        perfil_def = PERFILES.get(perfil)
+        if perfil_def is None:
+            return {"estado": "bloqueado", "perfil": perfil, "motivo": f"perfil desconocido: {perfil}"}
+        # Mapeo status requerido -> check no satisface
+        with self._lock, self._conn() as conn:
+            for req in perfil_def.get("requisitos", []):
+                cid = req["check_id"]
+                r = conn.execute("SELECT status FROM verificaciones WHERE project_id=? AND check_id=?", (project_id, cid)).fetchone()
+                if r is None:
+                    return {"estado": "bloqueado", "perfil": perfil, "motivo": f"requisito ausente: {cid}"}
+                status = r[0]
+                if status in ("fail", "unknown"):
+                    return {"estado": "bloqueado", "perfil": perfil, "motivo": f"{cid} en {status}"}
+                if status == "not_applicable":
+                    # Solo permitido si el perfil lo autoriza explícitamente
+                    if not perfil_def.get("autoriza_abstencion", False):
+                        return {"estado": "bloqueado", "perfil": perfil, "motivo": f"{cid} not_applicable no autorizado"}
+                if status == "warn":
+                    # Requiere aceptación ligada a revisión concreta
+                    rev = json.dumps({"project_id": project_id, "declaracion": data}, sort_keys=True)
+                    import hashlib as _h
+                    rev_hash = _h.sha256(rev.encode()).hexdigest()[:12]
+                    acc = conn.execute("SELECT 1 FROM aceptaciones WHERE project_id=? AND check_id=? AND revision_declaracion=?", (project_id, cid, rev_hash)).fetchone()
+                    if acc is None:
+                        return {"estado": "requiere_revision", "perfil": perfil, "motivo": f"{cid} en warn sin aceptación para revisión {rev_hash}"}
+        return {"estado": "elegible", "perfil": perfil, "motivo": "todos los requisitos en pass o aceptados"}

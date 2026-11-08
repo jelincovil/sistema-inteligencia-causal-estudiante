@@ -260,8 +260,8 @@ class TestA10Puerta:
     """A10: Puerta vacía bloqueada; fail/unknown no promueven."""
 
     def test_senales_vacias(self):
-        r = evaluar_puerta({"solape": 0.3}, {"solape_min": 0.5})
-        assert r.status == Status.FAIL
+        r = evaluar_puerta({}, {"solape_min": 0.5})
+        assert r.status == Status.UNKNOWN  # Señales ausentes -> UNKNOWN y bloquea
 
     def test_fail_no_promueve(self):
         store = _store_temp()
@@ -291,19 +291,20 @@ class TestA12Equidad:
             {"g1": {"efecto": 100, "se": 10, "n": 100},
              "g2": {"efecto": 50, "se": 10, "n": 100}},
             "raza",
+            {"contexto": "revisión", "escala": "diferencia"}
         )
         assert r.status in (Status.PASS, Status.WARN)
 
     def test_dano_con_funcion_perdida(self):
         r = validar_impacto_dano({"efecto": 1596.0, "se": 301.6},
-                                 funcion_perdida="umbral", margen=1000)
+                                 funcion_perdida="umbral", margen=1000, contexto="decisión")
         assert r.status == Status.WARN
         assert r.recommended_action == Accion.ABSTENERSE
 
     def test_dano_no_es_abs_mas_se(self):
         """Verifica que el cálculo no es simplemente abs(efecto)+1.96*SE."""
         r = validar_impacto_dano({"efecto": 10.0, "se": 1.0},
-                                 funcion_perdida="umbral", margen=20)
+                                 funcion_perdida="umbral", margen=20, contexto="decisión")
         # Con margen 20 y efecto 10: exceso = 0, no debe alertar
         assert r.status == Status.PASS
 

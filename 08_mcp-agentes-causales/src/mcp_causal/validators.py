@@ -238,12 +238,34 @@ def validar_sensibilidad(
 
 # ================================================================ C-06 puerta
 
+def _rechazar_tipo(valor, nombre, esperado) -> str | None:
+    if isinstance(valor, bool):
+        return f"{nombre} es bool, esperado {esperado}"
+    if nombre in ("solape", "solape_min", "psi", "psi_alerta", "smd_max", "smd"):
+        if not isinstance(valor, (int, float)):
+            return f"{nombre} tipo {type(valor).__name__}, esperado número"
+        if isinstance(valor, float) and (valor != valor or valor == float('inf') or valor == float('-inf')):
+            return f"{nombre} es NaN o infinito"
+        if nombre.startswith("solape") and not (0 <= float(valor) <= 1):
+            return f"{nombre} fuera de [0,1]"
+    return None
+
 def evaluar_puerta(senales: dict, umbrales: dict) -> ResultadoVerificacion:
     """C-06: produce pasa/alerta/falla con motivo que nombra la señal."""
+    # Señales ausentes -> UNKNOWN y bloquean cuando son necesarias
+    requeridos = ["solape", "psi", "smd_max"]
+    ausentes = [k for k in requeridos if k not in senales]
+    if ausentes:
+        return _resultado("C-06", Status.UNKNOWN, Accion.ABSTENERSE, [f"senales_ausentes:{','.join(ausentes)}"], f"Señales ausentes: {ausentes} -> UNKNOWN")
     reasons = []
-    solape = senales.get("solape", 1.0)
-    psi = senales.get("psi", 0.0)
-    smd = senales.get("smd_max", 0.0)
+    solape = senales["solape"]
+    psi = senales["psi"]
+    smd = senales["smd_max"]
+    # Tipos estrictos
+    for n, v, esp in [("solape", solape, "número"), ("psi", psi, "número"), ("smd_max", smd, "número")]:
+        if (e := _rechazar_tipo(v, n, esp)):
+            return _resultado("C-06", Status.UNKNOWN, Accion.ABSTENERSE, [f"tipo_{n}"], e)
+
 
     if solape < umbrales.get("solape_min", 0.5):
         return _resultado("C-06", Status.FAIL, Accion.ABSTENERSE,
@@ -263,12 +285,34 @@ def evaluar_puerta(senales: dict, umbrales: dict) -> ResultadoVerificacion:
 
 # ================================================================ C-04 servicio
 
-def validar_abstencion(perfil: dict, soporte: dict) -> ResultadoVerificacion:
+def _es_rango_valido(rango, nombre) -> str | None:
+    if not isinstance(rango, (list, tuple)) or len(rango) != 2:
+        return f"{nombre} rango no es [lo, hi]"
+    lo, hi = rango
+    for x, lab in [(lo, 'lo'), (hi, 'hi')]:
+        if not isinstance(x, (int, float)):
+            return f"{nombre} {lab} no es número"
+        if x != x or x in (float('inf'), float('-inf')):
+            return f"{nombre} {lab} NaN o infinito"
+    if lo > hi:
+        return f"{nombre} lo>hi"
+    return None
+
+def validar_abstencion(perfil: dict, soporte: dict, justificacion: str = "", autorizado: bool = False) -> ResultadoVerificacion:
     """C-04: dentro del soporte responde, fuera se abstiene sin número."""
-    # A09: perfil incompleto también se abstiene
+    # Soporte: rangos marginales no certifican overlap conjunto; validar tipos
+    for cov, rango in soporte.items() if isinstance(soporte, dict) else []:
+        if (e := _es_rango_valido(rango, cov)):
+            return _resultado("C-04", Status.UNKNOWN, Accion.ABSTENERSE, [f"rango_{cov}"], e)
+    # NOT_APPLICABLE exige justificación y autorización del perfil
     if not perfil:
         return _resultado("C-04", Status.UNKNOWN, Accion.ABSTENERSE,
                           ["perfil_vacio"], "Perfil incompleto: no se puede evaluar")
+    for cov, val in (perfil.items() if isinstance(perfil, dict) else []):
+        if not isinstance(val, (int, float)):
+            return _resultado("C-04", Status.UNKNOWN, Accion.ABSTENERSE, [f"perfil_{cov}_tipo"], f"{cov} no es número")
+        if isinstance(val, float) and (val != val or val in (float('inf'), float('-inf'))):
+            return _resultado("C-04", Status.UNKNOWN, Accion.ABSTENERSE, [f"perfil_{cov}_nan"], f"{cov} NaN o infinito")
     fuera = []
     for cov, rango in soporte.items():
         if cov not in perfil:
@@ -281,8 +325,11 @@ def validar_abstencion(perfil: dict, soporte: dict) -> ResultadoVerificacion:
             elif not (lo <= val <= hi):
                 fuera.append(f"{cov}={val}_fuera_[{lo},{hi}]")
     if fuera:
-        return _resultado("C-04", Status.NOT_APPLICABLE, Accion.ABSTENERSE,
-                          fuera, f"Abstención: {fuera}")
+        if not autorizado:
+            return _resultado("C-04", Status.UNKNOWN, Accion.ABSTENERSE, ["sin_autorizacion"], "Abstención sin autorización del perfil")
+        if not justificacion:
+            return _resultado("C-04", Status.UNKNOWN, Accion.ABSTENERSE, ["sin_justificacion"], "Abstención sin justificación")
+        return _resultado("C-04", Status.NOT_APPLICABLE, Accion.ABSTENERSE, fuera, f"Abstención justificada: {justificacion}")
     return _resultado("C-04", Status.PASS, Accion.CONTINUAR, [],
                       "Perfil dentro del soporte declarado")
 
@@ -292,6 +339,7 @@ def validar_abstencion(perfil: dict, soporte: dict) -> ResultadoVerificacion:
 def validar_equidad(
     efectos_por_grupo: dict, atributo: str, umbrales: dict | None = None
 ) -> ResultadoVerificacion:
+    """C-13: brecha pequeña no certifica equidad sin escala e incertidumbre."""
     """C-13: compara efectos por grupo. Exige contexto, escala e incertidumbre.
 
     A12: no certifica equidad por brecha pequeña sin incertidumbre.
@@ -317,6 +365,8 @@ def validar_equidad(
     brecha = max(efectos) - min(efectos)
     se_pooled = math.sqrt(sum(s ** 2 for s in ses) / len(ses))
     # Brecha relativa al SE agrupado (no solo brecha absoluta)
+    if "escala" not in (umbrales or {}) or "contexto" not in (umbrales or {}):
+        return _resultado("C-13", Status.UNKNOWN, Accion.ABSTENERSE, ["sin_escala_o_contexto"], "Equidad sin escala o contexto declarados")
     brecha_en_se = brecha / se_pooled if se_pooled > 0 else float("inf")
     umbral_se = umbrales.get("brecha_max_se", 2.0)
     if brecha_en_se > umbral_se:
@@ -330,8 +380,9 @@ def validar_equidad(
 # ================================================================ C-15 daño
 
 def validar_impacto_dano(
-    efecto: dict, funcion_perdida: str = "umbral", margen: float = 0.0
+    efecto: dict, funcion_perdida: str = "umbral", margen: float | None = None, contexto: str = ""
 ) -> ResultadoVerificacion:
+    """C-15: daño no es abs+SE sin función de pérdida."""
     """C-15: evalúa daño con función de pérdida explícita.
 
     A12: no denominar daño a abs(efecto)+1.96*SE.
@@ -340,8 +391,14 @@ def validar_impacto_dano(
         if campo not in efecto:
             return _resultado("C-15", Status.FAIL, Accion.REVISAR_IDENTIFICACION,
                               [f"sin_{campo}"], f"Efecto sin {campo}")
+    if margen is None:
+        return _resultado("C-15", Status.UNKNOWN, Accion.ABSTENERSE, ["sin_margen"], "Daño sin margen ni contexto")
+    if not contexto:
+        return _resultado("C-15", Status.UNKNOWN, Accion.ABSTENERSE, ["sin_contexto"], "Daño sin contexto de decisión")
+    # Si es la heurística antigua, nombrarla explícitamente y limitar su uso
+    if funcion_perdida == "heuristica_abs_se":
+        return _resultado("C-15", Status.UNKNOWN, Accion.ABSTENERSE, ["heuristica_no_dano"], "Heurística abs+1.96SE no es daño; use pérdida explícita")
     if funcion_perdida == "umbral":
-        # Daño = cuánto excede el efecto el margen de decisión
         exceso = abs(efecto["efecto"]) - margen
         incertidumbre = 1.96 * efecto["se"]
         dano = max(0, exceso) + incertidumbre * (1 if exceso > 0 else 0)

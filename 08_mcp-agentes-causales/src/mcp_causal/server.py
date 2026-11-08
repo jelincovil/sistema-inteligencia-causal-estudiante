@@ -159,6 +159,17 @@ def emitir_tarjeta(project_id: str) -> str:
 
 
 @mcp.tool()
+@mcp.tool()
+def consultar_elegibilidad(project_id: str, perfil: str = "aprobar_bundle_causal") -> str:
+    return evaluar_elegibilidad(project_id, perfil)
+
+
+@mcp.tool()
+def registrar_artefacto_tool(project_id: str, artifact_path: str) -> str:
+    return registrar_evidencia(project_id, artifact_path)
+
+
+@mcp.tool()
 def generar_y_estimar(project_id: str, n: int = 2000, tau: float = 0.5,
                       k_folds: int = 5, semilla: int = 4242) -> str:
     """Genera DGP sintético y estima ATE por AIPW con cross-fitting."""
