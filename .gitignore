@@ -24,3 +24,4 @@ __pycache__/
 08_mcp-agentes-causales/build/
 08_mcp-agentes-causales/dist/
 08_mcp-agentes-causales/*.egg-info/
+08_mcp-agentes-causales/.mcp_causal_workspace/
