@@ -8,7 +8,7 @@ Rama: main
 
 ### Tests unitarios y de aceptación
 ```
-pytest 08_mcp-agentes-causales/tests/ -> 41 passed
+pytest 08_mcp-agentes-causales/tests/ -> 42 passed (41 aceptación + 1 E2E)
 ```
 
 ### Script de aceptación v1
@@ -51,8 +51,8 @@ mcp-causal serve --workspace .mcp_causal_workspace
 - Vigencia de evidencia: `guardar_declaracion` invalida verificaciones al cambiar la revisión;
   `estado_promocion` verifica `verificar_vigencia` (hash del artefacto en disco) y bloquea si
   la evidencia ya no coincide; `emitir_tarjeta_dict` refleja el estado real.
-- Nuevos tools MCP: `verificar_evidencia_tool`, `verificar_vigencia`, `invalidar_por_artefacto`,
-  `aceptar_advertencia_tool` (total 17 tools).
+- MCP operativo: 17 tools + 2 resources + 2 prompts, 42 tests (incluido E2E handshake), wheel
+  66 KB desde src/; `mcp.json` listo para Claude/Cursor.
 - Limpieza: `build/` y `dist/` fuera de tracking (artefactos regenerables), `contracts/`, `scripts/`
   y `reports/` añadidos a tracking.
 

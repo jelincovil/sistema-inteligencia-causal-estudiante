@@ -116,12 +116,19 @@ class ProjectStore:
         with self._lock, self._conn() as conn:
             conn.executescript(_SCHEMA)
             # Migración suave: añadir columna si falta (bases antiguas)
-            cols = {r[1] for r in conn.execute("PRAGMA table_info(proyectos)").fetchall()}
-            if "declaracion_revision" not in cols:
+            cols_p = {r[1] for r in conn.execute("PRAGMA table_info(proyectos)").fetchall()}
+            if "declaracion_revision" not in cols_p:
                 try:
                     conn.execute("ALTER TABLE proyectos ADD COLUMN declaracion_revision TEXT DEFAULT ''")
                 except Exception:
                     pass
+            cols_v = {r[1] for r in conn.execute("PRAGMA table_info(verificaciones)").fetchall()}
+            for col in ("revision_declaracion", "perfil_version", "aceptacion_revision"):
+                if col not in cols_v:
+                    try:
+                        conn.execute(f"ALTER TABLE verificaciones ADD COLUMN {col} TEXT DEFAULT ''")
+                    except Exception:
+                        pass
 
     # ------------------------------------------------------------ proyectos
 

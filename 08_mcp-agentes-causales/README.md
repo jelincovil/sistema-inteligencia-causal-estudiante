@@ -47,7 +47,7 @@ El MCP implementa 3 capas:
 | `declarar_poblacion_excluida` | C-14 / Q-02+Q-07 | Cuantifica y declara quién queda fuera del soporte |
 | `evaluar_impacto_dano` | C-15 / Q-02+Q-07 | Estima el daño si el efecto es incorrecto |
 
-**15 tools · 15 contratos · 15 capítulos.**
+**17 tools · 15 contratos · 15 capítulos.**
 | `emitir_tarjeta` | Q-08 / C-05 | Model Card computable, sin `truth` en el bundle |
 
 Ver `server/README.md` para instalación y prueba local.

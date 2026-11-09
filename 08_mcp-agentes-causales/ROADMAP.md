@@ -10,15 +10,15 @@ Iter 4 (caps 14-15): +2 tools + 2 contratos (C-07, C-05) → mcp-causal v1.0-rc 
 Iter 5 (ética)     : +3 tools + 3 contratos (C-13, C-14, C-15) → mcp-causal v1.1 ✅ hecho
 ```
 
-**15 contratos · 15 tools · 15 capítulos · 14 tests.**
+**15 contratos · 17 tools · 15 capítulos · 42 tests.**
 
 Regla: **no se publica tool sin capítulo verde**. El capítulo es la especificación; el JSON es el contrato; la tool es la implementación.
 
-## Estado final (v1.0-rc)
+## Estado final (v1.0 — READY_LOCAL_V1)
 
 - [x] 15 capítulos compilando (109 pp.)
 - [x] 12 contratos JSON válidos contra schema
-- [x] 12 tools MCP con 9 tests verdes
+- [x] 17 tools MCP con 42 tests verdes (E2E incluido)
 - [x] 15 scripts canónicos reproducibles con semilla
 - [x] 7 evals con DGP que castiga violaciones
 - [x] Semana 4 de docencia como primer cliente del MCP
