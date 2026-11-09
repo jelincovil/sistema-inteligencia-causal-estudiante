@@ -14,7 +14,7 @@ from .models import (
 from .projects import ProjectStore
 from .validators import (
     evaluar_puerta, validar_abstencion, validar_equidad,
-    validar_esquema_roles, validar_observabilidad,
+    validar_esquema_roles, validar_exigencias_estimador, validar_observabilidad,
     validar_particion_pared, validar_sensibilidad,
     validar_validez_temporal, validar_version_linaje,
     validar_impacto_dano,
@@ -118,6 +118,7 @@ def ejecutar_verificacion(project_id: str, tipo: str, parametros_json: str) -> s
         "abstencion": validar_abstencion,
         "equidad": validar_equidad,
         "impacto_dano": validar_impacto_dano,
+        "exigencias_estimador": validar_exigencias_estimador,
     }
     fn = validadores.get(tipo)
     if fn is None:
@@ -138,6 +139,36 @@ def consultar_evidencia(project_id: str) -> str:
 
 
 @mcp.tool()
+def verificar_evidencia_tool(project_id: str, artifact_id: str) -> str:
+    """Recomputa el hash de un artefacto y reporta si sigue vigente."""
+    vigente = _store.verificar_evidencia(project_id, artifact_id)
+    return json.dumps({"artifact_id": artifact_id, "vigente": vigente}, ensure_ascii=False)
+
+
+@mcp.tool()
+def verificar_vigencia(project_id: str) -> str:
+    """Verifica vigencia de todas las dependencias; invalida verificaciones con evidencia modificada."""
+    r = _store.verificar_vigencia(project_id)
+    return json.dumps(r, ensure_ascii=False)
+
+
+@mcp.tool()
+def invalidar_por_artefacto(project_id: str, artifact_id: str) -> str:
+    """Invalida verificaciones que dependen de un artefacto."""
+    inv = _store.invalidar_por_artefacto(project_id, artifact_id)
+    return json.dumps({"invalidados": inv}, ensure_ascii=False)
+
+
+@mcp.tool()
+def aceptar_advertencia_tool(project_id: str, check_id: str, revisor: str = "") -> str:
+    """Acepta una advertencia (warn) para la revisión vigente."""
+    try:
+        return json.dumps(_store.aceptar_advertencia(project_id, check_id, revisor), ensure_ascii=False)
+    except ValueError as e:
+        return json.dumps({"estado": "falla", "motivo": str(e)}, ensure_ascii=False)
+
+
+@mcp.tool()
 def emitir_tarjeta(project_id: str) -> str:
     """C-05: Emite la tarjeta del modelo."""
     proyecto = _store.consultar_proyecto(project_id)
@@ -148,24 +179,27 @@ def emitir_tarjeta(project_id: str) -> str:
         return json.dumps({"estado": "falla", "motivo": "sin declaración"})
     if not any(s.get("clase") == "no_observable" for s in decl.get("supuestos", [])):
         return json.dumps({"estado": "falla", "motivo": "sin no observables"})
-    tarjeta = {"project_id": project_id, "estimando": decl,
-               "verificaciones": proyecto.get("verificaciones", []),
-               "promocion": _store.estado_promocion(project_id)}
-    resultado = ResultadoVerificacion(check_id="tarjeta_c05", status=Status.PASS,
+    tarjeta = _store.emitir_tarjeta_dict(project_id)
+    # Registrar la tarjeta como verificación C-05
+    prom = tarjeta.get("promocion", {})
+    estado_t = Status.PASS if prom.get("estado") == "elegible" else Status.FAIL if prom.get("estado") == "bloqueado" else Status.UNKNOWN
+    resultado = ResultadoVerificacion(check_id="C-05_tarjeta", status=estado_t,
                                        claim_level=ClaimLevel.COMPUTED,
-                                       recommended_action=Accion.CONTINUAR)
+                                       recommended_action=Accion.CONTINUAR if estado_t == Status.PASS else Accion.ABSTENERSE,
+                                       mensaje_humano=f"Tarjeta: {tarjeta.get('estado')}",
+                                       reason_codes=[f"promocion:{prom.get('estado')}"] if prom else [])
     _store.guardar_verificacion(project_id, resultado)
-    return json.dumps({"estado": "pasa", "tarjeta": tarjeta}, ensure_ascii=False, default=str)
+    return json.dumps({"estado": "pasa" if estado_t == Status.PASS else "bloqueado", "tarjeta": tarjeta}, ensure_ascii=False, default=str)
 
 
 @mcp.tool()
 def consultar_elegibilidad(project_id: str, perfil: str = "aprobar_bundle_causal") -> str:
-    return __import__('json').dumps(_store.estado_promocion(project_id, perfil), ensure_ascii=False)
+    return json.dumps(_store.estado_promocion(project_id, perfil), ensure_ascii=False)
 
 
 @mcp.tool()
 def registrar_artefacto_tool(project_id: str, artifact_path: str) -> str:
-    return __import__('json').dumps(_store.registrar_artefacto(project_id, __import__('pathlib').Path(artifact_path)).__dict__, ensure_ascii=False, default=str)
+    return json.dumps(_store.registrar_artefacto(project_id, __import__('pathlib').Path(artifact_path)).__dict__, ensure_ascii=False, default=str)
 
 
 @mcp.tool()

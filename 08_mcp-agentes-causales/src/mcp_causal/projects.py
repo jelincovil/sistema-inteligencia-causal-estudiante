@@ -5,8 +5,8 @@ proyecto A no habilita nada en el proyecto B. El estado persiste
 tras reiniciar. Los artefactos cambiantes invalidan verificaciones
 dependientes (invalidación transitiva).
 """
-from __future__ import annotations
 
+import hashlib
 import json
 import sqlite3
 import threading
@@ -27,7 +27,8 @@ CREATE TABLE IF NOT EXISTS proyectos (
     project_id TEXT PRIMARY KEY,
     nombre TEXT NOT NULL,
     creado_en TEXT NOT NULL,
-    declaracion_json TEXT
+    declaracion_json TEXT,
+    declaracion_revision TEXT DEFAULT ''
 );
 
 CREATE TABLE IF NOT EXISTS evidencia (
@@ -90,6 +91,12 @@ CREATE INDEX IF NOT EXISTS idx_dep_artifact ON dependencias(project_id, artifact
 """
 
 
+def _revision_declaracion(project_id: str, declaracion_data: dict) -> str:
+    """Hash corto de la declaración vigente, usado para ligar aceptaciones y verificaciones."""
+    payload = json.dumps({"project_id": project_id, "declaracion": declaracion_data}, sort_keys=True)
+    return hashlib.sha256(payload.encode()).hexdigest()[:12]
+
+
 class ProjectStore:
     """Almacén de proyectos con aislamiento y persistencia SQLite."""
 
@@ -108,6 +115,13 @@ class ProjectStore:
     def _init_db(self) -> None:
         with self._lock, self._conn() as conn:
             conn.executescript(_SCHEMA)
+            # Migración suave: añadir columna si falta (bases antiguas)
+            cols = {r[1] for r in conn.execute("PRAGMA table_info(proyectos)").fetchall()}
+            if "declaracion_revision" not in cols:
+                try:
+                    conn.execute("ALTER TABLE proyectos ADD COLUMN declaracion_revision TEXT DEFAULT ''")
+                except Exception:
+                    pass
 
     # ------------------------------------------------------------ proyectos
 
@@ -155,14 +169,32 @@ class ProjectStore:
     # ---------------------------------------------------------- declaración
 
     def guardar_declaracion(self, project_id: str, decl: DeclaracionCausal) -> None:
-        """Guarda la declaración causal del proyecto."""
+        """Guarda la declaración; si cambia la revisión, invalida verificaciones previas."""
+        nuevo_json = json.dumps(decl.to_dict(), ensure_ascii=False)
+        nuevo_data = decl.to_dict()
         with self._lock, self._conn() as conn:
-            cur = conn.execute(
-                "UPDATE proyectos SET declaracion_json = ? WHERE project_id = ?",
-                (json.dumps(decl.to_dict(), ensure_ascii=False), project_id),
-            )
-            if cur.rowcount == 0:
+            row = conn.execute(
+                "SELECT declaracion_json, declaracion_revision FROM proyectos WHERE project_id = ?", (project_id,)
+            ).fetchone()
+            if row is None:
                 raise ValueError(f"Proyecto '{project_id}' no existe")
+            viejo_json = row[0]
+            if viejo_json:
+                viejo_data = json.loads(viejo_json)
+                viejo_rev = row[1] or _revision_declaracion(project_id, viejo_data)
+                nuevo_rev = _revision_declaracion(project_id, nuevo_data)
+                if viejo_rev != nuevo_rev:
+                    # Cambio de declaración -> invalida todas las verificaciones
+                    conn.execute(
+                        "UPDATE verificaciones SET status='unknown', claim_level='declared', reason_codes=?, mensaje_humano=? WHERE project_id=?",
+                        (json.dumps([f"declaracion_cambio:{viejo_rev}->{nuevo_rev}"]), f"Invalidada por cambio de declaracion {viejo_rev}->{nuevo_rev}", project_id),
+                    )
+            else:
+                nuevo_rev = _revision_declaracion(project_id, nuevo_data)
+            conn.execute(
+                "UPDATE proyectos SET declaracion_json=?, declaracion_revision=? WHERE project_id=?",
+                (nuevo_json, _revision_declaracion(project_id, nuevo_data), project_id),
+            )
 
     def obtener_declaracion(self, project_id: str) -> DeclaracionCausal | None:
         """Recupera la declaración causal del proyecto."""
@@ -197,6 +229,17 @@ class ProjectStore:
             dag_referencia=data.get("dag_referencia", ""),
         )
 
+    def obtener_revision_declaracion(self, project_id: str) -> str:
+        """Devuelve el hash corto de la declaración vigente, o '' si no hay."""
+        with self._lock, self._conn() as conn:
+            row = conn.execute("SELECT declaracion_json, declaracion_revision FROM proyectos WHERE project_id=?", (project_id,)).fetchone()
+        if row is None or row[0] is None:
+            return ""
+        if row[1]:
+            return row[1]
+        data = json.loads(row[0])
+        return _revision_declaracion(project_id, data)
+
     # ------------------------------------------------------------- evidencia
 
     def registrar_artefacto(
@@ -206,8 +249,7 @@ class ProjectStore:
 
         Rechaza rutas fuera del workspace (A19: traversal y symlinks).
         """
-        ruta = Path(ruta).resolve()  # Resolver symlinks y `..`
-        # A19: la ruta resuelta debe estar dentro del workspace
+        ruta = Path(ruta).resolve()
         try:
             ruta.relative_to(self.workspace.resolve())
         except ValueError:
@@ -222,6 +264,9 @@ class ProjectStore:
         reg.version_codigo = versiones.get("version_codigo", "")
         reg.version_config = versiones.get("version_config", "")
         with self._lock, self._conn() as conn:
+            # Detectar si el hash cambió respecto al previo con el mismo artifact_id
+            prev = conn.execute("SELECT sha256 FROM evidencia WHERE project_id=? AND artifact_id=?", (project_id, reg.artifact_id)).fetchone()
+            hash_cambio = prev is not None and prev[0] != reg.sha256
             conn.execute(
                 """INSERT OR REPLACE INTO evidencia
                 (project_id, artifact_id, ruta, sha256, version_datos, version_codigo, version_config, registrado_en)
@@ -237,7 +282,26 @@ class ProjectStore:
                     reg.registrado_en,
                 ),
             )
+            if hash_cambio:
+                # Auto-invalidar verificaciones ligadas a este artefacto
+                rows = conn.execute("SELECT check_id FROM dependencias WHERE project_id=? AND artifact_id=?", (project_id, reg.artifact_id)).fetchall()
+                for (cid,) in rows:
+                    conn.execute("UPDATE verificaciones SET status='unknown', claim_level='declared', reason_codes=? WHERE project_id=? AND check_id=?",
+                                 (json.dumps([f"evidencia_modificada:{reg.artifact_id}"]), project_id, cid))
         return reg
+
+    def registrar_artefacto_contenido(
+        self, project_id: str, nombre: str, contenido: bytes, **versiones: str
+    ) -> RegistroEvidencia:
+        """Registra un artefacto escribiendo contenido dentro del workspace (útil para tests)."""
+        ruta = (self.workspace / nombre).resolve()
+        ruta.parent.mkdir(parents=True, exist_ok=True)
+        try:
+            ruta.relative_to(self.workspace.resolve())
+        except ValueError:
+            raise ValueError(f"Ruta fuera del workspace: {ruta}")
+        ruta.write_bytes(contenido)
+        return self.registrar_artefacto(project_id, ruta, **versiones)
 
     def obtener_evidencia(self, project_id: str) -> list[dict]:
         with self._lock, self._conn() as conn:
@@ -271,8 +335,16 @@ class ProjectStore:
         ruta, sha = Path(row[0]), row[1]
         if not ruta.exists():
             return False
-        import hashlib
         return hashlib.sha256(ruta.read_bytes()).hexdigest() == sha
+
+    def verificar_toda_evidencia(self, project_id: str) -> dict:
+        """Verifica todos los artefactos del proyecto; devuelve los que fallan."""
+        evidencias = self.obtener_evidencia(project_id)
+        fallos = []
+        for ev in evidencias:
+            if not self.verificar_evidencia(project_id, ev["artifact_id"]):
+                fallos.append(ev["artifact_id"])
+        return {"total": len(evidencias), "fallos": fallos, "vigente": len(fallos) == 0}
 
     # -------------------------------------------------------- verificaciones
 
@@ -284,13 +356,22 @@ class ProjectStore:
     ) -> None:
         """Guarda una verificación y sus dependencias de artefactos."""
         resultado.project_id = project_id
+        # Sellar con la revisión vigente de la declaración
         with self._lock, self._conn() as conn:
+            decl_row = conn.execute("SELECT declaracion_json, declaracion_revision FROM proyectos WHERE project_id=?", (project_id,)).fetchone()
+            rev_decl = ""
+            if decl_row and decl_row[0]:
+                if decl_row[1]:
+                    rev_decl = decl_row[1]
+                else:
+                    rev_decl = _revision_declaracion(project_id, json.loads(decl_row[0]))
+            # Persistir revision_declaracion en la fila
             conn.execute(
                 """INSERT OR REPLACE INTO verificaciones
                 (project_id, check_id, status, claim_level, reason_codes, evidence_ids,
                  artifact_hashes, configuration_hash, checked_at, checker_version,
-                 limitations, recommended_action, mensaje_humano, result_json)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                 limitations, recommended_action, mensaje_humano, revision_declaracion, result_json)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
                 (
                     project_id,
                     resultado.check_id,
@@ -305,10 +386,10 @@ class ProjectStore:
                     json.dumps(resultado.limitations),
                     resultado.recommended_action.value,
                     resultado.mensaje_humano,
+                    rev_decl,
                     json.dumps(resultado.to_dict(), ensure_ascii=False),
                 ),
             )
-            # Registrar dependencias
             if artifact_ids:
                 conn.execute(
                     "DELETE FROM dependencias WHERE project_id = ? AND check_id = ?",
@@ -323,7 +404,7 @@ class ProjectStore:
     def listar_verificaciones(self, project_id: str) -> list[dict]:
         with self._lock, self._conn() as conn:
             rows = conn.execute(
-                "SELECT check_id, status, claim_level, recommended_action, checked_at, mensaje_humano "
+                "SELECT check_id, status, claim_level, recommended_action, checked_at, mensaje_humano, revision_declaracion "
                 "FROM verificaciones WHERE project_id = ? ORDER BY checked_at",
                 (project_id,),
             ).fetchall()
@@ -335,6 +416,7 @@ class ProjectStore:
                 "recommended_action": r[3],
                 "checked_at": r[4],
                 "mensaje": r[5],
+                "revision_declaracion": r[6],
             }
             for r in rows
         ]
@@ -355,10 +437,7 @@ class ProjectStore:
             row = conn.execute("SELECT declaracion_json FROM proyectos WHERE project_id=?", (project_id,)).fetchone()
             if row is None or row[0] is None:
                 raise ValueError("Proyecto sin declaración")
-            import hashlib as _h, json as _j, datetime as _dt, zoneinfo as _z
-            rev = _j.dumps({"project_id": project_id, "declaracion": _j.loads(row[0])}, sort_keys=True)
-            rev_hash = _h.sha256(rev.encode()).hexdigest()[:12]
-            # Solo si el check está en warn
+            rev_hash = _revision_declaracion(project_id, json.loads(row[0]))
             st = conn.execute("SELECT status FROM verificaciones WHERE project_id=? AND check_id=?", (project_id, check_id)).fetchone()
             if st is None or st[0] != "warn":
                 raise ValueError(f"Check {check_id} no está en warn")
@@ -366,10 +445,7 @@ class ProjectStore:
         return {"project_id": project_id, "check_id": check_id, "revision": rev_hash, "estado": "aceptado"}
 
     def invalidar_por_artefacto(self, project_id: str, artifact_id: str) -> list[str]:
-        """Invalida verificaciones que dependen de un artefacto cambiado.
-
-        Devuelve la lista de check_ids invalidados.
-        """
+        """Invalida verificaciones que dependen de un artefacto cambiado."""
         with self._lock, self._conn() as conn:
             rows = conn.execute(
                 "SELECT check_id FROM dependencias WHERE project_id = ? AND artifact_id = ?",
@@ -378,25 +454,69 @@ class ProjectStore:
             invalidados = [r[0] for r in rows]
             for check_id in invalidados:
                 conn.execute(
-                    "UPDATE verificaciones SET status = 'unknown', claim_level = 'declared' "
+                    "UPDATE verificaciones SET status = 'unknown', claim_level = 'declared', reason_codes=? "
                     "WHERE project_id = ? AND check_id = ?",
-                    (project_id, check_id),
+                    (json.dumps([f"evidencia_invalida:{artifact_id}"]), project_id, check_id),
                 )
         return invalidados
 
+    def invalidar_por_revision(self, project_id: str) -> list[str]:
+        """Invalida verificaciones cuya revisión ya no coincide con la vigente."""
+        with self._lock, self._conn() as conn:
+            vigente = self.obtener_revision_declaracion(project_id)
+            if not vigente:
+                return []
+            rows = conn.execute("SELECT check_id, revision_declaracion FROM verificaciones WHERE project_id=?", (project_id,)).fetchall()
+            invalidados = []
+            for cid, rev in rows:
+                if rev and rev != vigente:
+                    invalidados.append(cid)
+                    conn.execute("UPDATE verificaciones SET status='unknown', claim_level='declared', reason_codes=? WHERE project_id=? AND check_id=?",
+                                 (json.dumps([f"revision_desactualizada:{rev}->{vigente}"]), project_id, cid))
+        return invalidados
+
+    def verificar_vigencia(self, project_id: str) -> dict:
+        """Chequea que todas las dependencias de cada verificación sigan vigentes.
+
+        Si un artefacto cambió en disco, marca la verificación como unknown.
+        Devuelve el resumen de invalidados.
+        """
+        invalidados: list[str] = []
+        with self._lock, self._conn() as conn:
+            deps = conn.execute("SELECT check_id, artifact_id FROM dependencias WHERE project_id=?", (project_id,)).fetchall()
+            # Agrupar por artifact
+            art_to_checks: dict[str, list[str]] = {}
+            for cid, aid in deps:
+                art_to_checks.setdefault(aid, []).append(cid)
+            for aid, cids in art_to_checks.items():
+                erow = conn.execute("SELECT ruta, sha256 FROM evidencia WHERE project_id=? AND artifact_id=?", (project_id, aid)).fetchone()
+                if erow is None:
+                    continue
+                ruta, sha = Path(erow[0]), erow[1]
+                vigente = ruta.exists() and hashlib.sha256(ruta.read_bytes()).hexdigest() == sha
+                if not vigente:
+                    for cid in cids:
+                        conn.execute("UPDATE verificaciones SET status='unknown', claim_level='declared', reason_codes=? WHERE project_id=? AND check_id=?",
+                                     (json.dumps([f"evidencia_modificada:{aid}"]), project_id, cid))
+                        if cid not in invalidados:
+                            invalidados.append(cid)
+        return {"invalidados": invalidados, "vigente": len(invalidados) == 0}
+
     def estado_promocion(self, project_id: str, perfil: str = "aprobar_bundle_causal") -> dict:
-        """Evalúa elegibilidad según el perfil de requisitos versionado."""
+        """Evalúa elegibilidad según el perfil de requisitos versionado.
+
+        Antes de decidir, verifica vigencia de evidencia (hash del artefacto) y
+        que la revisión de declaración coincida.
+        """
         from .perfiles import PERFILES
-        # consultar_conocimiento no exige declaración
         if perfil == "consultar_conocimiento":
             return {"estado": "elegible", "perfil": perfil, "motivo": "sin requisitos"}
         with self._lock, self._conn() as conn:
             row = conn.execute("SELECT declaracion_json FROM proyectos WHERE project_id=?", (project_id,)).fetchone()
         if row is None or row[0] is None:
             return {"estado": "bloqueado", "perfil": perfil, "motivo": "sin declaración causal válida"}
+        data = json.loads(row[0])
         from .models import ClaseSupuesto, Supuesto, TipoEstimando
-        import json as _j
-        data = _j.loads(row[0])
         try:
             supuestos = tuple(Supuesto(nombre=s["nombre"], clase=ClaseSupuesto(s["clase"]), justificacion=s.get("justificacion",""), criterio_revision=s.get("criterio_revision","")) for s in data.get("supuestos", []))
             decl = __import__("mcp_causal.models", fromlist=["DeclaracionCausal"]).DeclaracionCausal(estimando=TipoEstimando(data["estimando"]), tratamiento=data["tratamiento"], resultado=data["resultado"], poblacion=data["poblacion"], supuestos=supuestos)
@@ -405,26 +525,55 @@ class ProjectStore:
         perfil_def = PERFILES.get(perfil)
         if perfil_def is None:
             return {"estado": "bloqueado", "perfil": perfil, "motivo": f"perfil desconocido: {perfil}"}
-        # Mapeo status requerido -> check no satisface
+        # Verificar vigencia antes de evaluar requisitos (no bloquea el dict, solo marca)
+        self.verificar_vigencia(project_id)
+        # Chequear revisión desactualizada
+        vigente_rev = _revision_declaracion(project_id, data)
         with self._lock, self._conn() as conn:
             for req in perfil_def.get("requisitos", []):
                 cid = req["check_id"]
-                r = conn.execute("SELECT status FROM verificaciones WHERE project_id=? AND check_id=?", (project_id, cid)).fetchone()
+                r = conn.execute("SELECT status, revision_declaracion FROM verificaciones WHERE project_id=? AND check_id=?", (project_id, cid)).fetchone()
                 if r is None:
                     return {"estado": "bloqueado", "perfil": perfil, "motivo": f"requisito ausente: {cid}"}
-                status = r[0]
+                status, rev_check = r[0], r[1]
+                # Revisión desactualizada -> bloquea
+                if rev_check and rev_check != vigente_rev:
+                    return {"estado": "bloqueado", "perfil": perfil, "motivo": f"{cid} revision desactualizada {rev_check}->{vigente_rev}: redeclaracion invalido verificaciones"}
                 if status in ("fail", "unknown"):
                     return {"estado": "bloqueado", "perfil": perfil, "motivo": f"{cid} en {status}"}
                 if status == "not_applicable":
-                    # Solo permitido si el perfil lo autoriza explícitamente
                     if not perfil_def.get("autoriza_abstencion", False):
                         return {"estado": "bloqueado", "perfil": perfil, "motivo": f"{cid} not_applicable no autorizado"}
                 if status == "warn":
-                    # Requiere aceptación ligada a revisión concreta
-                    rev = json.dumps({"project_id": project_id, "declaracion": data}, sort_keys=True)
-                    import hashlib as _h
-                    rev_hash = _h.sha256(rev.encode()).hexdigest()[:12]
-                    acc = conn.execute("SELECT 1 FROM aceptaciones WHERE project_id=? AND check_id=? AND revision_declaracion=?", (project_id, cid, rev_hash)).fetchone()
+                    acc = conn.execute("SELECT 1 FROM aceptaciones WHERE project_id=? AND check_id=? AND revision_declaracion=?", (project_id, cid, vigente_rev)).fetchone()
                     if acc is None:
-                        return {"estado": "requiere_revision", "perfil": perfil, "motivo": f"{cid} en warn sin aceptación para revisión {rev_hash}"}
+                        return {"estado": "requiere_revision", "perfil": perfil, "motivo": f"{cid} en warn sin aceptacion para revision {vigente_rev}"}
         return {"estado": "elegible", "perfil": perfil, "motivo": "todos los requisitos en pass o aceptados"}
+
+    # ------------------------------------------------------- tarjeta / reporte
+
+    def emitir_tarjeta_dict(self, project_id: str) -> dict:
+        """Construye el dict de tarjeta reflejando fielmente el estado de promocion."""
+        proyecto = self.consultar_proyecto(project_id)
+        if proyecto is None:
+            return {"estado": "falla", "motivo": "proyecto no encontrado"}
+        if proyecto.get("declaracion") is None:
+            return {"estado": "bloqueado", "motivo": "sin declaracion", "verificaciones": proyecto.get("verificaciones", [])}
+        verifs = proyecto.get("verificaciones", [])
+        # Clasificar
+        bloqueantes = [v for v in verifs if v.get("status") in ("fail", "unknown")]
+        pendientes = [v for v in verifs if v.get("status") == "warn"]
+        promocion = self.estado_promocion(project_id)
+        tarjeta = {
+            "project_id": project_id,
+            "declaracion": proyecto["declaracion"],
+            "revision_declaracion": self.obtener_revision_declaracion(project_id),
+            "verificaciones": verifs,
+            "promocion": promocion,
+            "estado": promocion["estado"],
+            "bloqueantes": [b["check_id"] for b in bloqueantes],
+            "pendientes_revision": [p["check_id"] for p in pendientes],
+            "evidencia": self.obtener_evidencia(project_id),
+            "evidencia_vigente": self.verificar_toda_evidencia(project_id),
+        }
+        return tarjeta
