@@ -24,7 +24,7 @@
 
 #if es-curso [
 #monorepo[
-  Lab #code[L08] planta fugas deliberadas (outcome, tratamiento, interacciones) y las detecta antes de estimar. La Serie A2 (DML) y el escenario #code[ihdp_medium] asumen covariables solo pre-tratamiento. No usar columnas de ground truth (#code[y0], #code[y1], #code[tau]) fuera de celdas de evaluación. Rutas: #code[05_labs_sesion/L08_leakage_ihdp/] y notebook A2 en #code[03_notebooks_caso_estudio/notebooks/].
+  Lab #code[L08] planta fugas deliberadas (outcome, tratamiento, interacciones) y las detecta antes de estimar. La Serie A2 (DML) y el escenario #code[ihdp_medium] asumen covariables solo pre-tratamiento. No usar columnas de ground truth (#code[y0], #code[y1], #code[tau]) fuera de celdas de evaluación. Rutas: notebook A2 en #code[03_notebooks_caso_estudio/notebooks/].
 ]
 
 ]
