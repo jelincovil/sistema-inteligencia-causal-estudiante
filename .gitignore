@@ -31,3 +31,6 @@ __pycache__/
 
 # papelera del sistema de archivos (autocontenida, excluida)
 .trash/
+
+# artefactos de build Rust (regenerables con cargo build)
+**/target/
