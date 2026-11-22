@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/curso-ia-causal/monorepo/blob/main/04_produccion_causal/B2_model_card_ci/schemas/causal-model-card-v1.schema.json",
   "title": "Causal Model Card v1",
-  "description": "Contrato machine-readable de ejemplo para una model card ATE (02_monografia/apendices/apG_model_card_causal.typ, sec-apG-schema). El runtime local usa causal-model-card.local.schema.json local-0.2; este ejemplo no define por sí solo el contrato HTTP de /metadata.",
+  "description": "Contrato machine-readable de ejemplo para una model card ATE (02_causal AI en produccion/Causal_AI/apendices/apG_model_card_causal.typ). El runtime local usa causal-model-card.local.schema.json local-0.2; este ejemplo no define por sí solo el contrato HTTP de /metadata.",
   "type": "object",
   "required": [
     "schema_version",

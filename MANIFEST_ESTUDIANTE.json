@@ -18,8 +18,8 @@
     },
     {
       "path": "01_silabo/README.md",
-      "bytes": 464,
-      "sha256": "0347442ca1e1df325f3633e2162a7069d4a536ab3984b30b4a672869771260ba"
+      "bytes": 1021,
+      "sha256": "7b7ddf6e40d9c5880d471ffb75f79837b15ab25edf268a5bfab51476fb661fc5"
     },
     {
       "path": "01_silabo/cronograma/calendario.pdf",
@@ -188,8 +188,8 @@
     },
     {
       "path": "04_produccion_causal/B2_model_card_ci/schemas/causal-model-card-v1.schema.json",
-      "bytes": 5620,
-      "sha256": "a10cc46eaf01b5ff313160b103686f3b47710e6e66aea7188869ef3e3fd23868"
+      "bytes": 5627,
+      "sha256": "39a1442bbdf01d1297fbd6e1cd7470cf9e0e3bde20253f5fa7718651df0931eb"
     },
     {
       "path": "04_produccion_causal/B2_model_card_ci/schemas/ejemplo_valido.json",
@@ -623,8 +623,8 @@
     },
     {
       "path": "requirements.txt",
-      "bytes": 422,
-      "sha256": "44e157bf29ab43df392a4d874918f43e42cefb4f31d58fef51ab2c366905a8e7"
+      "bytes": 416,
+      "sha256": "9f9701c28434d06eed254dfeaa94f692ea0089b510f51a20da5dc24b2a225541"
     },
     {
       "path": "scripts/doctor_minimo.py",
