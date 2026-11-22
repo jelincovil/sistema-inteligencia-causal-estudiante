@@ -1,0 +1,10 @@
+services:
+  servicio:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      SIC_ESCENARIO: synthetic/ihdp
+      SIC_VERSION_ESPERADA: v0009
+    ports:
+      - "127.0.0.1:8000:8000"

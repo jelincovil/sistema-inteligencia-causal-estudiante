@@ -1,0 +1,117 @@
+name: Instalador Windows
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "instalador_windows/**"
+      - ".github/workflows/instalador-windows.yml"
+  pull_request:
+    paths:
+      - "instalador_windows/**"
+      - ".github/workflows/instalador-windows.yml"
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  compilar:
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Verificar coherencia tag ↔ CMake ↔ instalador
+        if: github.event_name == 'release'
+        shell: pwsh
+        run: |
+          $tag = "${{ github.event.release.tag_name }}"
+          if ($tag -notmatch '^v(\d+\.\d+\.\d+)$') { throw "El tag '$tag' no tiene el formato vX.Y.Z" }
+          $version = $Matches[1]
+          $cmake = Get-Content -Raw "instalador_windows/CMakeLists.txt"
+          if ($cmake -notmatch "project\(PuenteCausal\s+VERSION\s+$([regex]::Escape($version))\b") {
+            throw "CMakeLists.txt no coincide con el tag $tag"
+          }
+          $cpp = Get-Content -Raw "instalador_windows/PuenteCausal.cpp"
+          if ($cpp -notmatch [regex]::Escape("zip/refs/tags/$tag")) {
+            throw "PuenteCausal.cpp no apunta al tag $tag (kProjectUrl)"
+          }
+          Write-Host "Coherencia verificada: tag $tag <-> CMakeLists <-> instalador"
+
+      - name: Configurar con MSVC
+        run: cmake -S instalador_windows -B build -G "Visual Studio 17 2022" -A x64
+
+      - name: Compilar ejecutable nativo
+        run: cmake --build build --config Release --parallel
+
+      - name: Autoevaluación sin interfaz gráfica
+        shell: pwsh
+        run: |
+          ctest --test-dir build -C Release --output-on-failure
+          $code = $LASTEXITCODE
+          if ($code -ne 0) {
+            $log = Join-Path $env:LOCALAPPDATA "PuenteCausal/registros/lanzador.log"
+            if (Test-Path $log) { Get-Content $log -Tail 100 }
+            exit $code
+          }
+
+      - name: Instalación y servicio reales al publicar
+        if: github.event_name == 'release'
+        timeout-minutes: 25
+        shell: pwsh
+        run: |
+          # Una aplicación Win32 no bloquea «&» ni fija siempre $LASTEXITCODE.
+          # Start-Process -Wait garantiza que la instalación y el servicio terminen.
+          $exe = Resolve-Path "build/Release/PuenteCausal.exe"
+          $process = Start-Process -FilePath $exe -ArgumentList "--smoke-test" -Wait -PassThru
+          $code = $process.ExitCode
+          $log = Join-Path $env:LOCALAPPDATA "PuenteCausal/registros/lanzador.log"
+          if (Test-Path $log) { Get-Content $log -Tail 100 }
+          if ($code -ne 0) { throw "Falló la prueba integral del lanzador (código $code)." }
+
+      - name: Preparar hash del ejecutable
+        shell: pwsh
+        run: |
+          $exe = Resolve-Path "build/Release/PuenteCausal.exe"
+          $originalHash = (Get-FileHash -Algorithm SHA256 $exe).Hash.ToLowerInvariant()
+          $destination = Join-Path $PWD "PuenteCausal.exe"
+          Copy-Item -LiteralPath $exe -Destination $destination -Force
+          $hash = (Get-FileHash -Algorithm SHA256 $destination).Hash.ToLowerInvariant()
+          if ($hash -ne $originalHash) { throw "La copia del ejecutable cambió sus bytes." }
+          [IO.File]::WriteAllText("$PWD/PuenteCausal.exe.sha256", "$hash  PuenteCausal.exe`n", [Text.Encoding]::ASCII)
+          Write-Host "SHA-256: $hash"
+
+      - name: Conservar artefacto de compilación
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: PuenteCausal-windows-x64
+          path: |
+            PuenteCausal.exe
+            PuenteCausal.exe.sha256
+          if-no-files-found: error
+          retention-days: 30
+
+  publicar_release:
+    if: github.event_name == 'release'
+    needs: compilar
+    runs-on: windows-2022
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: PuenteCausal-windows-x64
+
+      - name: Adjuntar descarga pública
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          $expected = ((Get-Content -Raw "PuenteCausal.exe.sha256") -split '\s+')[0]
+          $actual = (Get-FileHash -Algorithm SHA256 "PuenteCausal.exe").Hash.ToLowerInvariant()
+          if ($actual -ne $expected) { throw "El ejecutable no coincide con su SHA-256." }
+          # Sin --clobber: un asset que ya existe aborta el release en vez de sobrescribirlo.
+          gh release upload "$env:RELEASE_TAG" PuenteCausal.exe PuenteCausal.exe.sha256 --repo "${{ github.repository }}"
