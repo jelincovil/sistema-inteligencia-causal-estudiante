@@ -1,0 +1,1950 @@
+{
+  "schema_version": "1.1",
+  "profile": "scientific_audit",
+  "corpus": {
+    "id": "causal-ml-lalonde-executable-book-v1",
+    "kind": "case"
+  },
+  "atoms": [
+    {
+      "id": "association_observed_distribution_only",
+      "definition_claim": "C.taxonomy.association",
+      "description": "An associational contrast is a functional of the observed joint distribution only."
+    },
+    {
+      "id": "prediction_not_counterfactual",
+      "definition_claim": "C.taxonomy.prediction",
+      "description": "Predictive generalization concerns unseen draws of a stated target, not intervention effects."
+    },
+    {
+      "id": "counterfactual_requires_identification",
+      "definition_claim": "C.taxonomy.counterfactual",
+      "description": "A counterfactual claim needs an estimand and identification assumptions beyond predictive fit."
+    },
+    {
+      "id": "operational_readiness_not_causal_validity",
+      "definition_claim": "C.taxonomy.operational",
+      "description": "Executable-pipeline readiness is not evidence of causal validity."
+    },
+    {
+      "id": "consistency",
+      "definition_claim": "C.assumption.consistency",
+      "description": "Observed outcome equals the potential outcome for the received treatment, given a well-defined treatment version."
+    },
+    {
+      "id": "noninterference",
+      "definition_claim": "C.assumption.noninterference",
+      "description": "A unit's potential outcomes do not depend on other units' treatment assignments under the declared exposure model."
+    },
+    {
+      "id": "conditional_mean_exchangeability",
+      "definition_claim": "C.assumption.exchangeability",
+      "description": "Conditional mean exchangeability given declared baseline covariates; untestable, not a balance-test conclusion."
+    },
+    {
+      "id": "positivity_on_target_support",
+      "definition_claim": "C.assumption.positivity",
+      "description": "Every covariate pattern in the target support has strictly positive probability of either treatment level."
+    },
+    {
+      "id": "valid_baseline_adjustment_set",
+      "definition_claim": "C.identification.adjustment_set",
+      "description": "A declared baseline adjustment set blocks the declared backdoor paths; selection is substantive, not a balance check."
+    },
+    {
+      "id": "ate_identified_from_observed_distribution",
+      "definition_claim": "C.identified",
+      "description": "The ATE is identified from the observed distribution, only under the full five-atom identification conjunction."
+    },
+    {
+      "id": "cross_fitted_aipw_score",
+      "definition_claim": "C.estimator.aipw",
+      "description": "The implemented AIPW score adds inverse-propensity residual corrections; cross-fitting separates nuisance fit from score evaluation."
+    },
+    {
+      "id": "pinned_lalonde_bytes",
+      "definition_claim": "C.data.provenance.pin",
+      "description": "The local lalonde.csv is 27,509 bytes with SHA-256 a49703ca0233ba0a27fa9cda959a38a07f6825def0f7743cf2380ce4e57dd3ef, matching the recorded pin."
+    },
+    {
+      "id": "pinned_lalonde_url",
+      "definition_claim": "C.data.provenance.url",
+      "description": "The raw object was pinned to the commit-bound Rdatasets MatchIt lalonde.csv URL at commit 1dcc2bf5f955cc1224a3e1307256e1fe86b68dae."
+    },
+    {
+      "id": "data_value_license_unresolved",
+      "definition_claim": "C.data.license",
+      "description": "The license of the data values remains unresolved_upstream; package-level licensing is not assigned to the data values."
+    },
+    {
+      "id": "lalonde_observation_count",
+      "definition_claim": "C.data.schema.rows",
+      "description": "The audit records observation_count 614."
+    },
+    {
+      "id": "lalonde_declared_columns_present",
+      "definition_claim": "C.data.schema.columns",
+      "description": "All ten declared columns are recorded present with zero missing declared cells."
+    },
+    {
+      "id": "lalonde_exact_duplicate_records_zero",
+      "definition_claim": "C.data.schema.exact_duplicates",
+      "description": "The audit records exact_duplicate_record_count 0."
+    },
+    {
+      "id": "lalonde_duplicate_unit_ids_zero",
+      "definition_claim": "C.data.schema.duplicate_ids",
+      "description": "The audit records duplicate_unit_or_unit_epoch_ids as empty."
+    },
+    {
+      "id": "lalonde_repeated_measurement_vectors",
+      "definition_claim": "C.data.schema.repeated_measurements",
+      "description": "Five repeated measurement vectors excluding identifier are counted as warnings, not proof of duplicate people."
+    },
+    {
+      "id": "feature_availability_contract",
+      "definition_claim": "C.data.feature_availability",
+      "description": "All declared adjustment features are available at or before the 1975 pre-NSW baseline with pre_treatment_adjustment role."
+    },
+    {
+      "id": "re78_excluded_from_adjustment",
+      "definition_claim": "C.data.features.outcome_excluded",
+      "description": "re78 is the declared outcome, not an adjustment feature; adjustment excludes it."
+    },
+    {
+      "id": "log1p_transform_frozen_re74_re75",
+      "definition_claim": "C.data.features.log1p_transform",
+      "description": "re74 and re75 carry the frozen log1p transform; other declared features use identity."
+    },
+    {
+      "id": "entity_hash_split_roles",
+      "definition_claim": "C.data.split_governance",
+      "description": "Split assignment uses deterministic entity_hash keyed by the protocol salt."
+    },
+    {
+      "id": "split_fractions_060_020_020",
+      "definition_claim": "C.data.split.fractions",
+      "description": "Declared train/calibration/holdout fractions are 0.6, 0.2 and 0.2."
+    },
+    {
+      "id": "entity_disjoint_roles_zero_overlap",
+      "definition_claim": "C.data.split.entity_disjoint",
+      "description": "The audit's leakage checks report zero cross-role unit overlap and entity-disjoint verification."
+    },
+    {
+      "id": "temporal_governance_unavailable",
+      "definition_claim": "C.data.epoch_unavailable",
+      "description": "No epoch is present; temporal separation is unavailable rather than verified."
+    },
+    {
+      "id": "frozen_cross_fitting_protocol",
+      "definition_claim": "C.protocol.cross_fitting",
+      "description": "The predeclared estimator uses 5 train folds with cross-fitting of nuisance fits and held-out evaluation."
+    },
+    {
+      "id": "logistic_irls_propensity",
+      "definition_claim": "C.protocol.propensity_fit",
+      "description": "Propensity is a main-effects logistic IRLS fit with fixed iteration limit, tolerance and ridge."
+    },
+    {
+      "id": "primary_propensity_clip_005",
+      "definition_claim": "C.protocol.primary_clip",
+      "description": "The primary propensity clip is 0.05."
+    },
+    {
+      "id": "sensitivity_propensity_clips_001_010",
+      "definition_claim": "C.protocol.sensitivity_clips",
+      "description": "Predeclared sensitivity propensity clips are 0.01 and 0.1."
+    },
+    {
+      "id": "ridge_linear_outcome_models",
+      "definition_claim": "C.protocol.outcome_models",
+      "description": "Outcome models are separate treatment-level ridge-linear least squares; predictions are not truncated to nonnegative earnings."
+    },
+    {
+      "id": "single_holdout_event",
+      "definition_claim": "C.empirical.holdout.event",
+      "description": "The holdout ledger records one final-only event, H001-final-only."
+    },
+    {
+      "id": "holdout_access_sequence_1",
+      "definition_claim": "C.empirical.holdout.access",
+      "description": "The report records access_sequence 1 for the single final holdout evaluation."
+    },
+    {
+      "id": "holdout_not_reused_for_tuning",
+      "definition_claim": "C.empirical.holdout.tuning",
+      "description": "The report records reused_for_tuning false for the holdout evaluation."
+    },
+    {
+      "id": "unadjusted_all_observation_contrast",
+      "definition_claim": "C.empirical.unadjusted_all",
+      "description": "All-observation unadjusted mean difference, association only."
+    },
+    {
+      "id": "train_aipw_005",
+      "definition_claim": "C.empirical.aipw_train",
+      "description": "Train cross-fitted AIPW summary at clip 0.05."
+    },
+    {
+      "id": "holdout_aipw_005",
+      "definition_claim": "C.empirical.aipw_holdout",
+      "description": "Single holdout external-nuisance AIPW summary at clip 0.05."
+    },
+    {
+      "id": "holdout_aipw_clip_001",
+      "definition_claim": "C.empirical.aipw_holdout_clip_001",
+      "description": "Holdout external-nuisance AIPW summary at predeclared clip 0.01."
+    },
+    {
+      "id": "holdout_aipw_clip_010",
+      "definition_claim": "C.empirical.aipw_holdout_clip_010",
+      "description": "Holdout external-nuisance AIPW summary at predeclared clip 0.10."
+    },
+    {
+      "id": "weak_estimated_overlap_train",
+      "definition_claim": "C.empirical.overlap.train",
+      "description": "138 of 366 train rows have raw estimated propensity outside [0.05, 0.95]."
+    },
+    {
+      "id": "weak_estimated_overlap_holdout",
+      "definition_claim": "C.empirical.overlap.holdout",
+      "description": "41 of 134 holdout rows have raw estimated propensity outside [0.05, 0.95]."
+    },
+    {
+      "id": "nuisance_numerics_converged_train_folds",
+      "definition_claim": "C.empirical.computational_train_folds",
+      "description": "All five recorded train-fold propensity fits converged without suspected separation."
+    },
+    {
+      "id": "nuisance_numerics_converged_deployed",
+      "definition_claim": "C.empirical.computational_deployed",
+      "description": "The deployed propensity fit converged without suspected separation."
+    },
+    {
+      "id": "hidden_confounding_unbounded_by_this_run",
+      "definition_claim": "C.limit.unmeasured_confounding",
+      "description": "Unmeasured selection between NSW and PSID comparisons is not ruled out by fit diagnostics."
+    },
+    {
+      "id": "transport_not_identified",
+      "definition_claim": "C.limit.transportability",
+      "description": "No transport design or formula is supplied; effects elsewhere are not established."
+    },
+    {
+      "id": "sampling_interval_omits_structural_uncertainty",
+      "definition_claim": "C.limit.uncertainty",
+      "description": "Normal-reference intervals omit confounding, model, transport and clipping-bias uncertainty."
+    },
+    {
+      "id": "deployment_requires_external_monitoring",
+      "definition_claim": "C.deployment.monitoring",
+      "description": "Any future deployment needs versioned monitoring and rollback; none is implemented here."
+    },
+    {
+      "id": "argument_structure_is_not_claim_support",
+      "definition_claim": "C.argument.reconstruction_limits",
+      "description": "Administrative dossiers reconstruct dependencies; they do not certify scientific claims."
+    },
+    {
+      "id": "conditional_causal_interpretation_only",
+      "definition_claim": "C.claim.conditional_causal",
+      "description": "Split-specific causal interpretation exists only under unverified substantive premises; conditional dossier only."
+    }
+  ],
+  "claims": [
+    {
+      "id": "C.taxonomy.association",
+      "book_key": null,
+      "source": {
+        "system": "local",
+        "key": "book/chapters/01-claims.typ#taxonomy"
+      },
+      "kind": "formal",
+      "statement": "An associational contrast is a functional of the observed joint distribution and does not, by itself, identify a potential-outcome contrast.",
+      "expression": {
+        "op": "atom",
+        "id": "association_observed_distribution_only"
+      },
+      "scope": {
+        "claim_class": "association"
+      },
+      "assumptions": []
+    },
+    {
+      "id": "C.taxonomy.prediction",
+      "book_key": null,
+      "source": {
+        "system": "local",
+        "key": "book/chapters/01-claims.typ#taxonomy"
+      },
+      "kind": "formal",
+      "statement": "Predictive generalization concerns unseen draws from a stated prediction target and does not identify intervention effects.",
+      "expression": {
+        "op": "atom",
+        "id": "prediction_not_counterfactual"
+      },
+      "scope": {
+        "claim_class": "prediction"
+      },
+      "assumptions": []
+    },
+    {
+      "id": "C.taxonomy.counterfactual",
+      "book_key": null,
+      "source": {
+        "system": "local",
+        "key": "book/chapters/01-claims.typ#taxonomy"
+      },
+      "kind": "conditional",
+      "statement": "A counterfactual claim requires an intervention definition, an estimand, and identification assumptions beyond predictive fit.",
+      "expression": {
+        "op": "atom",
+        "id": "counterfactual_requires_identification"
+      },
+      "scope": {
+        "claim_class": "counterfactual"
+      },
+      "assumptions": []
+    },
+    {
+      "id": "C.taxonomy.operational",
+      "book_key": null,
+      "source": {
+        "system": "local",
+        "key": "book/chapters/01-claims.typ#taxonomy"
+      },
+      "kind": "conditional",
+      "statement": "Operational claims concern a versioned pipeline, its monitoring, and its rollback rules; even an executable artifact only marks operational readiness, never causal validity.",
+      "expression": {
+        "op": "atom",
+        "id": "operational_readiness_not_causal_validity"
+      },
+      "scope": {
+        "claim_class": "operational"
+      },
+      "assumptions": []
+    },
+    {
+      "id": "C.assumption.consistency",
+      "book_key": null,
+      "source": {
+        "system": "local",
+        "key": "book/chapters/02-potential-outcomes.typ#consistency"
+      },
+      "kind": "conditional",
+      "statement": "For each unit and actually received treatment, the observed outcome equals the corresponding potential outcome under a well-defined treatment version; this premise is substantive and unverified here.",
+      "expression": {
+        "op": "atom",
+        "id": "consistency"
+      },
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment"
+      },
+      "assumptions": []
+    },
+    {
+      "id": "C.assumption.noninterference",
+      "book_key": null,
+      "source": {
+        "system": "local",
+        "key": "book/chapters/02-potential-outcomes.typ#interference"
+      },
+      "kind": "conditional",
+      "statement": "A unit's potential outcomes do not depend on other units' treatment assignments under the declared exposure model; this premise is substantive and unverified here.",
+      "expression": {
+        "op": "atom",
+        "id": "noninterference"
+      },
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment"
+      },
+      "assumptions": []
+    },
+    {
+      "id": "C.assumption.exchangeability",
+      "book_key": null,
+      "source": {
+        "system": "local",
+        "key": "book/chapters/03-identification.typ#exchangeability"
+      },
+      "kind": "conditional",
+      "statement": "Conditional mean exchangeability holds given the declared baseline covariates; this is an untestable assumption, not a balance-test conclusion.",
+      "expression": {
+        "op": "atom",
+        "id": "conditional_mean_exchangeability"
+      },
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment"
+      },
+      "assumptions": []
+    },
+    {
+      "id": "C.assumption.positivity",
+      "book_key": null,
+      "source": {
+        "system": "local",
+        "key": "book/chapters/04-overlap.typ#positivity"
+      },
+      "kind": "conditional",
+      "statement": "Every covariate pattern in the target support has strictly positive probability of either treatment level; clipping does not repair structural nonpositivity.",
+      "expression": {
+        "op": "atom",
+        "id": "positivity_on_target_support"
+      },
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment"
+      },
+      "assumptions": []
+    },
+    {
+      "id": "C.identification.adjustment_set",
+      "book_key": null,
+      "source": {
+        "system": "local",
+        "key": "book/chapters/03-identification.typ#backdoor"
+      },
+      "kind": "conditional",
+      "statement": "A declared baseline adjustment set blocks the declared backdoor paths for the declared causal question; selecting the set is a substantive modeling decision, not a balance-check or tuning result.",
+      "expression": {
+        "op": "atom",
+        "id": "valid_baseline_adjustment_set"
+      },
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment"
+      },
+      "assumptions": []
+    },
+    {
+      "id": "C.assumptions.conjunction",
+      "book_key": null,
+      "source": {
+        "system": "local",
+        "key": "book/chapters/03-identification.typ#backdoor"
+      },
+      "kind": "conditional",
+      "statement": "The identification conjunction contains consistency, noninterference, conditional mean exchangeability, positivity on target support, and a valid baseline adjustment set; none of the five atoms is certified here.",
+      "expression": {
+        "op": "and",
+        "items": [
+          {
+            "op": "atom",
+            "id": "consistency"
+          },
+          {
+            "op": "atom",
+            "id": "noninterference"
+          },
+          {
+            "op": "atom",
+            "id": "conditional_mean_exchangeability"
+          },
+          {
+            "op": "atom",
+            "id": "positivity_on_target_support"
+          },
+          {
+            "op": "atom",
+            "id": "valid_baseline_adjustment_set"
+          }
+        ]
+      },
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment"
+      },
+      "assumptions": []
+    },
+    {
+      "id": "C.backdoor.theorem",
+      "book_key": null,
+      "source": {
+        "system": "local",
+        "key": "book/chapters/03-identification.typ#backdoor"
+      },
+      "kind": "conditional",
+      "statement": "If consistency, noninterference, conditional mean exchangeability, positivity on target support, and a valid baseline adjustment set all hold, then the interventional mean is recovered from the observed distribution by covariate standardization. This is the implication only; whether the premises hold is substantive and remains unverified.",
+      "expression": {
+        "op": "implies",
+        "antecedent": {
+          "op": "and",
+          "items": [
+            {
+              "op": "atom",
+              "id": "consistency"
+            },
+            {
+              "op": "atom",
+              "id": "noninterference"
+            },
+            {
+              "op": "atom",
+              "id": "conditional_mean_exchangeability"
+            },
+            {
+              "op": "atom",
+              "id": "positivity_on_target_support"
+            },
+            {
+              "op": "atom",
+              "id": "valid_baseline_adjustment_set"
+            }
+          ]
+        },
+        "consequent": {
+          "op": "atom",
+          "id": "ate_identified_from_observed_distribution"
+        }
+      },
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment"
+      },
+      "assumptions": []
+    },
+    {
+      "id": "C.identified",
+      "book_key": null,
+      "source": {
+        "system": "local",
+        "key": "book/chapters/03-identification.typ#backdoor"
+      },
+      "kind": "conditional",
+      "statement": "Only conditionally on the full five-atom identification conjunction is the ATE identified from the observed distribution; no premise is certified by this syntactic derivation.",
+      "expression": {
+        "op": "atom",
+        "id": "ate_identified_from_observed_distribution"
+      },
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment"
+      },
+      "assumptions": [
+        "C.assumption.consistency",
+        "C.assumption.noninterference",
+        "C.assumption.exchangeability",
+        "C.assumption.positivity",
+        "C.identification.adjustment_set"
+      ]
+    },
+    {
+      "id": "C.estimator.aipw",
+      "book_key": null,
+      "source": {
+        "system": "local",
+        "key": "book/chapters/05-estimation.typ#aipw"
+      },
+      "kind": "formal",
+      "statement": "The implemented AIPW score adds inverse-propensity residual corrections to the outcome-regression contrast; cross-fitting separates nuisance fitting from score evaluation on train folds.",
+      "expression": {
+        "op": "atom",
+        "id": "cross_fitted_aipw_score"
+      },
+      "scope": {
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning"
+      },
+      "assumptions": []
+    },
+    {
+      "id": "C.data.provenance.pin",
+      "book_key": null,
+      "source": {
+        "system": "local",
+        "key": "data/real/PROVENANCE.md#Retrieved object"
+      },
+      "kind": "factual",
+      "statement": "The local data/real/lalonde.csv is 27,509 bytes with SHA-256 a49703ca0233ba0a27fa9cda959a38a07f6825def0f7743cf2380ce4e57dd3ef, matching the recorded expected size and hash.",
+      "expression": {
+        "op": "atom",
+        "id": "pinned_lalonde_bytes"
+      },
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment"
+      },
+      "assumptions": []
+    },
+    {
+      "id": "C.data.provenance.url",
+      "book_key": null,
+      "source": {
+        "system": "local",
+        "key": "data/real/PROVENANCE.md#Retrieved object"
+      },
+      "kind": "factual",
+      "statement": "The raw object was pinned to the commit-bound Rdatasets MatchIt lalonde.csv URL at commit 1dcc2bf5f955cc1224a3e1307256e1fe86b68dae, retrieved on 2026-11-22, per the recorded provenance.",
+      "expression": {
+        "op": "atom",
+        "id": "pinned_lalonde_url"
+      },
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment"
+      },
+      "assumptions": []
+    },
+    {
+      "id": "C.data.license",
+      "book_key": null,
+      "source": {
+        "system": "local",
+        "key": "data/real/PROVENANCE.md#License/status: explicitly unresolved for the data values"
+      },
+      "kind": "factual",
+      "statement": "The data-value license remains unresolved_upstream; package-level licensing is not silently assigned to the data values.",
+      "expression": {
+        "op": "atom",
+        "id": "data_value_license_unresolved"
+      },
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment"
+      },
+      "assumptions": []
+    },
+    {
+      "id": "C.data.schema.rows",
+      "book_key": null,
+      "source": {
+        "system": "local",
+        "key": "artifacts/lalonde/audit.json#observation_count"
+      },
+      "kind": "factual",
+      "statement": "The audit records observation_count 614.",
+      "expression": {
+        "op": "atom",
+        "id": "lalonde_observation_count"
+      },
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1"
+      },
+      "assumptions": []
+    },
+    {
+      "id": "C.data.schema.columns",
+      "book_key": null,
+      "source": {
+        "system": "local",
+        "key": "artifacts/lalonde/audit.json#columns"
+      },
+      "kind": "factual",
+      "statement": "All ten declared column records are present, and the total number of missing declared cells is zero.",
+      "expression": {
+        "op": "atom",
+        "id": "lalonde_declared_columns_present"
+      },
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1"
+      },
+      "assumptions": []
+    },
+    {
+      "id": "C.data.schema.exact_duplicates",
+      "book_key": null,
+      "source": {
+        "system": "local",
+        "key": "artifacts/lalonde/audit.json#exact_duplicate_record_count"
+      },
+      "kind": "factual",
+      "statement": "The audit records exact_duplicate_record_count 0.",
+      "expression": {
+        "op": "atom",
+        "id": "lalonde_exact_duplicate_records_zero"
+      },
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1"
+      },
+      "assumptions": []
+    },
+    {
+      "id": "C.data.schema.duplicate_ids",
+      "book_key": null,
+      "source": {
+        "system": "local",
+        "key": "artifacts/lalonde/audit.json#duplicate_unit_or_unit_epoch_ids"
+      },
+      "kind": "factual",
+      "statement": "The audit records duplicate_unit_or_unit_epoch_ids as empty.",
+      "expression": {
+        "op": "atom",
+        "id": "lalonde_duplicate_unit_ids_zero"
+      },
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1"
+      },
+      "assumptions": []
+    },
+    {
+      "id": "C.data.schema.repeated_measurements",
+      "book_key": null,
+      "source": {
+        "system": "local",
+        "key": "artifacts/lalonde/audit.json#duplicate_measurement_rows_excluding_id"
+      },
+      "kind": "factual",
+      "statement": "The audit counts five repeated measurement vectors excluding the identifier; these remain warnings, not proof of duplicate people.",
+      "expression": {
+        "op": "atom",
+        "id": "lalonde_repeated_measurement_vectors"
+      },
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1"
+      },
+      "assumptions": []
+    },
+    {
+      "id": "C.data.feature_availability",
+      "book_key": null,
+      "source": {
+        "system": "local",
+        "key": "config/lalonde.contract.json#features"
+      },
+      "kind": "factual",
+      "statement": "Every declared adjustment feature is available at or before the 1975 pre-NSW baseline and carries the pre_treatment_adjustment role in the contract.",
+      "expression": {
+        "op": "atom",
+        "id": "feature_availability_contract"
+      },
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment"
+      },
+      "assumptions": []
+    },
+    {
+      "id": "C.data.features.outcome_excluded",
+      "book_key": null,
+      "source": {
+        "system": "local",
+        "key": "config/lalonde.contract.json#outcome"
+      },
+      "kind": "factual",
+      "statement": "re78 is declared under contract outcome and is not among the adjustment features; adjustment therefore excludes the outcome column.",
+      "expression": {
+        "op": "atom",
+        "id": "re78_excluded_from_adjustment"
+      },
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment"
+      },
+      "assumptions": []
+    },
+    {
+      "id": "C.data.features.log1p_transform",
+      "book_key": null,
+      "source": {
+        "system": "local",
+        "key": "config/lalonde.contract.json#features"
+      },
+      "kind": "factual",
+      "statement": "re74 and re75 carry the frozen log1p transform; every other declared adjustment feature uses the identity transform.",
+      "expression": {
+        "op": "atom",
+        "id": "log1p_transform_frozen_re74_re75"
+      },
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment"
+      },
+      "assumptions": []
+    },
+    {
+      "id": "C.data.split_governance",
+      "book_key": null,
+      "source": {
+        "system": "local",
+        "key": "config/lalonde.contract.json#split"
+      },
+      "kind": "factual",
+      "statement": "The split strategy is entity_hash keyed by the protocol salt causal-ml-lalonde-protocol-v1-no-outcome-tuning; assignment is deterministic for a given salt.",
+      "expression": {
+        "op": "atom",
+        "id": "entity_hash_split_roles"
+      },
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment"
+      },
+      "assumptions": []
+    },
+    {
+      "id": "C.data.split.fractions",
+      "book_key": null,
+      "source": {
+        "system": "local",
+        "key": "config/lalonde.contract.json#split"
+      },
+      "kind": "factual",
+      "statement": "The declared train, calibration and holdout fractions are 0.6, 0.2 and 0.2 of entity-hashed rows.",
+      "expression": {
+        "op": "atom",
+        "id": "split_fractions_060_020_020"
+      },
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment"
+      },
+      "assumptions": []
+    },
+    {
+      "id": "C.data.split.entity_disjoint",
+      "book_key": null,
+      "source": {
+        "system": "local",
+        "key": "artifacts/lalonde/audit.json#leakage_checks"
+      },
+      "kind": "factual",
+      "statement": "The audit's leakage checks report zero train/calibration, train/holdout and calibration/holdout unit overlap, with entity-disjoint verification true.",
+      "expression": {
+        "op": "atom",
+        "id": "entity_disjoint_roles_zero_overlap"
+      },
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1"
+      },
+      "assumptions": []
+    },
+    {
+      "id": "C.data.epoch_unavailable",
+      "book_key": null,
+      "source": {
+        "system": "local",
+        "key": "artifacts/lalonde/audit.json#leakage_checks"
+      },
+      "kind": "factual",
+      "statement": "No epoch is present, so temporal separation is unavailable rather than verified (epoch_disjoint_verified is false); entity-disjoint splitting is the only implemented role separation for this CSV.",
+      "expression": {
+        "op": "atom",
+        "id": "temporal_governance_unavailable"
+      },
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment"
+      },
+      "assumptions": []
+    },
+    {
+      "id": "C.protocol.cross_fitting",
+      "book_key": null,
+      "source": {
+        "system": "local",
+        "key": "config/lalonde.contract.json#estimator"
+      },
+      "kind": "factual",
+      "statement": "The predeclared estimator cross_fitted_aipw_logistic_linear_v1 uses 5 train folds; nuisance fits are separated from evaluation on the held-out folds.",
+      "expression": {
+        "op": "atom",
+        "id": "frozen_cross_fitting_protocol"
+      },
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment"
+      },
+      "assumptions": []
+    },
+    {
+      "id": "C.protocol.propensity_fit",
+      "book_key": null,
+      "source": {
+        "system": "local",
+        "key": "config/lalonde.contract.json#estimator"
+      },
+      "kind": "factual",
+      "statement": "The propensity model is a main-effects logistic IRLS fit with maximum 100 iterations, tolerance 1E-8, and fixed ridge 1E-6.",
+      "expression": {
+        "op": "atom",
+        "id": "logistic_irls_propensity"
+      },
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment"
+      },
+      "assumptions": []
+    },
+    {
+      "id": "C.protocol.primary_clip",
+      "book_key": null,
+      "source": {
+        "system": "local",
+        "key": "config/lalonde.contract.json#estimator"
+      },
+      "kind": "factual",
+      "statement": "The primary propensity clip is 0.05.",
+      "expression": {
+        "op": "atom",
+        "id": "primary_propensity_clip_005"
+      },
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment",
+        "clip": "0.05"
+      },
+      "assumptions": []
+    },
+    {
+      "id": "C.protocol.sensitivity_clips",
+      "book_key": null,
+      "source": {
+        "system": "local",
+        "key": "config/lalonde.contract.json#estimator"
+      },
+      "kind": "factual",
+      "statement": "The predeclared sensitivity propensity clips are 0.01 and 0.1.",
+      "expression": {
+        "op": "atom",
+        "id": "sensitivity_propensity_clips_001_010"
+      },
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment"
+      },
+      "assumptions": []
+    },
+    {
+      "id": "C.protocol.outcome_models",
+      "book_key": null,
+      "source": {
+        "system": "local",
+        "key": "artifacts/lalonde/causal_report.json#protocol.outcome_learner"
+      },
+      "kind": "factual",
+      "statement": "The outcome models are separate treatment-level ridge-linear least squares on standardized contract features; predictions are not truncated to nonnegative earnings.",
+      "expression": {
+        "op": "atom",
+        "id": "ridge_linear_outcome_models"
+      },
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment"
+      },
+      "assumptions": []
+    },
+    {
+      "id": "C.empirical.holdout.event",
+      "book_key": null,
+      "source": {
+        "system": "local",
+        "key": "artifacts/lalonde/holdout_ledger.json#events"
+      },
+      "kind": "empirical",
+      "statement": "The holdout ledger records exactly one final-only event, H001-final-only; the ledger is a local record, not a tamper-proof timestamp authority.",
+      "expression": {
+        "op": "atom",
+        "id": "single_holdout_event"
+      },
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment"
+      },
+      "assumptions": []
+    },
+    {
+      "id": "C.empirical.holdout.access",
+      "book_key": null,
+      "source": {
+        "system": "local",
+        "key": "artifacts/lalonde/causal_report.json#holdout"
+      },
+      "kind": "empirical",
+      "statement": "The report records access_sequence 1 for the single final holdout evaluation.",
+      "expression": {
+        "op": "atom",
+        "id": "holdout_access_sequence_1"
+      },
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment"
+      },
+      "assumptions": []
+    },
+    {
+      "id": "C.empirical.holdout.tuning",
+      "book_key": null,
+      "source": {
+        "system": "local",
+        "key": "artifacts/lalonde/causal_report.json#holdout"
+      },
+      "kind": "empirical",
+      "statement": "The report records reused_for_tuning false for the holdout evaluation.",
+      "expression": {
+        "op": "atom",
+        "id": "holdout_not_reused_for_tuning"
+      },
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment"
+      },
+      "assumptions": []
+    },
+    {
+      "id": "C.protocol.complete",
+      "book_key": null,
+      "source": {
+        "system": "local",
+        "key": "config/lalonde.contract.json"
+      },
+      "kind": "conditional",
+      "statement": "The frozen protocol dossier names the declared baseline features and transforms, outcome exclusion, entity-hash split roles and fractions, the cross-fitted IRLS logistic propensity with treatment-level ridge-linear outcome models, the frozen clips, and the single final-only holdout event with access sequence 1 and no tuning reuse. It is a reproducibility dossier of mixed factual and empirical records, not an identification proof; MIXED_DOSSIER obligations apply.",
+      "expression": {
+        "op": "and",
+        "items": [
+          {
+            "op": "atom",
+            "id": "feature_availability_contract"
+          },
+          {
+            "op": "atom",
+            "id": "re78_excluded_from_adjustment"
+          },
+          {
+            "op": "atom",
+            "id": "log1p_transform_frozen_re74_re75"
+          },
+          {
+            "op": "atom",
+            "id": "entity_hash_split_roles"
+          },
+          {
+            "op": "atom",
+            "id": "split_fractions_060_020_020"
+          },
+          {
+            "op": "atom",
+            "id": "frozen_cross_fitting_protocol"
+          },
+          {
+            "op": "atom",
+            "id": "logistic_irls_propensity"
+          },
+          {
+            "op": "atom",
+            "id": "primary_propensity_clip_005"
+          },
+          {
+            "op": "atom",
+            "id": "sensitivity_propensity_clips_001_010"
+          },
+          {
+            "op": "atom",
+            "id": "ridge_linear_outcome_models"
+          },
+          {
+            "op": "atom",
+            "id": "single_holdout_event"
+          },
+          {
+            "op": "atom",
+            "id": "holdout_access_sequence_1"
+          },
+          {
+            "op": "atom",
+            "id": "holdout_not_reused_for_tuning"
+          }
+        ]
+      },
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment"
+      },
+      "assumptions": []
+    },
+    {
+      "id": "C.empirical.unadjusted_all",
+      "book_key": null,
+      "source": {
+        "system": "local",
+        "key": "artifacts/lalonde/causal_report.json#descriptive.all_observations"
+      },
+      "kind": "empirical",
+      "statement": "The generated report gives an all-observation unadjusted mean difference of -635.0 nominal dollars (rounded for prose); this is explicitly association_only.",
+      "expression": {
+        "op": "atom",
+        "id": "unadjusted_all_observation_contrast"
+      },
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment",
+        "role": "all_observations"
+      },
+      "assumptions": []
+    },
+    {
+      "id": "C.empirical.aipw_train",
+      "book_key": null,
+      "source": {
+        "system": "local",
+        "key": "artifacts/lalonde/causal_report.json#train_cross_fitted_aipw"
+      },
+      "kind": "empirical",
+      "statement": "At the frozen 0.05 clip, the generated train cross-fitted AIPW summary is -269.3 with influence-function SE 1023.1 and normal 95 percent interval [-2274.4, 1735.9], all in nominal dollars after rounding.",
+      "expression": {
+        "op": "atom",
+        "id": "train_aipw_005"
+      },
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment",
+        "clip": "0.05",
+        "role": "train_cross_fitted"
+      },
+      "assumptions": []
+    },
+    {
+      "id": "C.empirical.aipw_holdout",
+      "book_key": null,
+      "source": {
+        "system": "local",
+        "key": "artifacts/lalonde/causal_report.json#holdout.aipw"
+      },
+      "kind": "empirical",
+      "statement": "At the frozen 0.05 clip, the generated single holdout external-nuisance AIPW summary is 426.3 with influence-function SE 1821.9 and normal 95 percent interval [-3144.6, 3997.3], all in nominal dollars after rounding.",
+      "expression": {
+        "op": "atom",
+        "id": "holdout_aipw_005"
+      },
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment",
+        "clip": "0.05",
+        "role": "holdout_external_nuisance"
+      },
+      "assumptions": []
+    },
+    {
+      "id": "C.empirical.aipw_holdout_clip_001",
+      "book_key": null,
+      "source": {
+        "system": "local",
+        "key": "artifacts/lalonde/causal_report.json#sensitivity"
+      },
+      "kind": "empirical",
+      "statement": "At predeclared sensitivity clip 0.01, the generated holdout external-nuisance AIPW summary is 1137.4 with normal 95 percent interval [-3173.6, 5448.3], in nominal dollars after rounding; the selection rule forbids choosing a preferred clip by results.",
+      "expression": {
+        "op": "atom",
+        "id": "holdout_aipw_clip_001"
+      },
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment",
+        "clip": "0.01",
+        "role": "holdout_external_nuisance"
+      },
+      "assumptions": []
+    },
+    {
+      "id": "C.empirical.aipw_holdout_clip_010",
+      "book_key": null,
+      "source": {
+        "system": "local",
+        "key": "artifacts/lalonde/causal_report.json#sensitivity"
+      },
+      "kind": "empirical",
+      "statement": "At predeclared sensitivity clip 0.10, the generated holdout external-nuisance AIPW summary is 75.5 with normal 95 percent interval [-2443.2, 2594.3], in nominal dollars after rounding; the selection rule forbids choosing a preferred clip by results.",
+      "expression": {
+        "op": "atom",
+        "id": "holdout_aipw_clip_010"
+      },
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment",
+        "clip": "0.10",
+        "role": "holdout_external_nuisance"
+      },
+      "assumptions": []
+    },
+    {
+      "id": "C.empirical.overlap.train",
+      "book_key": null,
+      "source": {
+        "system": "local",
+        "key": "artifacts/lalonde/causal_report.json#train_cross_fitted_aipw.overlap"
+      },
+      "kind": "empirical",
+      "statement": "At diagnostic thresholds fixed in the contract, 138 of 366 train rows (37.70 percent) have raw estimated propensity outside [0.05, 0.95], indicating material estimated-overlap weakness on train.",
+      "expression": {
+        "op": "atom",
+        "id": "weak_estimated_overlap_train"
+      },
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment",
+        "diagnostic": "raw_propensity_outside_0.05_to_0.95",
+        "role": "train_cross_fitted"
+      },
+      "assumptions": []
+    },
+    {
+      "id": "C.empirical.overlap.holdout",
+      "book_key": null,
+      "source": {
+        "system": "local",
+        "key": "artifacts/lalonde/causal_report.json#holdout.aipw.overlap"
+      },
+      "kind": "empirical",
+      "statement": "At diagnostic thresholds fixed in the contract, 41 of 134 holdout rows (30.60 percent) have raw estimated propensity outside [0.05, 0.95], indicating material estimated-overlap weakness on holdout.",
+      "expression": {
+        "op": "atom",
+        "id": "weak_estimated_overlap_holdout"
+      },
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment",
+        "diagnostic": "raw_propensity_outside_0.05_to_0.95",
+        "role": "holdout_external_nuisance"
+      },
+      "assumptions": []
+    },
+    {
+      "id": "C.empirical.computational_train_folds",
+      "book_key": null,
+      "source": {
+        "system": "local",
+        "key": "artifacts/lalonde/causal_report.json#train_fold_diagnostics"
+      },
+      "kind": "empirical",
+      "statement": "All five recorded train-fold propensity fits report converged true and separation_suspected false, in 7 IRLS iterations each; numerical convergence does not establish identification or model correctness.",
+      "expression": {
+        "op": "atom",
+        "id": "nuisance_numerics_converged_train_folds"
+      },
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment",
+        "diagnostic": "logistic_convergence"
+      },
+      "assumptions": []
+    },
+    {
+      "id": "C.empirical.computational_deployed",
+      "book_key": null,
+      "source": {
+        "system": "local",
+        "key": "artifacts/lalonde/causal_report.json#deployed_nuisance_diagnostics"
+      },
+      "kind": "empirical",
+      "statement": "The deployed propensity fit on the train rows reports converged true and separation_suspected false, in 7 IRLS iterations; numerical convergence does not establish identification or model correctness.",
+      "expression": {
+        "op": "atom",
+        "id": "nuisance_numerics_converged_deployed"
+      },
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment",
+        "diagnostic": "logistic_convergence"
+      },
+      "assumptions": []
+    },
+    {
+      "id": "C.limit.unmeasured_confounding",
+      "book_key": null,
+      "source": {
+        "system": "local",
+        "key": "book/chapters/07-uncertainty.typ#sensitivity"
+      },
+      "kind": "conditional",
+      "statement": "Neither balance nor AIPW fit rules out unmeasured selection between NSW participants and PSID comparisons; adjusted intervals are not hidden-confounding bounds.",
+      "expression": {
+        "op": "atom",
+        "id": "hidden_confounding_unbounded_by_this_run"
+      },
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment"
+      },
+      "assumptions": []
+    },
+    {
+      "id": "C.limit.transportability",
+      "book_key": null,
+      "source": {
+        "system": "local",
+        "key": "book/chapters/07-uncertainty.typ#transportability"
+      },
+      "kind": "conditional",
+      "statement": "No target-population sampling design or effect-modifier transport formula is supplied, so the computed sample contrast does not establish effects in other populations or periods.",
+      "expression": {
+        "op": "atom",
+        "id": "transport_not_identified"
+      },
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment"
+      },
+      "assumptions": []
+    },
+    {
+      "id": "C.limit.uncertainty",
+      "book_key": null,
+      "source": {
+        "system": "local",
+        "key": "book/chapters/07-uncertainty.typ#uncertainty"
+      },
+      "kind": "conditional",
+      "statement": "Normal-reference influence-function intervals address one sampling approximation only; clipping sensitivity is a set of alternate weighted estimates, not a sensitivity analysis for hidden bias.",
+      "expression": {
+        "op": "atom",
+        "id": "sampling_interval_omits_structural_uncertainty"
+      },
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment"
+      },
+      "assumptions": []
+    },
+    {
+      "id": "C.deployment.monitoring",
+      "book_key": null,
+      "source": {
+        "system": "local",
+        "key": "book/chapters/08-governance.typ#monitoring"
+      },
+      "kind": "conditional",
+      "statement": "Any future deployment needs versioned feature timestamps, role-specific data audits, drift and override monitoring, and rollback criteria; none is implemented as a production service here.",
+      "expression": {
+        "op": "atom",
+        "id": "deployment_requires_external_monitoring"
+      },
+      "scope": {
+        "claim_class": "operational"
+      },
+      "assumptions": []
+    },
+    {
+      "id": "C.argument.reconstruction_limits",
+      "book_key": null,
+      "source": {
+        "system": "local",
+        "key": "book/chapters/09-argument-kernel.typ#reconstruction"
+      },
+      "kind": "factual",
+      "statement": "Canonical hashes, exact expression rules, cycle checks, and registered candidates reconstruct an administrative argument dossier; Lean execution, independent process replay, and scientific approval remain outside this checker.",
+      "expression": {
+        "op": "atom",
+        "id": "argument_structure_is_not_claim_support"
+      },
+      "scope": {
+        "claim_class": "evidence_governance"
+      },
+      "assumptions": []
+    },
+    {
+      "id": "C.claim.conditional_causal",
+      "book_key": null,
+      "source": {
+        "system": "local",
+        "key": "book/chapters/06-lalonde-case.typ#evidence-boundary"
+      },
+      "kind": "conditional",
+      "statement": "Only if the causal question, identification premises, measurement model, target support, and protocol were substantively established could the adjusted contrast receive the stated split-specific causal interpretation; the holdout sensitivity clips 0.01, 0.05 and 0.10 diverge from one another. This project explicitly leaves that scientific verification unresolved; the dossier is conditional only and establishes no causal effect.",
+      "expression": {
+        "op": "atom",
+        "id": "conditional_causal_interpretation_only"
+      },
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment"
+      },
+      "assumptions": [
+        "C.identified",
+        "C.protocol.complete",
+        "C.data.provenance.pin",
+        "C.data.provenance.url",
+        "C.data.license",
+        "C.data.epoch_unavailable",
+        "C.empirical.unadjusted_all",
+        "C.empirical.aipw_train",
+        "C.empirical.aipw_holdout",
+        "C.empirical.aipw_holdout_clip_001",
+        "C.empirical.aipw_holdout_clip_010",
+        "C.empirical.overlap.train",
+        "C.empirical.overlap.holdout",
+        "C.empirical.computational_train_folds",
+        "C.empirical.computational_deployed",
+        "C.limit.unmeasured_confounding",
+        "C.limit.transportability",
+        "C.limit.uncertainty",
+        "C.assumption.consistency",
+        "C.assumption.noninterference",
+        "C.assumption.exchangeability",
+        "C.assumption.positivity",
+        "C.identification.adjustment_set"
+      ]
+    }
+  ],
+  "arguments": [
+    {
+      "id": "A.assumptions.conjunction",
+      "conclusion": "C.assumptions.conjunction",
+      "premises": [
+        "C.assumption.consistency",
+        "C.assumption.noninterference",
+        "C.assumption.exchangeability",
+        "C.assumption.positivity",
+        "C.identification.adjustment_set"
+      ],
+      "rule": "AND_INTRO",
+      "evidence_specs": []
+    },
+    {
+      "id": "A.backdoor.modus_ponens",
+      "conclusion": "C.identified",
+      "premises": [
+        "C.assumptions.conjunction",
+        "C.backdoor.theorem"
+      ],
+      "rule": "MODUS_PONENS",
+      "evidence_specs": []
+    },
+    {
+      "id": "A.protocol.conjunction",
+      "conclusion": "C.protocol.complete",
+      "premises": [
+        "C.data.feature_availability",
+        "C.data.features.outcome_excluded",
+        "C.data.features.log1p_transform",
+        "C.data.split_governance",
+        "C.data.split.fractions",
+        "C.protocol.cross_fitting",
+        "C.protocol.propensity_fit",
+        "C.protocol.primary_clip",
+        "C.protocol.sensitivity_clips",
+        "C.protocol.outcome_models",
+        "C.empirical.holdout.event",
+        "C.empirical.holdout.access",
+        "C.empirical.holdout.tuning"
+      ],
+      "rule": "AND_INTRO",
+      "evidence_specs": []
+    },
+    {
+      "id": "A.causal.conditional_only",
+      "conclusion": "C.claim.conditional_causal",
+      "premises": [
+        "C.identified",
+        "C.protocol.complete",
+        "C.data.provenance.pin",
+        "C.data.provenance.url",
+        "C.data.license",
+        "C.data.epoch_unavailable",
+        "C.empirical.unadjusted_all",
+        "C.empirical.aipw_train",
+        "C.empirical.aipw_holdout",
+        "C.empirical.aipw_holdout_clip_001",
+        "C.empirical.aipw_holdout_clip_010",
+        "C.empirical.overlap.train",
+        "C.empirical.overlap.holdout",
+        "C.empirical.computational_train_folds",
+        "C.empirical.computational_deployed",
+        "C.limit.unmeasured_confounding",
+        "C.limit.transportability",
+        "C.limit.uncertainty"
+      ],
+      "rule": "CONDITIONAL_APPLICATION",
+      "evidence_specs": []
+    }
+  ],
+  "evidence_specs": [
+    {
+      "id": "E.data.raw",
+      "kind": "registered",
+      "claim_id": "C.data.provenance.pin",
+      "runner_id": "rust.causal_ml.prepare",
+      "target": "data/real/lalonde.csv",
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment"
+      },
+      "availability": "candidate"
+    },
+    {
+      "id": "E.data.audit.rows",
+      "kind": "registered",
+      "claim_id": "C.data.schema.rows",
+      "runner_id": "rust.causal_ml.prepare",
+      "target": "artifacts/lalonde/audit.json#observation_count",
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1"
+      },
+      "availability": "candidate"
+    },
+    {
+      "id": "E.data.audit.columns",
+      "kind": "registered",
+      "claim_id": "C.data.schema.columns",
+      "runner_id": "rust.causal_ml.prepare",
+      "target": "artifacts/lalonde/audit.json#columns",
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1"
+      },
+      "availability": "candidate"
+    },
+    {
+      "id": "E.data.audit.exact_duplicates",
+      "kind": "registered",
+      "claim_id": "C.data.schema.exact_duplicates",
+      "runner_id": "rust.causal_ml.prepare",
+      "target": "artifacts/lalonde/audit.json#exact_duplicate_record_count",
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1"
+      },
+      "availability": "candidate"
+    },
+    {
+      "id": "E.data.audit.duplicate_ids",
+      "kind": "registered",
+      "claim_id": "C.data.schema.duplicate_ids",
+      "runner_id": "rust.causal_ml.prepare",
+      "target": "artifacts/lalonde/audit.json#duplicate_unit_or_unit_epoch_ids",
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1"
+      },
+      "availability": "candidate"
+    },
+    {
+      "id": "E.data.audit.repeated_measurements",
+      "kind": "registered",
+      "claim_id": "C.data.schema.repeated_measurements",
+      "runner_id": "rust.causal_ml.prepare",
+      "target": "artifacts/lalonde/audit.json#duplicate_measurement_rows_excluding_id",
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1"
+      },
+      "availability": "candidate"
+    },
+    {
+      "id": "E.data.split.entity_disjoint",
+      "kind": "registered",
+      "claim_id": "C.data.split.entity_disjoint",
+      "runner_id": "rust.causal_ml.prepare",
+      "target": "artifacts/lalonde/audit.json#leakage_checks",
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1"
+      },
+      "availability": "candidate"
+    },
+    {
+      "id": "E.data.epoch",
+      "kind": "registered",
+      "claim_id": "C.data.epoch_unavailable",
+      "runner_id": "rust.causal_ml.prepare",
+      "target": "artifacts/lalonde/audit.json#leakage_checks",
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment"
+      },
+      "availability": "candidate"
+    },
+    {
+      "id": "E.data.features.baseline",
+      "kind": "registered",
+      "claim_id": "C.data.feature_availability",
+      "runner_id": "rust.causal_ml.prepare",
+      "target": "config/lalonde.contract.json#features",
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment"
+      },
+      "availability": "candidate"
+    },
+    {
+      "id": "E.data.features.outcome_excluded",
+      "kind": "registered",
+      "claim_id": "C.data.features.outcome_excluded",
+      "runner_id": "rust.causal_ml.prepare",
+      "target": "config/lalonde.contract.json#outcome",
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment"
+      },
+      "availability": "candidate"
+    },
+    {
+      "id": "E.data.features.log1p",
+      "kind": "registered",
+      "claim_id": "C.data.features.log1p_transform",
+      "runner_id": "rust.causal_ml.prepare",
+      "target": "config/lalonde.contract.json#features",
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment"
+      },
+      "availability": "candidate"
+    },
+    {
+      "id": "E.data.splits",
+      "kind": "registered",
+      "claim_id": "C.data.split_governance",
+      "runner_id": "rust.causal_ml.prepare",
+      "target": "artifacts/lalonde/splits.csv",
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment"
+      },
+      "availability": "candidate"
+    },
+    {
+      "id": "E.data.split.fractions",
+      "kind": "registered",
+      "claim_id": "C.data.split.fractions",
+      "runner_id": "rust.causal_ml.prepare",
+      "target": "config/lalonde.contract.json#split",
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment"
+      },
+      "availability": "candidate"
+    },
+    {
+      "id": "E.protocol.cross_fitting",
+      "kind": "registered",
+      "claim_id": "C.protocol.cross_fitting",
+      "runner_id": "rust.causal_ml.estimate",
+      "target": "config/lalonde.contract.json#estimator",
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment"
+      },
+      "availability": "candidate"
+    },
+    {
+      "id": "E.protocol.propensity_fit",
+      "kind": "registered",
+      "claim_id": "C.protocol.propensity_fit",
+      "runner_id": "rust.causal_ml.estimate",
+      "target": "config/lalonde.contract.json#estimator",
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment"
+      },
+      "availability": "candidate"
+    },
+    {
+      "id": "E.protocol.primary_clip",
+      "kind": "registered",
+      "claim_id": "C.protocol.primary_clip",
+      "runner_id": "rust.causal_ml.estimate",
+      "target": "config/lalonde.contract.json#estimator",
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment",
+        "clip": "0.05"
+      },
+      "availability": "candidate"
+    },
+    {
+      "id": "E.protocol.sensitivity_clips",
+      "kind": "registered",
+      "claim_id": "C.protocol.sensitivity_clips",
+      "runner_id": "rust.causal_ml.estimate",
+      "target": "config/lalonde.contract.json#estimator",
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment"
+      },
+      "availability": "candidate"
+    },
+    {
+      "id": "E.protocol.outcome_models",
+      "kind": "registered",
+      "claim_id": "C.protocol.outcome_models",
+      "runner_id": "rust.causal_ml.estimate",
+      "target": "artifacts/lalonde/causal_report.json#protocol.outcome_learner",
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment"
+      },
+      "availability": "candidate"
+    },
+    {
+      "id": "E.empirical.unadjusted",
+      "kind": "registered",
+      "claim_id": "C.empirical.unadjusted_all",
+      "runner_id": "rust.causal_ml.estimate",
+      "target": "artifacts/lalonde/causal_report.json#descriptive.all_observations",
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment",
+        "role": "all_observations"
+      },
+      "availability": "candidate"
+    },
+    {
+      "id": "E.empirical.train",
+      "kind": "registered",
+      "claim_id": "C.empirical.aipw_train",
+      "runner_id": "rust.causal_ml.estimate",
+      "target": "artifacts/lalonde/causal_report.json#train_cross_fitted_aipw",
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment",
+        "clip": "0.05",
+        "role": "train_cross_fitted"
+      },
+      "availability": "candidate"
+    },
+    {
+      "id": "E.empirical.holdout",
+      "kind": "registered",
+      "claim_id": "C.empirical.aipw_holdout",
+      "runner_id": "rust.causal_ml.estimate",
+      "target": "artifacts/lalonde/causal_report.json#holdout.aipw",
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment",
+        "clip": "0.05",
+        "role": "holdout_external_nuisance"
+      },
+      "availability": "candidate"
+    },
+    {
+      "id": "E.empirical.holdout.clip_001",
+      "kind": "registered",
+      "claim_id": "C.empirical.aipw_holdout_clip_001",
+      "runner_id": "rust.causal_ml.estimate",
+      "target": "artifacts/lalonde/causal_report.json#sensitivity",
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment",
+        "clip": "0.01",
+        "role": "holdout_external_nuisance"
+      },
+      "availability": "candidate"
+    },
+    {
+      "id": "E.empirical.holdout.clip_010",
+      "kind": "registered",
+      "claim_id": "C.empirical.aipw_holdout_clip_010",
+      "runner_id": "rust.causal_ml.estimate",
+      "target": "artifacts/lalonde/causal_report.json#sensitivity",
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment",
+        "clip": "0.10",
+        "role": "holdout_external_nuisance"
+      },
+      "availability": "candidate"
+    },
+    {
+      "id": "E.empirical.overlap.train",
+      "kind": "registered",
+      "claim_id": "C.empirical.overlap.train",
+      "runner_id": "rust.causal_ml.estimate",
+      "target": "artifacts/lalonde/causal_report.json#train_cross_fitted_aipw.overlap",
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment",
+        "diagnostic": "raw_propensity_outside_0.05_to_0.95",
+        "role": "train_cross_fitted"
+      },
+      "availability": "candidate"
+    },
+    {
+      "id": "E.empirical.overlap.holdout",
+      "kind": "registered",
+      "claim_id": "C.empirical.overlap.holdout",
+      "runner_id": "rust.causal_ml.estimate",
+      "target": "artifacts/lalonde/causal_report.json#holdout.aipw.overlap",
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment",
+        "diagnostic": "raw_propensity_outside_0.05_to_0.95",
+        "role": "holdout_external_nuisance"
+      },
+      "availability": "candidate"
+    },
+    {
+      "id": "E.empirical.convergence.train_folds",
+      "kind": "registered",
+      "claim_id": "C.empirical.computational_train_folds",
+      "runner_id": "rust.causal_ml.estimate",
+      "target": "artifacts/lalonde/causal_report.json#train_fold_diagnostics",
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment",
+        "diagnostic": "logistic_convergence"
+      },
+      "availability": "candidate"
+    },
+    {
+      "id": "E.empirical.convergence.deployed",
+      "kind": "registered",
+      "claim_id": "C.empirical.computational_deployed",
+      "runner_id": "rust.causal_ml.estimate",
+      "target": "artifacts/lalonde/causal_report.json#deployed_nuisance_diagnostics",
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment",
+        "diagnostic": "logistic_convergence"
+      },
+      "availability": "candidate"
+    },
+    {
+      "id": "E.empirical.ledger.event",
+      "kind": "registered",
+      "claim_id": "C.empirical.holdout.event",
+      "runner_id": "rust.causal_ml.estimate",
+      "target": "artifacts/lalonde/holdout_ledger.json#events",
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment"
+      },
+      "availability": "candidate"
+    },
+    {
+      "id": "E.empirical.ledger.access",
+      "kind": "registered",
+      "claim_id": "C.empirical.holdout.access",
+      "runner_id": "rust.causal_ml.estimate",
+      "target": "artifacts/lalonde/causal_report.json#holdout",
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment"
+      },
+      "availability": "candidate"
+    },
+    {
+      "id": "E.empirical.ledger.tuning",
+      "kind": "registered",
+      "claim_id": "C.empirical.holdout.tuning",
+      "runner_id": "rust.causal_ml.estimate",
+      "target": "artifacts/lalonde/causal_report.json#holdout",
+      "scope": {
+        "dataset": "rdatasets-matchit-lalonde-pinned-v1",
+        "protocol": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+        "estimand": "ATE",
+        "setting": "single_timepoint_binary_treatment"
+      },
+      "availability": "candidate"
+    }
+  ]
+}

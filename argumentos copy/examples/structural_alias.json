@@ -1,0 +1,58 @@
+{
+  "schema_version": "1.1",
+  "profile": "structural",
+  "corpus": {
+    "id": "lab-notes",
+    "kind": "specification"
+  },
+  "claims": [
+    {
+      "id": "C.observed",
+      "book_key": null,
+      "source": {
+        "system": "notes",
+        "key": "entry-14"
+      },
+      "kind": "factual",
+      "statement": "The note records P. The statement is prose and is not an expression.",
+      "expression": {
+        "op": "atom",
+        "id": "P"
+      },
+      "scope": {
+        "domain": "notes"
+      },
+      "assumptions": []
+    },
+    {
+      "id": "C.alias",
+      "book_key": null,
+      "source": {
+        "system": "notes",
+        "key": "entry-14"
+      },
+      "kind": "factual",
+      "statement": "Same atom and same scope. A paraphrase would not qualify.",
+      "expression": {
+        "op": "atom",
+        "id": "P"
+      },
+      "scope": {
+        "domain": "notes"
+      },
+      "assumptions": []
+    }
+  ],
+  "arguments": [
+    {
+      "id": "A.alias",
+      "conclusion": "C.alias",
+      "premises": [
+        "C.observed"
+      ],
+      "rule": "ALIAS_EXACT",
+      "evidence_specs": []
+    }
+  ],
+  "evidence_specs": []
+}

@@ -8,6 +8,7 @@ validan tipos, rangos, consistencia y producen reason_codes específicos.
 import hashlib
 import json
 import math
+import re
 from pathlib import Path
 from typing import Any
 
@@ -106,8 +107,8 @@ def validar_validez_temporal(features: list[dict]) -> ResultadoVerificacion:
 
 # ============================================================== C-09 linaje
 
-def validar_version_linaje(manifest: dict) -> ResultadoVerificacion:
-    """C-09_linaje: hash presente, version inmutable, champion resuelto."""
+def validar_version_linaje(manifest: dict, workspace: Path | str | None = None) -> ResultadoVerificacion:
+    """C-09_linaje: hash presente, version inmutable y datos confinados al workspace."""
     reasons = []
     if not manifest:
         return _resultado("C-09_linaje", Status.FAIL, Accion.REVISAR_IDENTIFICACION,
@@ -119,13 +120,49 @@ def validar_version_linaje(manifest: dict) -> ResultadoVerificacion:
         return _resultado("C-09_linaje", Status.FAIL, Accion.REVISAR_IDENTIFICACION,
                           reasons, f"Manifest incompleto: {reasons}")
 
+    digest_declarado = manifest["dataset_sha256"]
+    if (not isinstance(digest_declarado, str)
+            or re.fullmatch(r"[0-9a-fA-F]{64}", digest_declarado) is None):
+        return _resultado("C-09_linaje", Status.FAIL, Accion.REVISAR_IDENTIFICACION,
+                          ["hash_invalido"],
+                          "dataset_sha256 debe contener exactamente 64 caracteres hexadecimales")
+
     ruta_datos = manifest.get("_ruta_datos")
-    if ruta_datos and Path(ruta_datos).exists():
-        sha_recomputado = hashlib.sha256(Path(ruta_datos).read_bytes()).hexdigest()
-        if sha_recomputado != manifest["dataset_sha256"]:
-            return _resultado("C-09_linaje", Status.FAIL, Accion.REVISAR_IDENTIFICACION,
-                              ["hash_no_coincide"],
-                              "Hash recomputado difiere del declarado")
+    if not ruta_datos:
+        return _resultado("C-09_linaje", Status.FAIL, Accion.REVISAR_IDENTIFICACION,
+                          ["falta_ruta_datos"],
+                          "Se requiere _ruta_datos para recomputar el hash de los datos")
+    if workspace is None:
+        return _resultado("C-09_linaje", Status.FAIL, Accion.REVISAR_IDENTIFICACION,
+                          ["workspace_requerido"],
+                          "Se requiere workspace para validar _ruta_datos de forma confinada")
+    try:
+        base = Path(workspace).resolve()
+        ruta_resuelta = (base / Path(ruta_datos)).resolve()
+    except (OSError, RuntimeError, TypeError, ValueError) as e:
+        return _resultado("C-09_linaje", Status.FAIL, Accion.REVISAR_IDENTIFICACION,
+                          ["ruta_datos_invalida"],
+                          f"No se pudo resolver la ruta de datos: {e}")
+    try:
+        ruta_resuelta.relative_to(base)
+    except ValueError:
+        return _resultado("C-09_linaje", Status.FAIL, Accion.REVISAR_IDENTIFICACION,
+                          ["ruta_fuera_workspace"],
+                          f"Ruta fuera del workspace autorizado: {ruta_resuelta}")
+    if not ruta_resuelta.is_file():
+        return _resultado("C-09_linaje", Status.FAIL, Accion.REVISAR_IDENTIFICACION,
+                          ["ruta_datos_ausente"],
+                          f"Archivo de datos ausente o no regular: {ruta_resuelta}")
+    try:
+        sha_recomputado = hashlib.sha256(ruta_resuelta.read_bytes()).hexdigest()
+    except OSError as e:
+        return _resultado("C-09_linaje", Status.FAIL, Accion.REVISAR_IDENTIFICACION,
+                          ["ruta_datos_ilegible"],
+                          f"No se pudo leer el archivo confinado: {e}")
+    if sha_recomputado != digest_declarado.lower():
+        return _resultado("C-09_linaje", Status.FAIL, Accion.REVISAR_IDENTIFICACION,
+                          ["hash_no_coincide"],
+                          "Hash recomputado difiere del declarado")
 
     return _resultado("C-09_linaje", Status.PASS, Accion.CONTINUAR, [],
                       f"Version {manifest['version']} integra")
@@ -254,13 +291,28 @@ def evaluar_puerta(senales: dict, umbrales: dict) -> ResultadoVerificacion:
         if (e := _rechazar_tipo(v, n, esp)):
             return _resultado("C-06_puerta", Status.UNKNOWN, Accion.ABSTENERSE, [f"tipo_{n}"], e)
 
-    if solape < umbrales.get("solape_min", 0.5):
+    limites = {}
+    for nombre, defecto in (("solape_min", 0.5), ("psi_alerta", 0.25), ("smd_max", 0.25)):
+        valor = umbrales.get(nombre, defecto)
+        if (e := _rechazar_tipo(valor, nombre, "numero")):
+            return _resultado(
+                "C-06_puerta", Status.UNKNOWN, Accion.ABSTENERSE,
+                [f"umbral_invalido:{nombre}"], f"Umbral inválido: {e}",
+            )
+        if nombre in ("psi_alerta", "smd_max") and valor < 0:
+            return _resultado(
+                "C-06_puerta", Status.UNKNOWN, Accion.ABSTENERSE,
+                [f"umbral_invalido:{nombre}"], f"Umbral inválido: {nombre} debe ser no negativo",
+            )
+        limites[nombre] = valor
+
+    if solape < limites["solape_min"]:
         return _resultado("C-06_puerta", Status.FAIL, Accion.ABSTENERSE,
                           [f"solape_roto:{solape:.2f}"],
-                          f"Solapamiento {solape:.0%} < minimo {umbrales.get('solape_min', 0.5):.0%}")
-    if psi > umbrales.get("psi_alerta", 0.25):
+                          f"Solapamiento {solape:.0%} < minimo {limites['solape_min']:.0%}")
+    if psi > limites["psi_alerta"]:
         reasons.append(f"deriva:{psi:.2f}")
-    if smd > umbrales.get("smd_max", 0.25):
+    if smd > limites["smd_max"]:
         reasons.append(f"desbalance:{smd:.2f}")
 
     if reasons:

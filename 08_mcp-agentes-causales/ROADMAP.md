@@ -10,11 +10,13 @@ Iter 4 (caps 14-15): +2 tools + 2 contratos (C-07, C-05) → mcp-causal v1.0-rc 
 Iter 5 (ética)     : +3 tools + 3 contratos (C-13, C-14, C-15) → mcp-causal v1.1 ✅ hecho
 ```
 
-**15 contratos · 17 tools · 15 capítulos · 42 tests.**
+**Registro del cierre histórico: 15 contratos · 17 tools · 15 capítulos · 42 tests reportados entonces.** La cifra no es una ejecución de aceptación del árbol actual.
 
 Regla: **no se publica tool sin capítulo verde**. El capítulo es la especificación; el JSON es el contrato; la tool es la implementación.
 
-## Estado final (v1.0 — READY_LOCAL_V1)
+## Estado histórico reportado (v1.0 — READY_LOCAL_V1 en aquella ejecución)
+
+Los siguientes checks no certifican cambios posteriores. Para hablar de un estado READY actual hay que ejecutar nuevamente todos los requisitos del contrato y conservar sus resultados.
 
 - [x] 15 capítulos compilando (109 pp.)
 - [x] 12 contratos JSON válidos contra schema

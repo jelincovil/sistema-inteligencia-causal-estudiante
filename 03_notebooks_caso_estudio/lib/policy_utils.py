@@ -6,6 +6,7 @@ Serializes policies for Serie B notebook B3 via joblib.
 from __future__ import annotations
 
 import json
+import warnings
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence, Tuple, Union
@@ -24,6 +25,30 @@ def _as_1d(a: ArrayLike) -> np.ndarray:
     return np.asarray(a, dtype=float).reshape(-1)
 
 
+def _as_strict_1d(a: ArrayLike, name: str) -> np.ndarray:
+    """Return a non-empty vector without silently flattening matrices."""
+    arr = np.asarray(a, dtype=float)
+    if arr.ndim != 1:
+        raise ValueError(f"{name} must be one-dimensional; got shape {arr.shape}")
+    if arr.size == 0:
+        raise ValueError(f"{name} must not be empty")
+    return arr
+
+
+def _validate_protocol_roles(calibration_role: str, evaluation_role: str) -> None:
+    """Enforce the course's train → validation → frozen test protocol."""
+    if calibration_role != "validation":
+        raise ValueError(
+            "calibration_role must be 'validation'; thresholds and budgets "
+            "must not be calibrated on train or test"
+        )
+    if evaluation_role != "test":
+        raise ValueError(
+            "evaluation_role must be 'test' and disjoint from validation "
+            "calibration"
+        )
+
+
 @dataclass
 class Policy:
     """Serializable treatment policy: decision from uplift scores.
@@ -32,7 +57,7 @@ class Policy:
     ----------
     mode:
         ``'threshold'`` — treat if score > threshold.
-        ``'topk'`` — treat top ``budget_fraction`` by score (calibrated on fit data).
+        ``'topk'`` — treat top ``budget_fraction`` by score (threshold set on calibration data).
     """
 
     mode: str = "threshold"
@@ -127,6 +152,49 @@ def make_threshold_policy(
     return pol
 
 
+def build_frozen_policy(
+    calibration_scores: ArrayLike,
+    *,
+    calibration_role: str,
+    evaluation_role: str,
+    budget_fraction: float = 0.2,
+    mode: str = "topk",
+    method_name: str = "cate",
+    feature_names: Optional[Sequence[str]] = None,
+    score_model: Any = None,
+    meta: Optional[Dict[str, Any]] = None,
+) -> Policy:
+    """Calibrate on validation and freeze a policy before test evaluation.
+
+    The fitted score function belongs to the earlier ``train`` role. Only
+    ``calibration_scores`` from ``validation`` may determine the threshold;
+    test scores and outcomes are never used to choose it. Applying the returned
+    object to test data changes no parameters and selects no winner.
+    """
+    _validate_protocol_roles(calibration_role, evaluation_role)
+    cal_scores = _as_strict_1d(calibration_scores, "calibration_scores")
+    if not np.isfinite(cal_scores).all():
+        raise ValueError("calibration_scores must contain only finite values")
+    policy_meta = dict(meta or {})
+    policy_meta.update(
+        {
+            "fit_role": "train",
+            "calibration_role": calibration_role,
+            "evaluation_role": evaluation_role,
+            "policy_frozen": True,
+        }
+    )
+    return make_threshold_policy(
+        cal_scores,
+        budget_fraction=budget_fraction,
+        mode=mode,
+        method_name=method_name,
+        feature_names=feature_names,
+        score_model=score_model,
+        meta=policy_meta,
+    )
+
+
 def apply_policy(
     scores: ArrayLike,
     policy: Policy,
@@ -150,6 +218,123 @@ def policy_value_from_tau(
     return float(np.mean(d * t))
 
 
+def observed_policy_value(y: ArrayLike) -> float:
+    """Mean factual outcome under the observed behavior policy, ``mean(Y)``.
+
+    This is not the value of a proposed target policy and does not use a
+    candidate decision vector.
+    """
+    y_a = _as_strict_1d(y, "y")
+    if not np.isfinite(y_a).all():
+        raise ValueError("y must contain only finite values")
+    return float(np.mean(y_a))
+
+
+def _validated_policy_arrays(
+    y: ArrayLike,
+    t: ArrayLike,
+    decision: ArrayLike,
+    propensity: ArrayLike,
+) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+    y_a = _as_strict_1d(y, "y")
+    t_a = _as_strict_1d(t, "t")
+    d = _as_strict_1d(decision, "decision")
+    e = _as_strict_1d(propensity, "propensity")
+    if not (y_a.shape == t_a.shape == d.shape == e.shape):
+        raise ValueError(
+            "y, t, decision, and propensity must have identical shapes; "
+            f"got {y_a.shape}, {t_a.shape}, {d.shape}, {e.shape}"
+        )
+    for name, arr in (("y", y_a), ("t", t_a), ("decision", d), ("propensity", e)):
+        if not np.isfinite(arr).all():
+            raise ValueError(f"{name} must contain only finite values")
+    if not np.isin(t_a, (0.0, 1.0)).all():
+        raise ValueError("t must contain only binary 0/1 actions")
+    if not np.isin(d, (0.0, 1.0)).all():
+        raise ValueError("decision must contain only binary 0/1 actions")
+    if not ((e > 0.0) & (e < 1.0)).all():
+        raise ValueError(
+            "propensity must lie strictly between 0 and 1; exact 0/1 "
+            "propensities violate overlap and are not repaired by clipping"
+        )
+    return y_a, t_a, d, e
+
+
+def _validated_clip(clip: float) -> float:
+    c = float(clip)
+    if not np.isfinite(c) or not 0.0 <= c < 0.5:
+        raise ValueError("clip must be finite and in [0, 0.5)")
+    return c
+
+
+def target_policy_value_ipw(
+    y: ArrayLike,
+    t: ArrayLike,
+    decision: ArrayLike,
+    propensity: ArrayLike,
+    *,
+    clip: float = 0.01,
+) -> float:
+    r"""Horvitz–Thompson IPW estimate of the deterministic target policy value.
+
+    For :math:`d_i = \pi(X_i) \in \{0,1\}` and behavior propensity
+    :math:`e_i = P(T_i=1\mid X_i)`, the estimand is
+    :math:`V(\pi) = E[Y(\pi(X))]`. The implemented estimator is
+
+    .. math::
+
+        \hat V_{IPW}(\pi) = \frac{1}{n} \sum_{i=1}^{n}
+        \frac{1\{T_i=d_i\}Y_i}
+        {e_i\text{ if }d_i=1\text{, otherwise }1-e_i}.
+
+    The denominator is the full sample size ``n``, not the sum of alignment
+    weights. Positivity, consistency, SUTVA, and unconfoundedness are required
+    for the causal interpretation. ``clip`` regularizes non-extreme propensity
+    estimates; with a positive value, the estimator is no longer exact HT and
+    can be biased even when the stated causal assumptions hold. Exact 0/1
+    propensities are rejected before clipping. Zero selected
+    mass (no unit with ``T == decision``) is an estimation failure, not NaN.
+    """
+    y_a, t_a, d, e = _validated_policy_arrays(y, t, decision, propensity)
+    c = _validated_clip(clip)
+    e_used = np.clip(e, c, 1.0 - c)
+    selected = t_a == d
+    if not selected.any():
+        raise ValueError(
+            "zero selected mass: no observed treatment equals the target "
+            "policy decision, so the IPW policy value is not estimable"
+        )
+    action_prob = np.where(d == 1.0, e_used, 1.0 - e_used)
+    weights = selected.astype(float) / action_prob
+    if not np.isfinite(weights).all():
+        raise ValueError("non-finite IPW weight; check overlap and clipping")
+    return float(np.sum(weights * y_a) / y_a.size)
+
+
+def alignment_weighted_outcome_mean(
+    y: ArrayLike,
+    t: ArrayLike,
+    decision: ArrayLike,
+    propensity: ArrayLike,
+    *,
+    clip: float = 0.01,
+) -> float:
+    r"""Legacy alignment diagnostic; not a target or observed policy value.
+
+    This inverse-propensity weighted average is normalized only over units
+    with ``T == decision``. It answers a different, conditioning-on-alignment
+    question and must not be represented as :math:`E[Y(\pi)]`.
+    """
+    y_a, t_a, d, e = _validated_policy_arrays(y, t, decision, propensity)
+    c = _validated_clip(clip)
+    e_used = np.clip(e, c, 1.0 - c)
+    w = np.where(t_a == 1.0, 1.0 / e_used, 1.0 / (1.0 - e_used))
+    align = (d == t_a).astype(float)
+    if align.sum() == 0:
+        return float("nan")
+    return float(np.sum(align * w * y_a) / np.sum(align * w))
+
+
 def policy_value_ipw(
     y: ArrayLike,
     t: ArrayLike,
@@ -158,23 +343,24 @@ def policy_value_ipw(
     *,
     clip: float = 0.01,
 ) -> float:
-    """IPW estimate of policy value for the treated-according-to-π units.
+    r"""Deprecated compatibility wrapper for the legacy alignment average.
 
-    Uses a simple inverse-propensity weighted mean outcome under the policy
-    alignment indicator 1{π(x)=t} (approximate; for teaching).
+    The historical name misleadingly suggested a target-policy value. For
+    valid inputs its numeric result is intentionally unchanged; stricter
+    overlap/shape guards now reject invalid inputs. New code must use
+    :func:`target_policy_value_ipw` for :math:`E[Y(\pi)]` or
+    :func:`alignment_weighted_outcome_mean` for the legacy diagnostic.
     """
-    y_a = _as_1d(y)
-    t_a = _as_1d(t).astype(int)
-    d = _as_1d(decision).astype(int)
-    e = np.clip(_as_1d(propensity), clip, 1.0 - clip)
-    # Value of assigning treatment according to d: AIPW-lite
-    # E[ d * (T*Y/e - (1-T)*Y/(1-e) ) ] style difference vs always control
-    # Simpler: only score value among those with d==t
-    w = np.where(t_a == 1, 1.0 / e, 1.0 / (1.0 - e))
-    align = (d == t_a).astype(float)
-    if align.sum() == 0:
-        return float("nan")
-    return float(np.sum(align * w * y_a) / np.sum(align * w))
+    warnings.warn(
+        "policy_value_ipw is deprecated and returns an alignment-weighted "
+        "outcome mean, not E[Y(pi)]. Use target_policy_value_ipw for target "
+        "policy value or alignment_weighted_outcome_mean for this diagnostic.",
+        DeprecationWarning,
+        stacklevel=2,
+    )
+    return alignment_weighted_outcome_mean(
+        y, t, decision, propensity, clip=clip
+    )
 
 
 def random_policy(
@@ -223,25 +409,43 @@ def compare_policies(
     y: Optional[ArrayLike] = None,
     t: Optional[ArrayLike] = None,
     propensity: Optional[ArrayLike] = None,
+    evaluation_role: str,
 ) -> pd.DataFrame:
-    """Table of treat-rate and value (oracle if ``tau`` given)."""
+    """Compare already-frozen policies on the declared test split.
+
+    ``target_value_ipw`` estimates :math:`E[Y(\\pi)]` by Horvitz–Thompson IPW.
+    ``value_tau`` remains an oracle quantity. ``evaluation_role='test'`` is
+    mandatory for every comparison, including descriptive treatment rates, so
+    validation/calibration results cannot be mislabeled as untouched holdout
+    evaluation. Partial IPW inputs are rejected rather than silently omitting
+    policy evaluation. This function never calibrates or selects a policy.
+    """
+    _validate_protocol_roles("validation", evaluation_role)
+    ipw_inputs = (y, t, propensity)
+    any_ipw = any(value is not None for value in ipw_inputs)
+    all_ipw = all(value is not None for value in ipw_inputs)
+    if any_ipw and not all_ipw:
+        raise ValueError("y, t, and propensity must be supplied together")
     rows = []
     for name, dec in policies.items():
-        d = _as_1d(dec)
+        d = _as_strict_1d(dec, f"decision for policy {name!r}")
+        if not np.isfinite(d).all() or not np.isin(d, (0.0, 1.0)).all():
+            raise ValueError(
+                f"decision for policy {name!r} must contain only finite binary 0/1 actions"
+            )
         row: Dict[str, Any] = {
             "policy": name,
             "treat_rate": float(np.mean(d)),
             "n_treated": int(d.sum()),
             "n": int(d.size),
+            "evaluation_role": evaluation_role,
         }
         if tau is not None:
             row["value_tau"] = policy_value_from_tau(d, tau)
-        if (
-            y is not None
-            and t is not None
-            and propensity is not None
-        ):
-            row["value_ipw"] = policy_value_ipw(y, t, d, propensity)
+        if all_ipw:
+            row["target_value_ipw"] = target_policy_value_ipw(
+                y, t, d, propensity
+            )
         rows.append(row)
     return pd.DataFrame(rows)
 
@@ -390,16 +594,25 @@ def resolve_cate_scores_column(
 def load_or_compute_cate_scores(
     scenario: str = "real/ihdp",
     *,
+    evaluation_role: str,
     a3_scores_path: Optional[Union[str, Path]] = None,
     method_selected: str = "t_learner",
     random_state: int = RANDOM_STATE,
 ) -> Tuple[pd.DataFrame, np.ndarray, str, Any]:
-    """Load A3 ``cate_scores_test.csv`` or re-fit T-learner on train.
+    """Load or compute test-only scores for exploratory evaluation.
+
+    ``evaluation_role='test'`` must be explicit. The returned scores are marked
+    ``score_role='test'`` and cannot calibrate a frozen policy: this function
+    provides no matching validation scores from the same scorer. Use
+    :func:`fit_frozen_policy_calibration` followed by
+    :func:`build_frozen_policy` for the rigorous train/validation/test protocol.
 
     Returns
     -------
     scores_df, tau_hat_test, method_name, score_model (picklable or None)
     """
+    _validate_protocol_roles("validation", evaluation_role)
+
     from .cate_utils import fit_t_learner
     from .data_io import load_scenario
     from .paths import artifacts_dir
@@ -439,6 +652,8 @@ def load_or_compute_cate_scores(
         # If selected method is t_learner, prefer embedded scorer predictions
         # only for interface; ranking uses A3 scores for continuity with A3.
         _ = col  # documented for audit
+        scores_df = scores_df.copy()
+        scores_df["score_role"] = evaluation_role
         return scores_df, tau_hat, method, scorer
 
     # No A3 artifact: score test with freshly fit T-learner
@@ -453,9 +668,51 @@ def load_or_compute_cate_scores(
             "row_id": row_ids,
             f"tau_hat_{method_selected}": tau_hat,
             "method_selected": method_selected,
+            "score_role": evaluation_role,
         }
     )
     return scores_df, tau_hat, method_selected, scorer
+
+
+def fit_frozen_policy_calibration(
+    scenario: str = "real/ihdp",
+    *,
+    method_selected: str = "t_learner",
+    calibration_role: str = "validation",
+    evaluation_role: str = "test",
+    random_state: int = RANDOM_STATE,
+) -> Tuple[np.ndarray, str, Any]:
+    """Fit on train and return only validation scores plus the scorer.
+
+    Returns ``(calibration_scores, method, scorer)``. Test features are
+    deliberately not scored here: callers first pass the calibration scores to
+    :func:`build_frozen_policy`, then apply the frozen scorer and threshold to
+    test. Test results cannot calibrate thresholds, budgets, methods, or winners.
+
+    A3's test-only score CSV cannot provide matching validation scores from an
+    identical fitted scorer. This strict path therefore fits the course's fixed
+    T-learner on train and does not reuse that artifact. Other methods are
+    rejected rather than silently pairing one method's test scores with another
+    method's calibration scores.
+    """
+    _validate_protocol_roles(calibration_role, evaluation_role)
+    if method_selected != "t_learner":
+        raise ValueError(
+            "fit_frozen_policy_calibration requires "
+            "method_selected='t_learner' so calibration and test use the "
+            "same frozen scorer"
+        )
+
+    from .cate_utils import fit_t_learner
+    from .data_io import load_scenario
+
+    bundle = load_scenario(scenario)
+    y_tr, t_tr, X_tr = bundle.ytx("train")
+    _, _, X_cal = bundle.ytx(calibration_role)
+    t_model = fit_t_learner(y_tr, t_tr, X_tr, random_state=random_state)
+    scorer = scorer_from_t_learner(t_model)
+    calibration_scores = scorer.predict(X_cal)
+    return calibration_scores, method_selected, scorer
 
 
 def build_rich_policy_card(
@@ -469,10 +726,13 @@ def build_rich_policy_card(
     feature_names: Sequence[str],
     treat_rate_test: float,
     n_test: int,
+    calibration_role: str,
+    evaluation_role: str,
     equity_group: str = "bw_tercile",
     random_state: int = RANDOM_STATE,
 ) -> str:
     """Human-auditable policy card for A4 → B3 (scope, risks, non-claims)."""
+    _validate_protocol_roles(calibration_role, evaluation_role)
     feats = ", ".join(f"`{f}`" for f in feature_names)
     # Raw f-string: markdown may contain LaTeX-like \( ... \) sequences.
     return rf"""# Policy card — Serie A4 (policy / uplift targeting)
@@ -483,11 +743,14 @@ def build_rich_policy_card(
 |-------|--------|
 | **scenario** | `{scenario}` |
 | **scenario_id** | `{scenario_id}` |
-| **population** | Official **test** split of the IHDP-style scenario (n={n_test}) |
+| **fit role** | `train` (score and nuisance models) |
+| **calibration role** | `{calibration_role}` (threshold/budget only) |
+| **evaluation role** | `{evaluation_role}` (frozen policy; no reselection) |
+| **population** | Official **{evaluation_role}** split of the IHDP-style scenario (n={n_test}) |
 | **outcome (Y)** | `outcome` (cognitive / development score scale of the benchmark) |
 | **treatment (T)** | `treatment` (binary program assignment in the SEM) |
 | **features (X)** | {feats} |
-| **scoring method** | `{method_name}` (CATE / uplift score from Notebook A3 when available) |
+| **scoring method** | `{method_name}` (fixed course T-learner fitted on train; validation and test use the same scorer) |
 | **policy mode** | `{mode}` (treat if score ≥ threshold calibrated to budget) |
 | **budget_fraction (B)** | {budget_fraction:.2f} ({100 * budget_fraction:.0f}% of units) |
 | **threshold (λ)** | {threshold:.6f} |
@@ -497,8 +760,8 @@ def build_rich_policy_card(
 ## Decision rule
 
 1. Compute uplift score \(s(x) = \\hat\\tau(x)\) with the scoring method above.
-2. Calibrate threshold \(λ\) so that approximately fraction **B** of units have \(s(x) ≥ λ\) (empirical quantile on the calibration scores, usually test scores for this notebook).
-3. Decision: \(π(x) = 1\\{{ s(x) ≥ λ \\}}\).
+2. Using only `{calibration_role}` scores, calibrate threshold \(λ\) at empirical quantile \(1-B\); freeze it before opening `{evaluation_role}` outcomes.
+3. Apply the frozen decision \(π(x) = 1\\{{ s(x) ≥ λ \\}}\) to `{evaluation_role}` once; do not select another policy from its results.
 
 ## Interface (Serie B / B3)
 
@@ -524,8 +787,10 @@ out = policy.predict(X=X_new)           # needs embedded score model
 - Data are **synthetic with Hill-style variable names** — not clinical or administrative records.
 - CATE scores inherit model bias; ranking quality ≠ identification of τ(x).
 - Equity tables (e.g. treat rate by `{equity_group}`) are **descriptive**, not a fairness proof or legal compliance check.
-- Threshold calibrated on a small test set (n≈150) is noisy; production systems need re-calibration and monitoring (Serie B).
-- Embedded scorer is a **T-learner RF** for `predict(X)`; if A3 used another `method_selected` for ranking, X-only scores may differ slightly from the CSV column.
+- Threshold calibrated on the validation split is noisy; a new deployment threshold requires a new calibration protocol, never tuning on the reported test set.
+- Embedded scorer is the **T-learner RF** fitted on train. A3 test-only score files are not used for calibration because they cannot provide matching validation scores from this frozen scorer.
+- Test metrics are one-time evaluations within the frozen run, not inputs for choosing another method, threshold, budget, or winner.
+- Code can enforce split roles but cannot verify that test was never inspected historically. Results on an already inspected holdout remain exploratory/contaminated, not confirmatory evidence; prospective confirmation requires a new uninspected holdout.
 
 ## Non-claims (explicit)
 
@@ -551,11 +816,17 @@ def default_policy_card(
     population: str = "test split of IHDP-style scenario",
     assumptions: str = "unconfoundedness given covariates; SUTVA; score is CATE",
     limits: str = "Synthetic data; equity tables are descriptive only",
+    calibration_role: str = "validation",
+    evaluation_role: str = "test",
 ) -> str:
     """Minimal model/policy card markdown for A4 → B3 handoff."""
+    _validate_protocol_roles(calibration_role, evaluation_role)
     return f"""# Policy card — Serie A4
 
 - **scenario_id**: `{scenario_id}`
+- **fit_role**: `train`
+- **calibration_role**: `{calibration_role}` (threshold/budget only)
+- **evaluation_role**: `{evaluation_role}` (frozen; no reselection)
 - **population**: {population}
 - **budget_fraction**: {budget_fraction}
 - **scoring method**: {method_name}
@@ -577,8 +848,15 @@ def export_a4_artifacts(
     equity_col: str = "bw",
     n_terciles: int = 3,
     save_plot: bool = True,
+    calibration_role: str = "validation",
+    evaluation_role: str = "test",
 ) -> Dict[str, Any]:
-    """Build policy under budget B, equity table, uplift plot; write A4 artifacts.
+    """Freeze on validation, evaluate once on test, and write A4 artifacts.
+
+    Models use ``train``; all CATE and outcome-only thresholds use only
+    ``validation`` scores. The returned/exported test metrics describe already
+    frozen policies and must not feed another selection round. Test-only A3
+    score files are not role-sufficient for this protocol.
 
     Writes under ``artifacts/A4/`` (by default)::
 
@@ -587,34 +865,49 @@ def export_a4_artifacts(
         uplift_curve.png
         equity_table.csv
 
-    Prefer reusing ``artifacts/A3/cate_scores_test.csv`` when present.
+    ``a3_scores_path`` remains for call-site compatibility but is not used by
+    the strict protocol; passing it emits a warning rather than silently
+    combining mismatched calibration and evaluation scores.
     """
-    from sklearn.ensemble import RandomForestRegressor
+    _validate_protocol_roles(calibration_role, evaluation_role)
+    if a3_scores_path is not None:
+        warnings.warn(
+            "a3_scores_path is ignored by export_a4_artifacts: test-only "
+            "scores cannot calibrate a frozen validation/test protocol. "
+            "The fixed T-learner is fitted on train instead.",
+            UserWarning,
+            stacklevel=2,
+        )
 
-    from .cate_utils import fit_t_learner  # noqa: F401 — used indirectly
+    from sklearn.ensemble import RandomForestRegressor
+    from sklearn.linear_model import LogisticRegression
+
     from .data_io import load_scenario
     from .metrics import qini_auc, qini_curve, uplift_curve
     from .paths import SCENARIO_IDS, artifacts_dir, ensure_dir, relative_to_repo
 
     bundle = load_scenario(scenario)
     y_tr, t_tr, X_tr = bundle.ytx("train")
-    y_te, t_te, X_te = bundle.ytx("test")
-    feature_names = list(X_te.columns)
+    _, _, X_cal = bundle.ytx(calibration_role)
+    feature_names = list(X_cal.columns)
     scenario_id = str(
         bundle.scenario_id
         or SCENARIO_IDS.get(scenario)
         or scenario.replace("/", "_")
     )
 
-    scores_df, tau_hat, method, scorer = load_or_compute_cate_scores(
+    tau_cal, method, scorer = fit_frozen_policy_calibration(
         scenario,
-        a3_scores_path=a3_scores_path,
         method_selected=method_selected,
+        calibration_role=calibration_role,
+        evaluation_role=evaluation_role,
         random_state=random_state,
     )
 
-    policy = make_threshold_policy(
-        tau_hat,
+    policy = build_frozen_policy(
+        tau_cal,
+        calibration_role=calibration_role,
+        evaluation_role=evaluation_role,
         budget_fraction=budget_fraction,
         mode="topk",
         method_name=method,
@@ -626,16 +919,11 @@ def export_a4_artifacts(
             "budget_fraction": float(budget_fraction),
             "method_selected": method,
             "random_state": int(random_state),
-            "split": "test",
             "n_features": len(feature_names),
             "interface": "predict(X|scores) -> {decision, uplift_score}",
         },
     )
-    out_pred = policy.predict(scores=tau_hat)
-    decision = out_pred["decision"]
-    treat_rate = float(np.mean(decision))
-
-    # Outcome-only baseline model (risk, non-causal) on train → predict test
+    # Outcome-only baseline: train fit, validation threshold, frozen test use.
     risk_model = RandomForestRegressor(
         n_estimators=100,
         min_samples_leaf=5,
@@ -643,17 +931,37 @@ def export_a4_artifacts(
         n_jobs=-1,
     )
     risk_model.fit(np.asarray(X_tr, dtype=float), np.asarray(y_tr, dtype=float))
+    y_risk_cal = risk_model.predict(np.asarray(X_cal, dtype=float))
+    risk_policy = build_frozen_policy(
+        -y_risk_cal,
+        calibration_role=calibration_role,
+        evaluation_role=evaluation_role,
+        budget_fraction=budget_fraction,
+        mode="topk",
+        method_name="outcome_only_low_y",
+        feature_names=feature_names,
+        meta={"baseline": "lowest predicted factual outcome"},
+    )
+    # The IPW nuisance model is also fitted and frozen on train before test.
+    prop = LogisticRegression(max_iter=1000, random_state=random_state)
+    prop.fit(np.asarray(X_tr, dtype=float), np.asarray(t_tr, dtype=int))
+
+    # Evaluate test only after every model and policy choice is frozen.
+    y_te, t_te, X_te = bundle.ytx(evaluation_role)
+    tau_hat = scorer.predict(X_te)
+    out_pred = policy.predict(scores=tau_hat)
+    decision = out_pred["decision"]
+    treat_rate = float(np.mean(decision))
     y_risk = risk_model.predict(np.asarray(X_te, dtype=float))
     dec_random = random_policy(
         len(tau_hat), budget_fraction, random_state=random_state
     )
-    dec_risk = outcome_only_policy(
-        y_risk, budget_fraction, treat_highest_risk=False
-    )
+    dec_risk = apply_policy(-y_risk, risk_policy)
     # For IHDP cognitive scores, "treat lowest predicted outcome" = highest need
     # (worse baseline). Also report highest for completeness in notebook.
 
-    # Equity: terciles of a continuous proxy (bw by default)
+    # Equity strata are descriptive test summaries only. They never feed
+    # policy calibration, model selection, or selection of a winner.
     eq_frame = X_te.copy()
     if equity_col not in eq_frame.columns:
         # fallback first continuous-looking column
@@ -726,6 +1034,8 @@ def export_a4_artifacts(
         feature_names=feature_names,
         treat_rate_test=treat_rate,
         n_test=int(len(tau_hat)),
+        calibration_role=calibration_role,
+        evaluation_role=evaluation_role,
         equity_group=group_col,
         random_state=random_state,
     )
@@ -771,11 +1081,7 @@ def export_a4_artifacts(
         plot_error = None
         uplift_path = None  # type: ignore
 
-    # Summary without truth (IPW optional)
-    from sklearn.linear_model import LogisticRegression
-
-    prop = LogisticRegression(max_iter=1000, random_state=random_state)
-    prop.fit(np.asarray(X_tr, dtype=float), np.asarray(t_tr, dtype=int))
+    # Target-policy evaluation uses the train-fitted propensity model.
     e_te = prop.predict_proba(np.asarray(X_te, dtype=float))[:, 1]
     policies = {
         "cate_topk": decision,
@@ -787,6 +1093,7 @@ def export_a4_artifacts(
         y=y_te,
         t=t_te,
         propensity=e_te,
+        evaluation_role=evaluation_role,
     )
 
     def _rel(p: Optional[Path]) -> Optional[str]:
@@ -803,17 +1110,20 @@ def export_a4_artifacts(
         "scenario": scenario,
         "scenario_id": scenario_id,
         "method_selected": method,
+        "fit_role": "train",
+        "calibration_role": calibration_role,
+        "evaluation_role": evaluation_role,
+        "policy_frozen_before_test": True,
+        "evidence_status": "unverified_holdout_history",
         "budget_fraction": float(budget_fraction),
         "threshold": float(policy.threshold),
         "treat_rate_test": treat_rate,
         "qini_auc_test": float(q_auc),
         "n_test": int(len(tau_hat)),
         "comparison_ipw": cmp.to_dict(orient="records"),
-        "a3_scores_used": bool(
-            Path(a3_scores_path).is_file()
-            if a3_scores_path is not None
-            else (artifacts_dir("A3") / "cate_scores_test.csv").is_file()
-        ),
+        "observed_policy_value_test": observed_policy_value(y_te),
+        "a3_scores_used": False,
+        "a3_scores_ignored_for_frozen_protocol": a3_scores_path is not None,
         "equity_group": group_col,
         "plot_error": plot_error,
     }

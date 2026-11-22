@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import subprocess
 from pathlib import Path
@@ -31,7 +32,63 @@ if len(serie_a) != 4:
 if any(p.name == "solution.ipynb" for p in ROOT.rglob("*.ipynb")):
     violations.append("hay una solution.ipynb")
 
+# El manifiesto delimita la distribución pública: comprobar sus hashes no
+# equivale a escanear secretos ni a certificar el resto del árbol de trabajo.
+manifest_path = ROOT / "MANIFEST_ESTUDIANTE.json"
+manifest_entries = []
+try:
+    candidate_entries = json.loads(manifest_path.read_text(encoding="utf-8"))["files"]
+    if not isinstance(candidate_entries, list):
+        raise ValueError("'files' debe ser una lista")
+    manifest_entries = candidate_entries
+except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError) as exc:
+    violations.append(f"manifiesto inválido o ilegible: {exc}")
+
+declared_paths = set()
+for index, entry in enumerate(manifest_entries):
+    location = f"MANIFEST_ESTUDIANTE.json:files[{index}]"
+    if not isinstance(entry, dict):
+        violations.append(f"{location}: la entrada debe ser un objeto")
+        continue
+    relative = entry.get("path")
+    expected_bytes = entry.get("bytes")
+    expected_sha256 = entry.get("sha256")
+    if not isinstance(relative, str) or not relative:
+        violations.append(f"{location}: path inválido")
+        continue
+    relative_path = Path(relative)
+    candidate = ROOT / relative_path
+    if relative_path.is_absolute() or ".." in relative_path.parts:
+        violations.append(f"{relative}: ruta fuera del repositorio")
+        continue
+    if relative in declared_paths:
+        violations.append(f"{relative}: ruta duplicada en el manifiesto")
+        continue
+    declared_paths.add(relative)
+    if type(expected_bytes) is not int or expected_bytes < 0:
+        violations.append(f"{relative}: bytes debe ser un entero no negativo")
+        continue
+    if not isinstance(expected_sha256, str):
+        violations.append(f"{relative}: sha256 inválido")
+        continue
+    if not candidate.is_file() or not candidate.resolve().is_relative_to(ROOT.resolve()):
+        violations.append(f"{relative}: archivo declarado ausente o fuera del repositorio")
+        continue
+    try:
+        data = candidate.read_bytes()
+    except OSError as exc:
+        violations.append(f"{relative}: no se pudo leer: {exc}")
+        continue
+    if len(data) != expected_bytes:
+        violations.append(f"{relative}: bytes declarados {expected_bytes}, actuales {len(data)}")
+    actual_sha256 = hashlib.sha256(data).hexdigest()
+    if actual_sha256 != expected_sha256:
+        violations.append(f"{relative}: SHA-256 declarado {expected_sha256}, actual {actual_sha256}")
+
 if violations:
     print("\n".join(violations))
     raise SystemExit(1)
-print(f"student repo: OK ({len(serie_a)} notebooks Serie A, sin secretos ni material docente)")
+print(
+    f"student repo: OK ({len(serie_a)} notebooks Serie A; sin nombres/rutas "
+    f"prohibidos; {len(manifest_entries)} archivos del manifiesto con tamaño y SHA-256 verificados)"
+)

@@ -7,6 +7,7 @@ buscar conocimiento, generar datos, estimar, evaluar puerta,
 consultar proyecto, leer resource.
 """
 import asyncio
+import hashlib
 import json
 import sys
 from pathlib import Path
@@ -23,6 +24,9 @@ async def e2e() -> dict:
 
     import tempfile as _tf
     _tmp_ws = _tf.mkdtemp(prefix="e2e_ws_")
+    datos_linaje = Path(_tmp_ws) / "datos.csv"
+    datos_linaje.write_bytes(b"D,Y\n1,2\n")
+    digest_linaje = hashlib.sha256(datos_linaje.read_bytes()).hexdigest()
     server_params = StdioServerParameters(
         command=sys.executable,
         args=["-m", "mcp_causal.server"],
@@ -150,10 +154,15 @@ async def e2e() -> dict:
                   f"promocion={pasos['consultar_proyecto']['promocion']}")
 
             # === 10. Completar verificaciones restantes para elegibilidad ===
+            pasos["verificaciones_elegibilidad"] = {}
             verifs_completas = [
                 ("esquema_roles", {"esquema": {"tratamiento": "D", "resultado": "Y", "covariables": ["X1", "X2"]}}),
                 ("validez_temporal", {"features": [{"nombre": "age", "timestamp_verificable": True}]}),
-                ("version_linaje", {"manifest": {"version": "v1", "dataset_sha256": "abc123"}}),
+                ("version_linaje", {"manifest": {
+                    "version": "v1",
+                    "dataset_sha256": digest_linaje,
+                    "_ruta_datos": str(datos_linaje),
+                }}),
                 ("particion_pared", {"splits": {"semilla": 42, "bloques": {"train": {"indices": [0,1,2]}, "test": {"indices": [3,4,5]}}, "n_total": 6}}),
                 ("observabilidad", {"psi": 0.1, "smd_max": 0.1, "ess_n": 0.5, "umbrales": {"ess_min": 0.1, "psi_alerta": 0.25, "smd_max": 0.25}}),
                 ("exigencias_estimador", {"ess_sobre_n": 0.5}),
@@ -162,8 +171,10 @@ async def e2e() -> dict:
                 try:
                     r = await session.call_tool("ejecutar_verificacion", arguments={"project_id": "demo_e2e", "tipo": tipo, "parametros_json": json.dumps(params)})
                     res = json.loads(r.content[0].text)
+                    pasos["verificaciones_elegibilidad"][tipo] = res
                     print(f"    verificacion {tipo}: {res.get('status')}")
                 except Exception as e:
+                    pasos["verificaciones_elegibilidad"][tipo] = {"error": str(e)}
                     print(f"    verificacion {tipo} error: {e}")
 
             # === 11. Emitir tarjeta ===
@@ -223,17 +234,16 @@ def main():
     assert pasos["abstencion"]["accion"] == "abstenerse", "No se abstuvo"
     assert pasos["consultar_proyecto"]["declaracion"], "Sin declaración"
     assert pasos["consultar_proyecto"]["verificaciones"] >= 2, "Sin verificaciones"
-    assert pasos["tarjeta"]["estado"] in ("pasa", "bloqueado"), "Tarjeta fallo: " + str(pasos["tarjeta"])
-    # Si todas las verifs pasaron, debe ser pasa
-    if pasos["tarjeta"]["estado"] == "bloqueado":
-        print(f"  Nota: tarjeta bloqueada (verificar verificaciones completas)")
-        # No falla: el bloqueo es correcto si falta verificacion
-        # Pero en este E2E completamos las 7, asi que deberia pasar
-        import sys as _sys
-        if _sys.version_info >= (3, 10):
-            pass  # dejamos que siga; el assert de arriba ya permite bloqueado
+    assert len(pasos["verificaciones_elegibilidad"]) == 6
+    assert all(
+        r.get("status") == "pass"
+        for r in pasos["verificaciones_elegibilidad"].values()
+    ), f"Verificaciones de elegibilidad incompletas: {pasos['verificaciones_elegibilidad']}"
+    assert pasos["tarjeta"]["estado"] == "pasa", (
+        "El recorrido completo no alcanzó elegibilidad: " + str(pasos["tarjeta"])
+    )
 
-    print("\nE2E: TODAS LAS VERIFICACIONES PASARON")
+    print("\nE2E: RECORRIDO COMPLETO ELEGIBLE")
     print("=" * 60)
     return 0
 

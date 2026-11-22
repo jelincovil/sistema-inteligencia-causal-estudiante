@@ -1,0 +1,297 @@
+{
+  "schema_version": "1.0",
+  "phase": "kernel_hardened_documentary_validated_scientific_review_pending",
+  "updated_at": "2026-11-22T14:49:47Z",
+  "scope": "argumentos copy/ plus declared read-only parent documentary sources",
+  "base_commit": null,
+  "implementation_commit": null,
+  "self_contained": false,
+  "self_containment": {
+    "typed_kernel_fixtures_book_and_bundled_lalonde": true,
+    "documentary_ingestion": false,
+    "note": "Documentary build and verification require the three declared sibling collections in the parent repository. The fixture command's self_contained flag refers only to its own package."
+  },
+  "completed_gates": [],
+  "validation": {
+    "rust_toolchain": "1.99.1",
+    "typst": "0.15.1",
+    "cargo_fmt_check": "pass",
+    "cargo_check_workspace_all_targets_locked": "pass",
+    "cargo_clippy_workspace_all_targets_locked_deny_warnings": "pass",
+    "cargo_test_workspace_locked": {
+      "status": "pass",
+      "tests_passed": 107,
+      "tests_failed": 0
+    },
+    "fixtures": {
+      "status": "pass",
+      "fixtures": 11,
+      "outputs_matched": true
+    },
+    "real_data_clean_replay": {
+      "status": "pass",
+      "output": "build/review-fixes-20261122/lalonde",
+      "deterministic_files_byte_identical": 5,
+      "ledger_current_matches_replay_byte_for_byte": true,
+      "ledger_difference_from_pre_review": "Access timestamp changed and report hash was rebound to the regenerated report; event ID/purpose/source/contract/audit/split hashes and model-change prohibition are unchanged.",
+      "holdout_events": 1,
+      "estimation_reruns_after_replay": 0,
+      "pre_review_numeric_leaves_compared": 421,
+      "pre_review_numeric_leaves_missing_or_changed": 0,
+      "new_numeric_confidence_and_interval_fields": 19,
+      "numerical_estimates_changed": false,
+      "causal_report_sha256": "9193ea4574ab202e0b771cc0b5db7f4f74c6ddd6f24c676dd0850dfb7beba70b"
+    },
+    "book": {
+      "status": "pass",
+      "output": "build/book/causal-ml-book.pdf",
+      "chapters": 9,
+      "bibliography_entries": 20,
+      "pages": 33,
+      "bytes": 616719,
+      "sha256": "c1f5e48f34351e3392116189b229726bf39a9b4ed948693c8f44e8c5dbb4a895"
+    },
+    "localized_review_fixes": {
+      "status": "pass",
+      "calibration_gate_x_treatment_only": true,
+      "calibration_outcomes_reported_descriptively": true,
+      "failed_gate_wording": "before holdout outcomes were evaluated or reported; raw parsing is not zero literal access",
+      "train_folds_depend_only_on_stable_ids": true,
+      "protocol_salt_governs_split_roles_only": true,
+      "confidence_level_dynamic_in_schema_and_labels": true,
+      "checked_in_confidence_level": 0.95,
+      "legacy_normal_95_fields_preserved_at_0_95": true,
+      "weak_overlap_warning_visible_beside_gate": true,
+      "estimator_or_threshold_reselected_on_holdout": false
+    },
+    "corpus_audit": {
+      "status": "pass",
+      "output": "artifacts/corpus_audit.json",
+      "files": 1,
+      "claims": 52,
+      "arguments": 4,
+      "atoms": 49,
+      "candidate_evidence_specs": 30,
+      "mixed_dossier_arguments": ["A.protocol.conjunction"],
+      "argument_obligations": 7,
+      "claim_pending_axes": 52,
+      "pending_obligations": 59,
+      "missing_local_sources": 0,
+      "missing_registered_artifacts": 0,
+      "cycle_diagnostics": 0,
+      "rejected_files": 0,
+      "identifier_duplicates": 0,
+      "claim_sha256": "880789de76c3beef5176f7e79ad7f602426f8e089240b91110382602877f71b1",
+      "canonical_sha256": "e17bfc7667cfe5a43a39e9222475379c9b96551628aa0489d5157bf75e97bb8e",
+      "audit_sha256": "c5f1e868132806bbbcaab3c22151c2bfccc9d0088fa58f91e5c2498acc2f91ee",
+      "claim_supported": false,
+      "evidence_replayed": false,
+      "corpus_closed": false,
+      "scientific_validity_certified": false,
+      "claim_kinds": {
+        "conditional": 16,
+        "empirical": 12,
+        "factual": 21,
+        "formal": 3
+      },
+      "repairs": [
+        "bounded recursive parsing and iterative budgeted assumption traversal",
+        "canonical-root source/artifact resolution with symlink and escape rejection",
+        "duplicate receipt rejection and strict timestamp/observed-check consistency",
+        "receipt current-byte validation for input hashes and artifact paths",
+        "closed atom registry with owning definition claims",
+        "fail-closed scope equality with explicit aggregation keys and domain lattice",
+        "cross-argument support-cycle detection via SCC analysis",
+        "factual pending axes and explicit argument-vs-claim counters",
+        "MIXED_DOSSIER text and unknown-variant self-approval mapping corrected",
+        "receipt admission output separated from report stream through --receipts-json or stderr",
+        "non-local sources tallied as unchecked instead of silently excluded",
+        "symlinked JSON entries reported as skipped_entries",
+        "closed obligation code vocabulary and non-string schema_version diagnostics",
+        "checked i128 rational arithmetic and indexed claim status lookup",
+        "schema and loader divergence pinned by conformance regression tests",
+        "atomic claim decomposition and adjusted contract/audit/report/source locators",
+        "identification premises demoted from formal to conditional with adjustment-set atom",
+        "clip 0.01/0.10 holdout sensitivity claims added"
+      ]
+    },
+    "literature_curation": {
+      "status": "pass",
+      "openalex_records": [
+        "W1530306231",
+        "W2150118316",
+        "W2171442673",
+        "W2263423262",
+        "W2890118063",
+        "W2891753394",
+        "W2996483157",
+        "W3122948292"
+      ],
+      "semantic_scholar_records": [
+        "61572150188f35378fa208a158d2dbe0817647b8",
+        "f75b70c9d7078724b592ec3e21de705e7b6ff73f"
+      ],
+      "added_references": [
+        "heckman1999",
+        "imbensrubin2015",
+        "cinellihazlett2020"
+      ],
+      "citation_metadata_normalized": true,
+      "book_pdf_bytes": 616719,
+      "book_pdf_pages": 33,
+      "book_pdf_sha256": "c1f5e48f34351e3392116189b229726bf39a9b4ed948693c8f44e8c5dbb4a895",
+      "literature_verified_identification": false,
+      "literature_replays_evidence": false,
+      "literature_validates_holdout": false,
+      "literature_promotes_candidates": false
+    },
+    "documentary_corpus": {
+      "status": "pass",
+      "corpus_id": "causal-ai-production-technical-mcp-v1",
+      "output": "artifacts/documentary-corpus",
+      "configuration": "config/corpus-ingest.json",
+      "configuration_sha256": "b94389546b5706b4a5b293336f206290d6b53ab4f71f0d8cd9b553f79a9e3480",
+      "source_collections": [
+        "02_causal AI en produccion/",
+        "05_contenido_tecnico/",
+        "08_mcp-agentes-causales/"
+      ],
+      "artifacts": 10,
+      "verified_bytes": 19558019,
+      "build_status": "pass",
+      "verify_status": "pass_byte_identical_regeneration",
+      "query_status": "pass_five_mcp_contract_candidates_returned",
+      "coverage": {
+        "discovered_regular_files": 388,
+        "included_files": 370,
+        "excluded_files": 18,
+        "parsed_files": 290,
+        "metadata_only_files": 80,
+        "source_units": 10130,
+        "unique_unreviewed_candidates": 2252,
+        "candidate_occurrences": 4189,
+        "pruned_directories": 14,
+        "required_groups_passed": 15,
+        "required_groups_total": 15,
+        "collections": {
+          "02_production_monograph": {
+            "discovered_regular_files": 167,
+            "included_files": 157,
+            "excluded_files": 10,
+            "parsed_files": 126,
+            "metadata_only_files": 31,
+            "source_units": 5322,
+            "candidates_present": 2144,
+            "candidate_occurrences": 2273,
+            "pruned_directories": 1
+          },
+          "05_technical_snapshot": {
+            "discovered_regular_files": 115,
+            "included_files": 107,
+            "excluded_files": 8,
+            "parsed_files": 97,
+            "metadata_only_files": 10,
+            "source_units": 4565,
+            "candidates_present": 1698,
+            "candidate_occurrences": 1809,
+            "pruned_directories": 0
+          },
+          "08_mcp_operations": {
+            "discovered_regular_files": 106,
+            "included_files": 106,
+            "excluded_files": 0,
+            "parsed_files": 67,
+            "metadata_only_files": 39,
+            "source_units": 243,
+            "candidates_present": 106,
+            "candidate_occurrences": 107,
+            "pruned_directories": 13
+          }
+        }
+      },
+      "relations": {
+        "byte_identical": 102,
+        "content_variant": 5
+      },
+      "artifact_sha256": {
+        "source_inventory.jsonl": "1545ee520bcedecfbd7e9767753ef20eaae6196cf3bea83b76b9a24d4f1dec7a",
+        "sources.jsonl": "69cfef24555ea23a7fe2e108fb6b658d2cdd7fbcd1e0bb75fea1f2a3be3baef7",
+        "source_units.jsonl": "c526b8924d84a1d70fe5435ea5b1471a48006ef29d603dcffea3e859cd447c7d",
+        "argument_candidates.jsonl": "540a64d4b72253fe0b189627d14c59bd9fb0906878fc62437a1d0bf2d39e1c96",
+        "relations.jsonl": "209d7c669c7c5bd3b3cb41e0f4ed2fc627ab1f152d9fa0564547c314002500cd",
+        "exclusions.jsonl": "b890bd5d6ae38d3fed4ca648490a38739bdec84fb15220f42f0cb6b955d2f804",
+        "coverage.json": "c1336704eb8c482363b269a890a1026ad9028895893adde51ed671fdebe450ff",
+        "REPORT.md": "f14f6ed0b8a6d3df3f9cc62b010845e3a2516c9788af4420da31f32f0fe1b82c",
+        "manifest.json": "78f92be4af1503737cf64f5ac7566064b7b95b2c04e412522f5af31d36375036",
+        "checksums.json": "3e8ad4106f3b82c275bdb9adb76813e125e0923634b0ff2d9d557ed61e715ed4"
+      },
+      "typed_kernel_claims": 52,
+      "typed_kernel_claims_added": 20,
+      "candidate_epistemic_status": "source_assertion_unverified",
+      "candidate_review_status": "unreviewed",
+      "candidate_atomicity_status": "not_assessed",
+      "raw_sources_modified": false,
+      "imported_code_executed": false,
+      "lalonde_estimation_reruns": 0,
+      "documentary_coverage_complete": true,
+      "documentary_coverage_scope": "Declared roots, required groups, and explicit ingestion policies only",
+      "semantically_curated_corpus_complete": false,
+      "execution_replayed": false,
+      "scientific_validity_certified": false,
+      "production_deployment_validated": false
+    }
+  },
+  "real_data": {
+    "dataset_id": "rdatasets-matchit-lalonde-pinned-v1",
+    "design": "NSW treated with nonexperimental PSID comparison",
+    "raw_sha256": "a49703ca0233ba0a27fa9cda959a38a07f6825def0f7743cf2380ce4e57dd3ef",
+    "raw_bytes": 27509,
+    "observations": 614,
+    "upstream_bytes_match": true,
+    "documentation_read": true,
+    "data_value_license": "unresolved_upstream",
+    "temporal_split_available": false
+  },
+  "scientific_status": {
+    "identification_verified": false,
+    "scientific_causal_claim_verified": false,
+    "holdout_used_for_model_selection": false,
+    "production_deployment_validated": false
+  },
+  "pending_gates": [
+    "atomicity, claim-type, contradiction, authority, and evidence review of the 2252 unreviewed documentary candidates",
+    "independent scientific and identification review",
+    "data-value redistribution-rights review",
+    "external evidence replay and prose-anchor verification",
+    "hidden-confounding sensitivity and transportability analysis",
+    "fresh-data validation if the analytical protocol changes"
+  ],
+  "blockers": [
+    "Observational NSW/PSID assignment and weak estimated overlap prevent automatic causal interpretation",
+    "No epoch or independently verified longitudinal identity is available in the real CSV",
+    "Candidate evidence remains unverified; structural green does not mean corpus closure or scientific validity",
+    "The 2252 extracted documentary candidates are unreviewed source assertions, not curated or scientifically validated arguments",
+    "MCP acceptance remains BLOCKED_LOCAL_V1 with 13 PASS and 3 NOT_IMPLEMENTED in the inspected source evidence",
+    "CATE, policy learning, monitoring, rollback, and deployment are theory/design only in this project"
+  ],
+  "commands_run": [
+    "cargo fmt --all -- --check",
+    "cargo check --workspace --all-targets --locked",
+    "cargo clippy --workspace --all-targets --locked -- -D warnings",
+    "cargo test --workspace --locked",
+    "cargo run --locked -p arg-cli -- doctor",
+    "cargo run --locked -p arg-cli -- fixtures --dir examples/fixtures",
+    "cargo run --locked -p arg-ingest -- build --config config/corpus-ingest.json --repository-root .. --output artifacts/documentary-corpus",
+    "cargo run --locked -p arg-ingest -- verify --config config/corpus-ingest.json --repository-root .. --output artifacts/documentary-corpus",
+    "cargo run --locked -p arg-ingest -- query --candidates artifacts/documentary-corpus/argument_candidates.jsonl --collection 08_mcp_operations --topic contracts --limit 5",
+    "cargo run --locked -p arg-cli -- check --kernel corpus/causal_ml.json --json build/reverification/corpus_check.json",
+    "cargo run --locked -p arg-cli -- corpus --dir corpus --root . --json artifacts/corpus_audit.json",
+    "cargo run --locked -p causal-ml -- prepare --input data/real/lalonde.csv --contract config/lalonde.contract.json --output build/review-fixes-20261122/lalonde",
+    "cargo run --locked -p causal-ml -- estimate --input data/real/lalonde.csv --contract config/lalonde.contract.json --output build/review-fixes-20261122/lalonde",
+    "cargo run --locked -p causal-ml -- report --contract config/lalonde.contract.json --output build/review-fixes-20261122/lalonde --markdown build/review-fixes-20261122/lalonde/report.md --typst build/review-fixes-20261122/lalonde/lalonde.typ",
+    "typst compile book/main.typ build/book/causal-ml-book.pdf --root .",
+    "pdfinfo build/book/causal-ml-book.pdf",
+    "shasum -a 256 build/book/causal-ml-book.pdf"
+  ],
+  "next_action": "The local internal audit recorded blocking identification, overlap, chronology, witness, and licensing gaps. Preserve the frozen LaLonde and verified documentary artifacts. Obtain signed external identification, redistribution-rights, replay/replication, and operational-acceptance review before certification. Do not tune the protocol against the consumed holdout."
+}

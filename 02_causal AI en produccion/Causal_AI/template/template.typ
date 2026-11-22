@@ -1,5 +1,5 @@
 // template.typ: plantilla consolidada de la monografía
-// Sistema de Inteligencia Causal, edición 2026
+// Contenido teórico y técnico para implementar causal AI, edición 2026
 
 // ============================================================
 // 0. Modo de edición (curso ↔ comercial ↔ principios)
@@ -24,7 +24,11 @@
 //   typst compile --input modo=principios main.typ main-principios.pdf
 #let modo-edicion = {
   let m = sys.inputs.at("modo", default: "curso")
-  if m in ("curso", "comercial", "principios") { m } else { "curso" }
+  if m in ("curso", "comercial", "principios") {
+    m
+  } else {
+    panic("modo de edición desconocido: " + m + "; use curso, comercial o principios")
+  }
 }
 #let es-curso = modo-edicion == "curso"
 // "Familia comercial": todo lo que no es el curso. El modo "principios" hereda
@@ -126,7 +130,7 @@
 #let project(body) = {
   // Documento
   set document(
-    title: "Sistema de Inteligencia Causal",
+    title: "Contenido teórico y técnico para implementar causal AI",
     author: if es-curso { "Curso ECO-490 / ECON-540" } else { autor-real },
     date: datetime(year: 2026, month: 1, day: 1),
     keywords: "causal inference, machine learning, MLOps local, DML, econml",
@@ -813,9 +817,13 @@
     ]
     #v(1em)
     #text(font: sans-font, fill: navy, size: 44pt, weight: "bold", hyphenate: false, tracking: -0.01em)[
-      Sistema de
+      Contenido
       #linebreak()
-      Inteligencia Causal
+      teórico y técnico
+      #linebreak()
+      para implementar
+      #linebreak()
+      causal AI
     ]
     #v(0.8em)
     #line(length: 12%, stroke: 1.2pt + accent)

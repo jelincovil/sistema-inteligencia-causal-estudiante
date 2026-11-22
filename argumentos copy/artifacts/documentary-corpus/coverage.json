@@ -1,0 +1,376 @@
+{
+  "schema_version": "arg-ingest/1",
+  "corpus_id": "causal-ai-production-technical-mcp-v1",
+  "collections": {
+    "02_production_monograph": {
+      "discovered_regular_files": 167,
+      "included_files": 157,
+      "excluded_files": 10,
+      "parsed_files": 126,
+      "metadata_only_files": 31,
+      "source_units": 5322,
+      "candidate_occurrences": 2273,
+      "candidates_present": 2144,
+      "pruned_directories": 1
+    },
+    "05_technical_snapshot": {
+      "discovered_regular_files": 115,
+      "included_files": 107,
+      "excluded_files": 8,
+      "parsed_files": 97,
+      "metadata_only_files": 10,
+      "source_units": 4565,
+      "candidate_occurrences": 1809,
+      "candidates_present": 1698,
+      "pruned_directories": 0
+    },
+    "08_mcp_operations": {
+      "discovered_regular_files": 106,
+      "included_files": 106,
+      "excluded_files": 0,
+      "parsed_files": 67,
+      "metadata_only_files": 39,
+      "source_units": 243,
+      "candidate_occurrences": 107,
+      "candidates_present": 106,
+      "pruned_directories": 13
+    }
+  },
+  "discovered_regular_files": 388,
+  "included_files": 370,
+  "excluded_files": 18,
+  "parsed_files": 290,
+  "metadata_only_files": 80,
+  "source_units": 10130,
+  "unique_candidates": 2252,
+  "candidate_occurrences": 4189,
+  "pruned_directories": 14,
+  "byte_identical_relations": 102,
+  "content_variant_relations": 5,
+  "required_groups": [
+    {
+      "id": "mcp-configuration",
+      "collection": "08_mcp_operations",
+      "path_prefix": "mcp.json",
+      "path_suffix": "mcp.json",
+      "expected_files": 1,
+      "matched_files": 1,
+      "matched_paths": [
+        "08_mcp-agentes-causales/mcp.json"
+      ],
+      "status": "pass"
+    },
+    {
+      "id": "mcp-current-contract-documentation",
+      "collection": "08_mcp_operations",
+      "path_prefix": "contratos/",
+      "path_suffix": ".md",
+      "expected_files": 1,
+      "matched_files": 1,
+      "matched_paths": [
+        "08_mcp-agentes-causales/contratos/README.md"
+      ],
+      "status": "pass"
+    },
+    {
+      "id": "mcp-current-contract-json",
+      "collection": "08_mcp_operations",
+      "path_prefix": "contratos/",
+      "path_suffix": ".json",
+      "expected_files": 16,
+      "matched_files": 16,
+      "matched_paths": [
+        "08_mcp-agentes-causales/contratos/C-01.json",
+        "08_mcp-agentes-causales/contratos/C-02.json",
+        "08_mcp-agentes-causales/contratos/C-03.json",
+        "08_mcp-agentes-causales/contratos/C-04.json",
+        "08_mcp-agentes-causales/contratos/C-05.json",
+        "08_mcp-agentes-causales/contratos/C-06.json",
+        "08_mcp-agentes-causales/contratos/C-07.json",
+        "08_mcp-agentes-causales/contratos/C-08.json",
+        "08_mcp-agentes-causales/contratos/C-09.json",
+        "08_mcp-agentes-causales/contratos/C-10.json",
+        "08_mcp-agentes-causales/contratos/C-11.json",
+        "08_mcp-agentes-causales/contratos/C-12.json",
+        "08_mcp-agentes-causales/contratos/C-13.json",
+        "08_mcp-agentes-causales/contratos/C-14.json",
+        "08_mcp-agentes-causales/contratos/C-15.json",
+        "08_mcp-agentes-causales/contratos/contrato.schema.json"
+      ],
+      "status": "pass"
+    },
+    {
+      "id": "mcp-evaluation-criteria",
+      "collection": "08_mcp_operations",
+      "path_prefix": "criterios/",
+      "path_suffix": ".md",
+      "expected_files": 1,
+      "matched_files": 1,
+      "matched_paths": [
+        "08_mcp-agentes-causales/criterios/Q-criterios.md"
+      ],
+      "status": "pass"
+    },
+    {
+      "id": "mcp-evaluation-specifications",
+      "collection": "08_mcp_operations",
+      "path_prefix": "evals/",
+      "path_suffix": ".md",
+      "expected_files": 7,
+      "matched_files": 7,
+      "matched_paths": [
+        "08_mcp-agentes-causales/evals/README.md",
+        "08_mcp-agentes-causales/evals/cap10_qini.md",
+        "08_mcp-agentes-causales/evals/cap11_placebo.md",
+        "08_mcp-agentes-causales/evals/cap12_puerta.md",
+        "08_mcp-agentes-causales/evals/cap13_servicio.md",
+        "08_mcp-agentes-causales/evals/cap14_monitor.md",
+        "08_mcp-agentes-causales/evals/cap15_tarjeta.md"
+      ],
+      "status": "pass"
+    },
+    {
+      "id": "mcp-knowledge-records",
+      "collection": "08_mcp_operations",
+      "path_prefix": "src/mcp_causal/resources/knowledge/",
+      "path_suffix": ".json",
+      "expected_files": 25,
+      "matched_files": 25,
+      "matched_paths": [
+        "08_mcp-agentes-causales/src/mcp_causal/resources/knowledge/aipw_dml.json",
+        "08_mcp-agentes-causales/src/mcp_causal/resources/knowledge/cate.json",
+        "08_mcp-agentes-causales/src/mcp_causal/resources/knowledge/did.json",
+        "08_mcp-agentes-causales/src/mcp_causal/resources/knowledge/estimando.json",
+        "08_mcp-agentes-causales/src/mcp_causal/resources/knowledge/identificacion_backdoor.json",
+        "08_mcp-agentes-causales/src/mcp_causal/resources/knowledge/incertidumbre.json",
+        "08_mcp-agentes-causales/src/mcp_causal/resources/knowledge/incidentes_rollback.json",
+        "08_mcp-agentes-causales/src/mcp_causal/resources/knowledge/iv.json",
+        "08_mcp-agentes-causales/src/mcp_causal/resources/knowledge/linaje.json",
+        "08_mcp-agentes-causales/src/mcp_causal/resources/knowledge/monitoreo.json",
+        "08_mcp-agentes-causales/src/mcp_causal/resources/knowledge/nube_costos.json",
+        "08_mcp-agentes-causales/src/mcp_causal/resources/knowledge/overlap_ess.json",
+        "08_mcp-agentes-causales/src/mcp_causal/resources/knowledge/particiones.json",
+        "08_mcp-agentes-causales/src/mcp_causal/resources/knowledge/placebo_control_negativo.json",
+        "08_mcp-agentes-causales/src/mcp_causal/resources/knowledge/policy_evaluation.json",
+        "08_mcp-agentes-causales/src/mcp_causal/resources/knowledge/preprocesamiento_fold.json",
+        "08_mcp-agentes-causales/src/mcp_causal/resources/knowledge/rd.json",
+        "08_mcp-agentes-causales/src/mcp_causal/resources/knowledge/roles.json",
+        "08_mcp-agentes-causales/src/mcp_causal/resources/knowledge/seguridad.json",
+        "08_mcp-agentes-causales/src/mcp_causal/resources/knowledge/sensibilidad.json",
+        "08_mcp-agentes-causales/src/mcp_causal/resources/knowledge/servicio.json",
+        "08_mcp-agentes-causales/src/mcp_causal/resources/knowledge/supuestos_no_observables.json",
+        "08_mcp-agentes-causales/src/mcp_causal/resources/knowledge/temporalidad.json",
+        "08_mcp-agentes-causales/src/mcp_causal/resources/knowledge/transportabilidad.json",
+        "08_mcp-agentes-causales/src/mcp_causal/resources/knowledge/trimming_poblacion.json"
+      ],
+      "status": "pass"
+    },
+    {
+      "id": "mcp-local-contract",
+      "collection": "08_mcp_operations",
+      "path_prefix": "contracts/local_v1.json",
+      "path_suffix": "contracts/local_v1.json",
+      "expected_files": 1,
+      "matched_files": 1,
+      "matched_paths": [
+        "08_mcp-agentes-causales/contracts/local_v1.json"
+      ],
+      "status": "pass"
+    },
+    {
+      "id": "mcp-root-readme",
+      "collection": "08_mcp_operations",
+      "path_prefix": "README.md",
+      "path_suffix": "README.md",
+      "expected_files": 1,
+      "matched_files": 1,
+      "matched_paths": [
+        "08_mcp-agentes-causales/README.md"
+      ],
+      "status": "pass"
+    },
+    {
+      "id": "mcp-workflows",
+      "collection": "08_mcp_operations",
+      "path_prefix": "src/mcp_causal/resources/workflows/",
+      "path_suffix": ".json",
+      "expected_files": 8,
+      "matched_files": 8,
+      "matched_paths": [
+        "08_mcp-agentes-causales/src/mcp_causal/resources/workflows/diagnosticar.json",
+        "08_mcp-agentes-causales/src/mcp_causal/resources/workflows/empaquetar.json",
+        "08_mcp-agentes-causales/src/mcp_causal/resources/workflows/estimar.json",
+        "08_mcp-agentes-causales/src/mcp_causal/resources/workflows/iniciar_proyecto.json",
+        "08_mcp-agentes-causales/src/mcp_causal/resources/workflows/investigar_alertas.json",
+        "08_mcp-agentes-causales/src/mcp_causal/resources/workflows/operar_local.json",
+        "08_mcp-agentes-causales/src/mcp_causal/resources/workflows/preparar_datos.json",
+        "08_mcp-agentes-causales/src/mcp_causal/resources/workflows/preparar_nube.json"
+      ],
+      "status": "pass"
+    },
+    {
+      "id": "production-data-engineering-chapters",
+      "collection": "02_production_monograph",
+      "path_prefix": "Causal_AI/capitulos_de/",
+      "path_suffix": ".typ",
+      "expected_files": 15,
+      "matched_files": 15,
+      "matched_paths": [
+        "02_causal AI en produccion/Causal_AI/capitulos_de/cap01_causalidad_elemental_datos.typ",
+        "02_causal AI en produccion/Causal_AI/capitulos_de/cap02_anatomia_sistema_decision.typ",
+        "02_causal AI en produccion/Causal_AI/capitulos_de/cap03_contratos_datos_causales.typ",
+        "02_causal AI en produccion/Causal_AI/capitulos_de/cap04_versionado_linaje.typ",
+        "02_causal AI en produccion/Causal_AI/capitulos_de/cap05_splits_pared_evaluacion.typ",
+        "02_causal AI en produccion/Causal_AI/capitulos_de/cap06_validez_temporal_fuga.typ",
+        "02_causal AI en produccion/Causal_AI/capitulos_de/cap07_calidad_observabilidad.typ",
+        "02_causal AI en produccion/Causal_AI/capitulos_de/cap08_benchmark_dgp.typ",
+        "02_causal AI en produccion/Causal_AI/capitulos_de/cap09_lo_que_dml_exige.typ",
+        "02_causal AI en produccion/Causal_AI/capitulos_de/cap10_heterogeneidad_politica.typ",
+        "02_causal AI en produccion/Causal_AI/capitulos_de/cap11_diagnostico_sin_verdad.typ",
+        "02_causal AI en produccion/Causal_AI/capitulos_de/cap12_puerta_causal_datos.typ",
+        "02_causal AI en produccion/Causal_AI/capitulos_de/cap13_servicio_abstencion.typ",
+        "02_causal AI en produccion/Causal_AI/capitulos_de/cap14_observabilidad_produccion.typ",
+        "02_causal AI en produccion/Causal_AI/capitulos_de/cap15_tarjeta_end_to_end.typ"
+      ],
+      "status": "pass"
+    },
+    {
+      "id": "production-data-engineering-main",
+      "collection": "02_production_monograph",
+      "path_prefix": "Causal_AI/main_de.typ",
+      "path_suffix": "Causal_AI/main_de.typ",
+      "expected_files": 1,
+      "matched_files": 1,
+      "matched_paths": [
+        "02_causal AI en produccion/Causal_AI/main_de.typ"
+      ],
+      "status": "pass"
+    },
+    {
+      "id": "production-main",
+      "collection": "02_production_monograph",
+      "path_prefix": "Causal_AI/main.typ",
+      "path_suffix": "Causal_AI/main.typ",
+      "expected_files": 1,
+      "matched_files": 1,
+      "matched_paths": [
+        "02_causal AI en produccion/Causal_AI/main.typ"
+      ],
+      "status": "pass"
+    },
+    {
+      "id": "production-method-chapters",
+      "collection": "02_production_monograph",
+      "path_prefix": "Causal_AI/capitulos/",
+      "path_suffix": ".typ",
+      "expected_files": 33,
+      "matched_files": 33,
+      "matched_paths": [
+        "02_causal AI en produccion/Causal_AI/capitulos/cap01_causalidad_elemental.typ",
+        "02_causal AI en produccion/Causal_AI/capitulos/cap02_anatomia_sistema.typ",
+        "02_causal AI en produccion/Causal_AI/capitulos/cap03_scm_pch.typ",
+        "02_causal AI en produccion/Causal_AI/capitulos/cap04_ingenieria_datos.typ",
+        "02_causal AI en produccion/Causal_AI/capitulos/cap05_prediccion_causalidad.typ",
+        "02_causal AI en produccion/Causal_AI/capitulos/cap06_regularizacion_postseleccion.typ",
+        "02_causal AI en produccion/Causal_AI/capitulos/cap07_datos_entrenamiento.typ",
+        "02_causal AI en produccion/Causal_AI/capitulos/cap08_intervencion_contrafactual.typ",
+        "02_causal AI en produccion/Causal_AI/capitulos/cap09_features_sin_fuga.typ",
+        "02_causal AI en produccion/Causal_AI/capitulos/cap10_ortogonalidad_crossfitting.typ",
+        "02_causal AI en produccion/Causal_AI/capitulos/cap11_dml.typ",
+        "02_causal AI en produccion/Causal_AI/capitulos/cap12_metalearners.typ",
+        "02_causal AI en produccion/Causal_AI/capitulos/cap13_arboles_bosques.typ",
+        "02_causal AI en produccion/Causal_AI/capitulos/cap14_validacion.typ",
+        "02_causal AI en produccion/Causal_AI/capitulos/cap15_despliegue_servicio.typ",
+        "02_causal AI en produccion/Causal_AI/capitulos/cap16_pds.typ",
+        "02_causal AI en produccion/Causal_AI/capitulos/cap17_panel_dmliv.typ",
+        "02_causal AI en produccion/Causal_AI/capitulos/cap18_mapa_decision.typ",
+        "02_causal AI en produccion/Causal_AI/capitulos/cap19_model_card_causal.typ",
+        "02_causal AI en produccion/Causal_AI/capitulos/cap20_cicd.typ",
+        "02_causal AI en produccion/Causal_AI/capitulos/cap21_policy_learning.typ",
+        "02_causal AI en produccion/Causal_AI/capitulos/cap22_uplift_targeting.typ",
+        "02_causal AI en produccion/Causal_AI/capitulos/cap23_explicacion_equidad.typ",
+        "02_causal AI en produccion/Causal_AI/capitulos/cap24_etica_interpretabilidad.typ",
+        "02_causal AI en produccion/Causal_AI/capitulos/cap25_decisiones_estructurales.typ",
+        "02_causal AI en produccion/Causal_AI/capitulos/cap26_generalizacion.typ",
+        "02_causal AI en produccion/Causal_AI/capitulos/cap27_deep_causal.typ",
+        "02_causal AI en produccion/Causal_AI/capitulos/cap28_scm_matrix_completion.typ",
+        "02_causal AI en produccion/Causal_AI/capitulos/cap29_descubrimiento_grafos.typ",
+        "02_causal AI en produccion/Causal_AI/capitulos/cap30_monitoreo.typ",
+        "02_causal AI en produccion/Causal_AI/capitulos/cap31_aprendizaje_continuo.typ",
+        "02_causal AI en produccion/Causal_AI/capitulos/cap32_lado_humano.typ",
+        "02_causal AI en produccion/Causal_AI/capitulos/cap33_supuestos_no_observables.typ"
+      ],
+      "status": "pass"
+    },
+    {
+      "id": "technical-main",
+      "collection": "05_technical_snapshot",
+      "path_prefix": "Causal_AI/main.typ",
+      "path_suffix": "Causal_AI/main.typ",
+      "expected_files": 1,
+      "matched_files": 1,
+      "matched_paths": [
+        "05_contenido_tecnico/Causal_AI/main.typ"
+      ],
+      "status": "pass"
+    },
+    {
+      "id": "technical-method-chapters",
+      "collection": "05_technical_snapshot",
+      "path_prefix": "Causal_AI/capitulos/",
+      "path_suffix": ".typ",
+      "expected_files": 33,
+      "matched_files": 33,
+      "matched_paths": [
+        "05_contenido_tecnico/Causal_AI/capitulos/cap01_causalidad_elemental.typ",
+        "05_contenido_tecnico/Causal_AI/capitulos/cap02_anatomia_sistema.typ",
+        "05_contenido_tecnico/Causal_AI/capitulos/cap03_scm_pch.typ",
+        "05_contenido_tecnico/Causal_AI/capitulos/cap04_ingenieria_datos.typ",
+        "05_contenido_tecnico/Causal_AI/capitulos/cap05_prediccion_causalidad.typ",
+        "05_contenido_tecnico/Causal_AI/capitulos/cap06_regularizacion_postseleccion.typ",
+        "05_contenido_tecnico/Causal_AI/capitulos/cap07_datos_entrenamiento.typ",
+        "05_contenido_tecnico/Causal_AI/capitulos/cap08_intervencion_contrafactual.typ",
+        "05_contenido_tecnico/Causal_AI/capitulos/cap09_features_sin_fuga.typ",
+        "05_contenido_tecnico/Causal_AI/capitulos/cap10_ortogonalidad_crossfitting.typ",
+        "05_contenido_tecnico/Causal_AI/capitulos/cap11_dml.typ",
+        "05_contenido_tecnico/Causal_AI/capitulos/cap12_metalearners.typ",
+        "05_contenido_tecnico/Causal_AI/capitulos/cap13_arboles_bosques.typ",
+        "05_contenido_tecnico/Causal_AI/capitulos/cap14_validacion.typ",
+        "05_contenido_tecnico/Causal_AI/capitulos/cap15_despliegue_servicio.typ",
+        "05_contenido_tecnico/Causal_AI/capitulos/cap16_pds.typ",
+        "05_contenido_tecnico/Causal_AI/capitulos/cap17_panel_dmliv.typ",
+        "05_contenido_tecnico/Causal_AI/capitulos/cap18_mapa_decision.typ",
+        "05_contenido_tecnico/Causal_AI/capitulos/cap19_model_card_causal.typ",
+        "05_contenido_tecnico/Causal_AI/capitulos/cap20_cicd.typ",
+        "05_contenido_tecnico/Causal_AI/capitulos/cap21_policy_learning.typ",
+        "05_contenido_tecnico/Causal_AI/capitulos/cap22_uplift_targeting.typ",
+        "05_contenido_tecnico/Causal_AI/capitulos/cap23_explicacion_equidad.typ",
+        "05_contenido_tecnico/Causal_AI/capitulos/cap24_etica_interpretabilidad.typ",
+        "05_contenido_tecnico/Causal_AI/capitulos/cap25_decisiones_estructurales.typ",
+        "05_contenido_tecnico/Causal_AI/capitulos/cap26_generalizacion.typ",
+        "05_contenido_tecnico/Causal_AI/capitulos/cap27_deep_causal.typ",
+        "05_contenido_tecnico/Causal_AI/capitulos/cap28_scm_matrix_completion.typ",
+        "05_contenido_tecnico/Causal_AI/capitulos/cap29_descubrimiento_grafos.typ",
+        "05_contenido_tecnico/Causal_AI/capitulos/cap30_monitoreo.typ",
+        "05_contenido_tecnico/Causal_AI/capitulos/cap31_aprendizaje_continuo.typ",
+        "05_contenido_tecnico/Causal_AI/capitulos/cap32_lado_humano.typ",
+        "05_contenido_tecnico/Causal_AI/capitulos/cap33_supuestos_no_observables.typ"
+      ],
+      "status": "pass"
+    }
+  ],
+  "checks": {
+    "all_included_sources_hashed": true,
+    "candidate_occurrence_links_resolve": true,
+    "discovered_regular_files_equal_included_plus_excluded": true,
+    "exclusion_accounting_complete": true,
+    "parsed_nonempty_sources_have_units": true,
+    "required_groups_complete": true,
+    "source_inventory_consistent": true,
+    "unit_accounting_complete": true,
+    "unit_sources_resolve": true
+  },
+  "errors": [],
+  "documentary_coverage_complete": true,
+  "semantically_curated_corpus_complete": false
+}

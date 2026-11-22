@@ -302,11 +302,11 @@ class ProjectStore:
     ) -> RegistroEvidencia:
         """Registra un artefacto escribiendo contenido dentro del workspace (útil para tests)."""
         ruta = (self.workspace / nombre).resolve()
-        ruta.parent.mkdir(parents=True, exist_ok=True)
         try:
             ruta.relative_to(self.workspace.resolve())
         except ValueError:
             raise ValueError(f"Ruta fuera del workspace: {ruta}")
+        ruta.parent.mkdir(parents=True, exist_ok=True)
         ruta.write_bytes(contenido)
         return self.registrar_artefacto(project_id, ruta, **versiones)
 
@@ -468,18 +468,25 @@ class ProjectStore:
         return invalidados
 
     def invalidar_por_revision(self, project_id: str) -> list[str]:
-        """Invalida verificaciones cuya revisión ya no coincide con la vigente."""
+        """Invalida verificaciones cuya revisión falta o no coincide con la vigente."""
         with self._lock, self._conn() as conn:
-            vigente = self.obtener_revision_declaracion(project_id)
+            row = conn.execute(
+                "SELECT declaracion_json, declaracion_revision FROM proyectos WHERE project_id=?",
+                (project_id,),
+            ).fetchone()
+            if row is None or row[0] is None:
+                return []
+            vigente = row[1] or _revision_declaracion(project_id, json.loads(row[0]))
             if not vigente:
                 return []
             rows = conn.execute("SELECT check_id, revision_declaracion FROM verificaciones WHERE project_id=?", (project_id,)).fetchall()
             invalidados = []
             for cid, rev in rows:
-                if rev and rev != vigente:
+                if rev != vigente:
                     invalidados.append(cid)
+                    anterior = rev or "ausente"
                     conn.execute("UPDATE verificaciones SET status='unknown', claim_level='declared', reason_codes=? WHERE project_id=? AND check_id=?",
-                                 (json.dumps([f"revision_desactualizada:{rev}->{vigente}"]), project_id, cid))
+                                 (json.dumps([f"revision_desactualizada:{anterior}->{vigente}"]), project_id, cid))
         return invalidados
 
     def verificar_vigencia(self, project_id: str) -> dict:
@@ -522,9 +529,9 @@ class ProjectStore:
             row = conn.execute("SELECT declaracion_json FROM proyectos WHERE project_id=?", (project_id,)).fetchone()
         if row is None or row[0] is None:
             return {"estado": "bloqueado", "perfil": perfil, "motivo": "sin declaración causal válida"}
-        data = json.loads(row[0])
         from .models import ClaseSupuesto, Supuesto, TipoEstimando
         try:
+            data = json.loads(row[0])
             supuestos = tuple(Supuesto(nombre=s["nombre"], clase=ClaseSupuesto(s["clase"]), justificacion=s.get("justificacion",""), criterio_revision=s.get("criterio_revision","")) for s in data.get("supuestos", []))
             decl = __import__("mcp_causal.models", fromlist=["DeclaracionCausal"]).DeclaracionCausal(estimando=TipoEstimando(data["estimando"]), tratamiento=data["tratamiento"], resultado=data["resultado"], poblacion=data["poblacion"], supuestos=supuestos)
         except Exception as e:
@@ -543,9 +550,11 @@ class ProjectStore:
                 if r is None:
                     return {"estado": "bloqueado", "perfil": perfil, "motivo": f"requisito ausente: {cid}"}
                 status, rev_check = r[0], r[1]
-                # Revisión desactualizada -> bloquea
-                if rev_check and rev_check != vigente_rev:
-                    return {"estado": "bloqueado", "perfil": perfil, "motivo": f"{cid} revision desactualizada {rev_check}->{vigente_rev}: redeclaracion invalido verificaciones"}
+                if rev_check != vigente_rev:
+                    anterior = rev_check or "ausente"
+                    return {"estado": "bloqueado", "perfil": perfil, "motivo": f"{cid} revision desactualizada {anterior}->{vigente_rev}: ejecute nuevamente la verificación para la declaración actual"}
+                if status not in ("pass", "fail", "unknown", "not_applicable", "warn"):
+                    return {"estado": "bloqueado", "perfil": perfil, "motivo": f"{cid} tiene estado desconocido: {status}"}
                 if status in ("fail", "unknown"):
                     return {"estado": "bloqueado", "perfil": perfil, "motivo": f"{cid} en {status}"}
                 if status == "not_applicable":

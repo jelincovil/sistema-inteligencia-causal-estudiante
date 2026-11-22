@@ -1,0 +1,22 @@
+[package]
+name = "arg-ingest"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+description = "Source-complete documentary ingestion with unreviewed argument candidates."
+
+[lib]
+name = "arg_ingest"
+path = "src/lib.rs"
+
+[[bin]]
+name = "argumentos-corpus"
+path = "src/main.rs"
+
+[dependencies]
+anyhow = { workspace = true }
+clap = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+sha2 = { workspace = true }
+walkdir = { workspace = true }

@@ -1,0 +1,132 @@
+{
+  "schema_version": "1.0",
+  "dataset_id": "rdatasets-matchit-lalonde-pinned-v1",
+  "description": "Rdatasets MatchIt LaLonde NSW treated and PSID comparison sample; observational cross-source comparison, not the NSW randomized benchmark.",
+  "source": {
+    "raw_url": "https://raw.githubusercontent.com/vincentarelbundock/Rdatasets/1dcc2bf5f955cc1224a3e1307256e1fe86b68dae/csv/MatchIt/lalonde.csv",
+    "documentation_url": "https://raw.githubusercontent.com/vincentarelbundock/Rdatasets/1dcc2bf5f955cc1224a3e1307256e1fe86b68dae/doc/MatchIt/lalonde.html",
+    "expected_bytes": 27509,
+    "expected_sha256": "a49703ca0233ba0a27fa9cda959a38a07f6825def0f7743cf2380ce4e57dd3ef"
+  },
+  "unit_id": {
+    "name": "rownames",
+    "dtype": "string",
+    "required": true,
+    "minimum": null,
+    "maximum": null,
+    "categories": null
+  },
+  "treatment": {
+    "name": "treat",
+    "dtype": "binary",
+    "required": true,
+    "minimum": 0.0,
+    "maximum": 1.0,
+    "categories": null
+  },
+  "outcome": {
+    "name": "re78",
+    "dtype": "number",
+    "required": true,
+    "minimum": 0.0,
+    "maximum": 1000000.0,
+    "categories": null
+  },
+  "epoch": null,
+  "features": [
+    {
+      "name": "age",
+      "dtype": "integer",
+      "required": true,
+      "minimum": 16.0,
+      "maximum": 100.0,
+      "categories": null,
+      "available_at": "baseline_before_NSW_assignment",
+      "causal_role": "pre_treatment_adjustment",
+      "transform": "identity"
+    },
+    {
+      "name": "educ",
+      "dtype": "integer",
+      "required": true,
+      "minimum": 0.0,
+      "maximum": 30.0,
+      "categories": null,
+      "available_at": "baseline_before_NSW_assignment",
+      "causal_role": "pre_treatment_adjustment",
+      "transform": "identity"
+    },
+    {
+      "name": "race",
+      "dtype": "categorical",
+      "required": true,
+      "minimum": null,
+      "maximum": null,
+      "categories": ["white", "black", "hispan"],
+      "available_at": "baseline_before_NSW_assignment",
+      "causal_role": "pre_treatment_adjustment",
+      "transform": "identity"
+    },
+    {
+      "name": "married",
+      "dtype": "binary",
+      "required": true,
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "categories": null,
+      "available_at": "baseline_before_NSW_assignment",
+      "causal_role": "pre_treatment_adjustment",
+      "transform": "identity"
+    },
+    {
+      "name": "nodegree",
+      "dtype": "binary",
+      "required": true,
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "categories": null,
+      "available_at": "baseline_before_NSW_assignment",
+      "causal_role": "pre_treatment_adjustment",
+      "transform": "identity"
+    },
+    {
+      "name": "re74",
+      "dtype": "number",
+      "required": true,
+      "minimum": 0.0,
+      "maximum": 1000000.0,
+      "categories": null,
+      "available_at": "calendar_year_1974_before_NSW_assignment",
+      "causal_role": "pre_treatment_adjustment",
+      "transform": "log1p"
+    },
+    {
+      "name": "re75",
+      "dtype": "number",
+      "required": true,
+      "minimum": 0.0,
+      "maximum": 1000000.0,
+      "categories": null,
+      "available_at": "calendar_year_1975_before_NSW_assignment",
+      "causal_role": "pre_treatment_adjustment",
+      "transform": "log1p"
+    }
+  ],
+  "split": {
+    "strategy": "entity_hash",
+    "protocol_salt": "causal-ml-lalonde-protocol-v1-no-outcome-tuning",
+    "train_fraction": 0.6,
+    "calibration_fraction": 0.2,
+    "holdout_fraction": 0.2
+  },
+  "estimator": {
+    "name": "cross_fitted_aipw_logistic_linear_v1",
+    "folds": 5,
+    "logistic_max_iterations": 100,
+    "logistic_tolerance": 0.00000001,
+    "ridge": 0.000001,
+    "primary_propensity_clip": 0.05,
+    "sensitivity_propensity_clips": [0.01, 0.1],
+    "confidence_level": 0.95
+  }
+}

@@ -1,13 +1,15 @@
 // ============================================================
-//  Sistema de Inteligencia Causal, edición 2026
+//  Contenido teórico y técnico para implementar causal AI, edición 2026
 //  Monografía del Curso ECO-490 / ECON-540
 // ============================================================
-//  Dos modos de compilación desde este mismo archivo (ver template.typ §0):
+//  Tres modos de compilación desde este mismo archivo (ver template.typ §0):
 //    curso (por defecto):      typst compile main.typ main-curso.pdf
 //    comercial (librería):     typst compile --input modo=comercial main.typ main-comercial.pdf
-//  El modo comercial excluye los apéndices de uso educativo (E e I) y sustituye
-//  los callouts del monorepo por una nota genérica; no altera el contenido
-//  técnico de los capítulos.
+//    principios (sin capa L3): typst compile --input modo=principios main.typ main-principios.pdf
+//  Las ediciones comercial y de principios excluyen los apéndices docentes E y J
+//  y sustituyen los callouts del monorepo por una nota genérica. La edición de
+//  principios excluye además el apéndice B y la capa de implementación L3; no
+//  altera el contenido teórico compartido de los capítulos.
 // ============================================================
 
 #import "template/template.typ": *

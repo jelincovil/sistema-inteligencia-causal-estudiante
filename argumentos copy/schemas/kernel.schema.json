@@ -1,0 +1,184 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:argumentos:kernel:1.1",
+  "title": "Argument kernel exchange v1.1",
+  "description": "Corpus-agnostic administrative exchange. A schema check is not a truth check. Legacy version 1.0 documents remain loadable through the self-contained local fixtures: they omit profile, corpus, and source, and they use only lean or python evidence. The Rust loader, not this file, is what the checker enforces. This file documents the optional top-level `atoms` registry added in the 1.1 line; it is still not the enforcement point.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "claims", "arguments", "evidence_specs"],
+  "properties": {
+    "schema_version": {
+      "enum": ["1.0", "1.1"]
+    },
+    "profile": {
+      "description": "Omitted on 1.0, which always means scientific_audit. Omitted on 1.1, which means structural. A profile is a compiled rule set; a document cannot add rules.",
+      "enum": ["scientific_audit", "structural"]
+    },
+    "corpus": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "kind": {
+          "enum": ["book", "paper", "specification", "dataset", "case", "other"]
+        }
+      }
+    },
+    "atoms": {
+      "description": "Optional atom registry for schema 1.1 corpora that use one. Each atom lists the single claim that defines it plus a plain-language description. An atom used by any claim expression must appear here; an atom no claim expression uses must not. The registry carries no approval, status, or support fields: whether anything is supported is computed by the checker, never asserted in JSON. The Rust loader, not this file, enforces registry matching.",
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/atom" }
+    },
+    "claims": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/claim" }
+    },
+    "arguments": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/argument" }
+    },
+    "evidence_specs": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/evidence" }
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9_.:-]*$"
+    },
+    "atom": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "definition_claim", "description"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "definition_claim": {
+          "description": "The single claim id whose expression defines this atom. A required slot; not a proof, approval, or review marker.",
+          "$ref": "#/$defs/id"
+        },
+        "description": {
+          "description": "Brief plain-language description of the atom. Not a status field.",
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "expression": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["op", "id"],
+          "properties": {
+            "op": { "const": "atom" },
+            "id": { "$ref": "#/$defs/id" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["op", "antecedent", "consequent"],
+          "properties": {
+            "op": { "const": "implies" },
+            "antecedent": { "$ref": "#/$defs/expression" },
+            "consequent": { "$ref": "#/$defs/expression" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["op", "items"],
+          "properties": {
+            "op": { "const": "and" },
+            "items": {
+              "type": "array",
+              "minItems": 2,
+              "items": { "$ref": "#/$defs/expression" }
+            }
+          }
+        }
+      ]
+    },
+    "claim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "statement", "expression", "scope", "assumptions"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "book_key": {
+          "description": "Legacy book locator. Null for any other corpus. Not a proof key.",
+          "type": ["string", "null"]
+        },
+        "source": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["system"],
+          "properties": {
+            "system": { "type": "string", "minLength": 1 },
+            "key": { "type": ["string", "null"] }
+          }
+        },
+        "kind": {
+          "enum": ["formal", "empirical", "conditional", "factual"]
+        },
+        "statement": { "type": "string", "minLength": 1 },
+        "expression": { "$ref": "#/$defs/expression" },
+        "scope": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        },
+        "assumptions": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/id" }
+        }
+      }
+    },
+    "argument": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "conclusion", "premises", "rule", "evidence_specs"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "conclusion": { "$ref": "#/$defs/id" },
+        "premises": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/id" }
+        },
+        "rule": { "type": "string", "minLength": 1 },
+        "evidence_specs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/id" }
+        }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "claim_id", "runner_id", "target", "scope", "availability"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "kind": {
+          "description": "registered requires schema 1.1. It never counts as lean or python.",
+          "enum": ["lean", "python", "registered"]
+        },
+        "claim_id": { "$ref": "#/$defs/id" },
+        "runner_id": { "$ref": "#/$defs/id" },
+        "target": { "type": "string", "minLength": 1 },
+        "scope": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        },
+        "availability": {
+          "description": "Neither value is validated evidence. approved is rejected.",
+          "enum": ["pending", "candidate"]
+        }
+      }
+    }
+  }
+}

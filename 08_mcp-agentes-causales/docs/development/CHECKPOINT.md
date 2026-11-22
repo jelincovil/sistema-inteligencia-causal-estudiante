@@ -1,6 +1,8 @@
 # CHECKPOINT — mcp-v2
 
-**Fecha:** 2026-11-07
+> **Archivo histórico.** Los checks y conteos siguientes describen el checkpoint del 2026-11-07; no certifican el árbol actual. En particular, “validado” para Docker/nube significa únicamente revisión estática de archivos: no se ejecutó una imagen ni un despliegue en nube. Los PASS históricos no sustituyen una ejecución nueva.
+
+**Fecha histórica:** 2026-11-07
 **Rama:** `mcp-v2`
 **Commit base:** `e4682ef` (main)
 **Estado:** P0–P5 completados, P6 parcial, P7 pendiente
@@ -13,7 +15,7 @@
 - [x] P3: Conocimiento (25 fichas, búsqueda léxica, contar/listar)
 - [x] P4: MCP (server.py con 11 tools, 2 resources, 2 prompts)
 - [x] P5: Referencia (estimators.py AIPW+DGP, e2e_reference.py)
-- [x] P6: Producción (Dockerfile validado, cloud_adapter.md validado, CLOUD_UNVERIFIED)
+- [x] P6 (histórico): Producción (preparación estática de Dockerfile y cloud_adapter.md; sin ejecución Docker y CLOUD_UNVERIFIED)
 - [x] P7: Cierre (FINAL_REPORT, CHECKPOINT, commit, A20 PASS)
 
 ## Estado de aceptación
@@ -22,12 +24,12 @@
 |---|---|
 | A01-A10, A12-A14, A17, A19, A23 | ✅ PASS (16 criterios) |
 | A20 Instalación limpia | ✅ PASS (wheel en venv limpio verificado) |
-| A22 Nube (sintaxis/config) | ✅ PASS (CLOUD_UNVERIFIED para despliegue) |
+| A22 Nube (solo sintaxis/config histórica) | ✅ PASS estático (sin despliegue; no es PASS de runtime) |
 | A15 Cliente MCP stdio | ⚠️ PARCIAL |
 | A16 E2E con fallo soporte | ⚠️ PARCIAL |
 | A21 Docker | ❌ NO DISPONIBLE (VM sin Docker) |
 
-**18 PASS, 2 PARCIAL, 1 NO DISPONIBLE**
+**Conteo histórico: 18 PASS, 2 PARCIAL, 1 NO DISPONIBLE; no recalculado en esta revisión.**
 
 ## Estructura creada
 

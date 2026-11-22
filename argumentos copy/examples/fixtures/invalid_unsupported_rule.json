@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.1",
+  "profile": "structural",
+  "corpus": {"id": "invalid-profile-rule", "kind": "specification"},
+  "claims": [
+    {
+      "id": "C.formal",
+      "book_key": null,
+      "source": {"system": "fixture", "key": "lean-outside-profile"},
+      "kind": "formal",
+      "statement": "The structural profile must reject a Lean-only rule.",
+      "expression": {"op": "atom", "id": "F"},
+      "scope": {"domain": "profile_fixture"},
+      "assumptions": []
+    }
+  ],
+  "arguments": [
+    {
+      "id": "A.formal",
+      "conclusion": "C.formal",
+      "premises": [],
+      "rule": "LEAN_ANCHOR",
+      "evidence_specs": ["E.formal"]
+    }
+  ],
+  "evidence_specs": [
+    {
+      "id": "E.formal",
+      "kind": "lean",
+      "claim_id": "C.formal",
+      "runner_id": "lean.formal_replay",
+      "target": "formal/profile_fixture.lean",
+      "scope": {"domain": "profile_fixture"},
+      "availability": "pending"
+    }
+  ]
+}

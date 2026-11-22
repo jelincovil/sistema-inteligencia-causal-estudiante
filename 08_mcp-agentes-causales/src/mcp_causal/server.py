@@ -25,13 +25,43 @@ _workspace = os.environ.get("MCP_CAUSAL_WORKSPACE", ".mcp_causal_workspace")
 _store = ProjectStore(_workspace)
 
 
-def _pj(texto, default=None):
+def _falla(motivo: str, codigo: str | None = None) -> str:
+    respuesta = {"estado": "falla", "motivo": motivo}
+    if codigo:
+        respuesta["error"] = codigo
+    return json.dumps(respuesta, ensure_ascii=False)
+
+
+def _pj(texto, default=None, campo: str = "parámetros"):
     if not texto:
         return default if default is not None else {}
     try:
         return json.loads(texto)
-    except (json.JSONDecodeError, TypeError):
-        return default if default is not None else {}
+    except (json.JSONDecodeError, TypeError) as e:
+        raise ValueError(f"JSON inválido en {campo}: {e}") from e
+
+
+def _pj_objeto(texto, campo: str) -> dict:
+    valor = _pj(texto, campo=campo)
+    if not isinstance(valor, dict):
+        raise ValueError(f"{campo} debe contener un objeto JSON")
+    return valor
+
+
+def _verificar_declaracion_previa(project_id: str) -> str | None:
+    try:
+        declaracion = _store.obtener_declaracion(project_id)
+    except (ValueError, TypeError, KeyError, AttributeError) as e:
+        return _falla(
+            f"La declaración causal guardada es inválida ({e}); declare nuevamente con declarar_estimando",
+            "PRECONDITION_FAILED",
+        )
+    if declaracion is None:
+        return _falla(
+            "Declaración causal ausente; ejecute crear_proyecto y declarar_estimando antes de esta operación",
+            "PRECONDITION_FAILED",
+        )
+    return None
 
 
 @mcp.tool()
@@ -41,17 +71,20 @@ def declarar_estimando(project_id: str, tipo: str, tratamiento: str,
     try:
         tipo_enum = TipoEstimando(tipo)
     except ValueError:
-        return json.dumps({"estado": "falla", "motivo": f"tipo inválido: {tipo}"})
-    supuestos_t = tuple(
-        Supuesto(nombre=s.get("nombre",""), clase=ClaseSupuesto(s.get("clase","no_observable")),
-                 criterio_revision=s.get("criterio_revision",""))
-        for s in _pj(supuestos_json, [])
-    )
+        return _falla(f"tipo inválido: {tipo}")
     try:
+        supuestos_data = _pj(supuestos_json, [], campo="supuestos_json")
+        if not isinstance(supuestos_data, list):
+            raise ValueError("supuestos_json debe contener una lista JSON")
+        supuestos_t = tuple(
+            Supuesto(nombre=s.get("nombre",""), clase=ClaseSupuesto(s.get("clase","no_observable")),
+                     criterio_revision=s.get("criterio_revision",""))
+            for s in supuestos_data
+        )
         decl = DeclaracionCausal(estimando=tipo_enum, tratamiento=tratamiento,
                                  resultado=resultado, poblacion=poblacion, supuestos=supuestos_t)
-    except ValueError as e:
-        return json.dumps({"estado": "falla", "motivo": str(e)})
+    except (ValueError, TypeError, KeyError, AttributeError) as e:
+        return _falla(str(e))
     _store.guardar_declaracion(project_id, decl)
     return json.dumps({"estado": "pasa", "id": decl.id_estable}, ensure_ascii=False)
 
@@ -59,7 +92,14 @@ def declarar_estimando(project_id: str, tipo: str, tratamiento: str,
 @mcp.tool()
 def validar_esquema(project_id: str, esquema_json: str) -> str:
     """C-01: Valida roles. esquema_json: {"tratamiento":"D","resultado":"Y","covariables":["X1"]}"""
-    r = validar_esquema_roles(_pj(esquema_json))
+    error = _verificar_declaracion_previa(project_id)
+    if error:
+        return error
+    try:
+        esquema = _pj_objeto(esquema_json, "esquema_json")
+    except (ValueError, TypeError) as e:
+        return _falla(str(e))
+    r = validar_esquema_roles(esquema)
     r.project_id = project_id
     _store.guardar_verificacion(project_id, r)
     return json.dumps(r.to_dict(), ensure_ascii=False)
@@ -74,7 +114,15 @@ def buscar(base: str, limite: int = 10) -> str:
 @mcp.tool()
 def evaluar_puerta_causal(project_id: str, senales_json: str, umbrales_json: str) -> str:
     """C-06: pasa/alerta/falla. senales_json: {"solape":0.5,"psi":0.1,"smd_max":0.2}"""
-    r = evaluar_puerta(_pj(senales_json), _pj(umbrales_json))
+    error = _verificar_declaracion_previa(project_id)
+    if error:
+        return error
+    try:
+        senales = _pj_objeto(senales_json, "senales_json")
+        umbrales = _pj_objeto(umbrales_json, "umbrales_json")
+    except (ValueError, TypeError) as e:
+        return _falla(str(e))
+    r = evaluar_puerta(senales, umbrales)
     r.project_id = project_id
     _store.guardar_verificacion(project_id, r)
     return json.dumps(r.to_dict(), ensure_ascii=False)
@@ -83,7 +131,12 @@ def evaluar_puerta_causal(project_id: str, senales_json: str, umbrales_json: str
 @mcp.tool()
 def abstenerse_soporte(perfil_json: str, soporte_json: str) -> str:
     """C-04: Dentro responde, fuera se abstiene. perfil_json: {"age":30} soporte_json: {"age":[18,54]}"""
-    r = validar_abstencion(_pj(perfil_json), _pj(soporte_json))
+    try:
+        perfil = _pj_objeto(perfil_json, "perfil_json")
+        soporte = _pj_objeto(soporte_json, "soporte_json")
+    except (ValueError, TypeError) as e:
+        return _falla(str(e))
+    r = validar_abstencion(perfil, soporte)
     return json.dumps(r.to_dict(), ensure_ascii=False)
 
 
@@ -106,7 +159,13 @@ def consultar_proyecto(project_id: str) -> str:
 @mcp.tool()
 def ejecutar_verificacion(project_id: str, tipo: str, parametros_json: str) -> str:
     """Ejecuta un verificador. tipo: esquema_roles, validez_temporal, observabilidad, sensibilidad, etc."""
-    parametros = _pj(parametros_json)
+    error = _verificar_declaracion_previa(project_id)
+    if error:
+        return error
+    try:
+        parametros = _pj_objeto(parametros_json, "parametros_json")
+    except (ValueError, TypeError) as e:
+        return _falla(str(e))
     validadores = {
         "esquema_roles": validar_esquema_roles,
         "validez_temporal": validar_validez_temporal,
@@ -122,11 +181,13 @@ def ejecutar_verificacion(project_id: str, tipo: str, parametros_json: str) -> s
     }
     fn = validadores.get(tipo)
     if fn is None:
-        return json.dumps({"estado": "falla", "motivo": f"desconocido: {tipo}"})
+        return _falla(f"desconocido: {tipo}")
+    if tipo == "version_linaje":
+        parametros["workspace"] = _store.workspace
     try:
         r = fn(**parametros)
-    except TypeError as e:
-        return json.dumps({"estado": "falla", "motivo": str(e)})
+    except (TypeError, ValueError, KeyError, AttributeError, OSError) as e:
+        return _falla(str(e))
     r.project_id = project_id
     _store.guardar_verificacion(project_id, r)
     return json.dumps(r.to_dict(), ensure_ascii=False)
@@ -206,6 +267,9 @@ def registrar_artefacto_tool(project_id: str, artifact_path: str) -> str:
 def generar_y_estimar(project_id: str, n: int = 2000, tau: float = 0.5,
                       k_folds: int = 5, semilla: int = 4242) -> str:
     """Genera DGP sintético y estima ATE por AIPW con cross-fitting."""
+    error = _verificar_declaracion_previa(project_id)
+    if error:
+        return error
     dgp = DGPSintetico(n=n, tau=tau, semilla=semilla)
     X, D, Y = dgp.generar()
     r = estimar_aipw(X, D, Y, k_folds=k_folds, semilla=semilla)

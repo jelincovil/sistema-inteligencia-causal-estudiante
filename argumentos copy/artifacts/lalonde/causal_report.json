@@ -1,0 +1,715 @@
+{
+  "schema_version": "1.0",
+  "generated_by": "causal-ml 0.1.0",
+  "status": "completed",
+  "dataset_id": "rdatasets-matchit-lalonde-pinned-v1",
+  "contract_sha256": "f66da858ea890ec4b89eb0fd2e4e4a167dd4a7815e450cd64acdcea8c23e5f86",
+  "audit_sha256": "6756aa706657f74b16abeae26b54df28281555bfac2de13470e3e4d1da19520c",
+  "splits_sha256": "d50097fadd29eca6e39dbd9aee8410a65e6f34233e6a057b975ba7f54b70c17f",
+  "causal_identification_status": "conditional_assumptions_not_verified",
+  "scientific_causal_claim_verified": false,
+  "estimand": {
+    "label": "Sample average adjusted treatment-contrast on each explicitly named split",
+    "formula": "E[mu1(X)-mu0(X) + T(Y-mu1(X))/e(X) - (1-T)(Y-mu0(X))/(1-e(X))]",
+    "interpretation": "Under consistency, noninterference, conditional mean exchangeability given the documented baseline covariates, positivity, and correct estimation protocol, this targets a split-specific ATE. These assumptions are neither tested nor certified here.",
+    "required_assumptions": [
+      "Consistency: observed Y equals the potential outcome for received treatment.",
+      "No relevant interference between NSW/PSID units.",
+      "Conditional mean exchangeability given only age, education, race, marital status, degree status, and 1974/1975 earnings.",
+      "Positivity over the target covariate support; clipping does not repair structural nonpositivity.",
+      "Well-defined NSW treatment and target population for the nonexperimental PSID comparison."
+    ]
+  },
+  "protocol": {
+    "specification_frozen_before_holdout": true,
+    "confidence_level": 0.95,
+    "adjustment_features": [
+      "age",
+      "educ",
+      "race=black",
+      "race=hispan",
+      "married",
+      "nodegree",
+      "re74",
+      "re75"
+    ],
+    "outcome_excluded_from_adjustment": true,
+    "propensity_learner": "Main-effects logistic IRLS with standardized contract features, unpenalized intercept and fixed ridge on other coefficients.",
+    "outcome_learner": "Separate treatment-level linear least squares with standardized contract features and fixed ridge; predictions are not truncated to nonnegative earnings.",
+    "train_folds": 5,
+    "primary_propensity_clip": 0.05,
+    "sensitivity_clips": [
+      0.01,
+      0.1
+    ],
+    "calibration_use": "One computational/treatment-propensity gate using calibration X and T only; descriptive calibration outcome means are subsequently computed and reported as associations, never for model selection or revision.",
+    "holdout_use": "One final external-nuisance evaluation after the gate; append-only local ledger forbids repeat use in this protocol directory.",
+    "standardization": "Feature means and population standard deviations recomputed on each fold's fit rows; constant columns use scale one.",
+    "dollar_deflation_applied": false
+  },
+  "descriptive": {
+    "all_observations": {
+      "claim_type": "association_only",
+      "observations": 614,
+      "treated_observations": 185,
+      "control_observations": 429,
+      "treated_outcome_mean": 6349.1435302702685,
+      "control_outcome_mean": 6984.169742307691,
+      "difference_in_outcome_means": -635.0262120374227,
+      "formula": "mean(Y | T=1) - mean(Y | T=0); not E[Y(1)-Y(0)] without identification"
+    },
+    "calibration": {
+      "claim_type": "association_only",
+      "observations": 114,
+      "treated_observations": 37,
+      "control_observations": 77,
+      "treated_outcome_mean": 4827.507221621621,
+      "control_outcome_mean": 7622.823788311688,
+      "difference_in_outcome_means": -2795.316566690067,
+      "formula": "mean(Y | T=1) - mean(Y | T=0); not E[Y(1)-Y(0)] without identification"
+    },
+    "holdout": {
+      "claim_type": "association_only",
+      "observations": 134,
+      "treated_observations": 44,
+      "control_observations": 90,
+      "treated_outcome_mean": 5932.377909090909,
+      "control_outcome_mean": 6739.631581111113,
+      "difference_in_outcome_means": -807.2536720202033,
+      "formula": "mean(Y | T=1) - mean(Y | T=0); not E[Y(1)-Y(0)] without identification"
+    },
+    "train": {
+      "claim_type": "association_only",
+      "observations": 366,
+      "treated_observations": 104,
+      "control_observations": 262,
+      "treated_outcome_mean": 7066.818825961541,
+      "control_outcome_mean": 6880.475364312976,
+      "difference_in_outcome_means": 186.3434616485647,
+      "formula": "mean(Y | T=1) - mean(Y | T=0); not E[Y(1)-Y(0)] without identification"
+    }
+  },
+  "train_cross_fitted_aipw": {
+    "role": "train_cross_fitted",
+    "observations": 366,
+    "treated_observations": 104,
+    "control_observations": 262,
+    "adjusted_mean_difference": -269.25856130493736,
+    "influence_function_standard_error": 1023.0543922004235,
+    "confidence_level": 0.95,
+    "normal_interval_label": "normal 95% interval",
+    "normal_interval_lower": -2274.408325859853,
+    "normal_interval_upper": 1735.8912032499782,
+    "normal_95_interval_lower": -2274.408325859853,
+    "normal_95_interval_upper": 1735.8912032499782,
+    "propensity_clip": 0.05,
+    "overlap": {
+      "minimum_raw_propensity": 0.003981818973235638,
+      "maximum_raw_propensity": 0.915723597730893,
+      "mean_raw_propensity": 0.28641894841047844,
+      "p05_raw_propensity": 0.010534289832313998,
+      "median_raw_propensity": 0.1221338243500901,
+      "p95_raw_propensity": 0.8410234015972378,
+      "raw_propensity_at_or_below_0_01": 14,
+      "raw_propensity_at_or_above_0_99": 0,
+      "raw_propensity_outside_0_05_to_0_95": 138,
+      "share_outside_0_05_to_0_95": 0.3770491803278688
+    },
+    "interpretation": "Adjusted sample contrast, causal only under the stated untestable identification assumptions; interval omits confounding and transport uncertainty."
+  },
+  "train_fold_diagnostics": [
+    {
+      "fold": 0,
+      "fit_observations": 292,
+      "evaluation_observations": 74,
+      "nuisance": {
+        "standardization_means": [
+          27.660958904109602,
+          10.167808219178083,
+          0.3732876712328777,
+          0.13356164383561647,
+          0.4452054794520561,
+          0.6061643835616457,
+          5.223708014342697,
+          4.622683433663914
+        ],
+        "standardization_scales": [
+          10.045348363199617,
+          2.7227965813652126,
+          0.48367756381541316,
+          0.34018073303987206,
+          0.4969884913334725,
+          0.48859914414883776,
+          4.128141277113959,
+          3.8230980872894746
+        ],
+        "propensity": {
+          "observations": 292,
+          "iterations": 7,
+          "converged": true,
+          "separation_suspected": false,
+          "maximum_absolute_coefficient": 1.7652552742862229,
+          "minimum_raw_probability": 0.005376099520216859,
+          "maximum_raw_probability": 0.9023364035171633,
+          "coefficients_include_intercept_first": true
+        },
+        "outcome_control": {
+          "observations": 212,
+          "coefficients_include_intercept_first": true,
+          "residual_sum_of_squares": 10467389662.48004
+        },
+        "outcome_treated": {
+          "observations": 80,
+          "coefficients_include_intercept_first": true,
+          "residual_sum_of_squares": 4525638949.983587
+        },
+        "deployed_propensity_coefficients": [
+          -1.7652552742862229,
+          0.1354977553567688,
+          0.6916107705935375,
+          1.5614209212956032,
+          0.4267801002524713,
+          -0.5596617531920379,
+          0.40709508575728975,
+          -0.676489708567864,
+          0.10278189868780213
+        ],
+        "deployed_outcome_control_coefficients": [
+          6712.315302030751,
+          1332.6313389797056,
+          2080.745984113827,
+          67.56214701768297,
+          653.8074256829093,
+          637.7450966245342,
+          777.1419852136388,
+          1508.3319540826894,
+          449.84175446523034
+        ],
+        "deployed_outcome_treated_coefficients": [
+          6887.150437223767,
+          1323.9157300334612,
+          1450.147904859355,
+          300.3123801940891,
+          677.4125818964749,
+          1239.7824641235259,
+          -1260.203287210315,
+          -1775.7049432538058,
+          1900.7956347154263
+        ]
+      }
+    },
+    {
+      "fold": 1,
+      "fit_observations": 275,
+      "evaluation_observations": 91,
+      "nuisance": {
+        "standardization_means": [
+          28.330909090909106,
+          10.225454545454543,
+          0.38545454545454616,
+          0.1454545454545454,
+          0.4363636363636374,
+          0.6145454545454567,
+          5.127631871345473,
+          4.645559548667749
+        ],
+        "standardization_scales": [
+          10.1090215824961,
+          2.6900637492830177,
+          0.48670251575574824,
+          0.3525585350848244,
+          0.49593387989039417,
+          0.48670251575574874,
+          4.169167558110309,
+          3.7652387282396185
+        ],
+        "propensity": {
+          "observations": 275,
+          "iterations": 7,
+          "converged": true,
+          "separation_suspected": false,
+          "maximum_absolute_coefficient": 1.5688040129722953,
+          "minimum_raw_probability": 0.00935123537267988,
+          "maximum_raw_probability": 0.9051929183613827,
+          "coefficients_include_intercept_first": true
+        },
+        "outcome_control": {
+          "observations": 193,
+          "coefficients_include_intercept_first": true,
+          "residual_sum_of_squares": 9754693435.640709
+        },
+        "outcome_treated": {
+          "observations": 82,
+          "coefficients_include_intercept_first": true,
+          "residual_sum_of_squares": 5896597817.516218
+        },
+        "deployed_propensity_coefficients": [
+          -1.5688040129722953,
+          0.04153330102493093,
+          0.30455517516867975,
+          1.4657653769770207,
+          0.17008489583267278,
+          -0.4975521280723324,
+          0.19167494140083904,
+          -0.8999743426528198,
+          0.20994667117625185
+        ],
+        "deployed_outcome_control_coefficients": [
+          5829.490987333968,
+          1207.873250450097,
+          1501.1587898918558,
+          -176.3142332519165,
+          543.2326589192436,
+          790.8381534505088,
+          327.14183420927463,
+          1679.0839445028346,
+          357.7269502285755
+        ],
+        "deployed_outcome_treated_coefficients": [
+          5837.6888649530765,
+          2039.3639009942244,
+          2247.2956896236205,
+          197.2448525469443,
+          -45.607479497987754,
+          -303.5344092591205,
+          283.5094483678548,
+          -3720.2453608623355,
+          2935.6679670569665
+        ]
+      }
+    },
+    {
+      "fold": 2,
+      "fit_observations": 302,
+      "evaluation_observations": 64,
+      "nuisance": {
+        "standardization_means": [
+          27.506622516556305,
+          10.317880794701988,
+          0.3543046357615896,
+          0.1490066225165563,
+          0.44370860927152384,
+          0.6059602649006637,
+          5.20967463000722,
+          4.726043966869225
+        ],
+        "standardization_scales": [
+          9.70483029097941,
+          2.6566693805798693,
+          0.4783020602500434,
+          0.35609499991261445,
+          0.49682117439764395,
+          0.4886434510583158,
+          4.168994501130865,
+          3.805225900313197
+        ],
+        "propensity": {
+          "observations": 302,
+          "iterations": 7,
+          "converged": true,
+          "separation_suspected": false,
+          "maximum_absolute_coefficient": 1.6982143936882612,
+          "minimum_raw_probability": 0.009478044161137998,
+          "maximum_raw_probability": 0.8984169487535871,
+          "coefficients_include_intercept_first": true
+        },
+        "outcome_control": {
+          "observations": 220,
+          "coefficients_include_intercept_first": true,
+          "residual_sum_of_squares": 10853483502.435436
+        },
+        "outcome_treated": {
+          "observations": 82,
+          "coefficients_include_intercept_first": true,
+          "residual_sum_of_squares": 6055776090.202177
+        },
+        "deployed_propensity_coefficients": [
+          -1.6982143936882612,
+          0.2359709605637231,
+          0.5166053145735524,
+          1.4962917862011706,
+          0.25933382377144243,
+          -0.3948223510827996,
+          0.3462376415897909,
+          -0.861811214810777,
+          0.17698179463502597
+        ],
+        "deployed_outcome_control_coefficients": [
+          5962.680228142822,
+          576.3479220955156,
+          1164.8210780279264,
+          -642.1982311805119,
+          855.8752893459839,
+          234.584505520014,
+          157.59571912045013,
+          1658.226305735705,
+          -85.01065541949392
+        ],
+        "deployed_outcome_treated_coefficients": [
+          7330.582939152539,
+          1303.1571058032828,
+          1733.1115415860024,
+          -489.19973088828266,
+          498.3337521652076,
+          1083.2715820345618,
+          206.0302259832424,
+          -3768.9868929528748,
+          4078.4826219686697
+        ]
+      }
+    },
+    {
+      "fold": 3,
+      "fit_observations": 298,
+      "evaluation_observations": 68,
+      "nuisance": {
+        "standardization_means": [
+          27.895973154362423,
+          10.27516778523491,
+          0.3791946308724828,
+          0.14429530201342272,
+          0.43288590604026794,
+          0.6073825503355714,
+          5.399491422419203,
+          4.736148615713345
+        ],
+        "standardization_scales": [
+          10.060850960010681,
+          2.741329370362956,
+          0.4851866267633156,
+          0.3513889125033369,
+          0.49547522480136685,
+          0.48833286586449265,
+          4.094807614158356,
+          3.8005917709191053
+        ],
+        "propensity": {
+          "observations": 298,
+          "iterations": 7,
+          "converged": true,
+          "separation_suspected": false,
+          "maximum_absolute_coefficient": 1.844367928447075,
+          "minimum_raw_probability": 0.004696681892744394,
+          "maximum_raw_probability": 0.8989208880443766,
+          "coefficients_include_intercept_first": true
+        },
+        "outcome_control": {
+          "observations": 215,
+          "coefficients_include_intercept_first": true,
+          "residual_sum_of_squares": 10848170897.766247
+        },
+        "outcome_treated": {
+          "observations": 83,
+          "coefficients_include_intercept_first": true,
+          "residual_sum_of_squares": 6951671203.487747
+        },
+        "deployed_propensity_coefficients": [
+          -1.8305243686422317,
+          0.09633667837191807,
+          0.5021845089919762,
+          1.844367928447075,
+          0.6130013089582169,
+          -0.2905070140645363,
+          0.21204416900706916,
+          -0.8120740417823156,
+          0.20721453613560478
+        ],
+        "deployed_outcome_control_coefficients": [
+          6256.034418930807,
+          529.3244759132753,
+          1317.4827090890112,
+          -314.0829472143771,
+          547.816843783225,
+          510.4539978592612,
+          21.320124567994757,
+          1770.2496434193376,
+          -8.223305187750405
+        ],
+        "deployed_outcome_treated_coefficients": [
+          7816.5467449768075,
+          2034.477795899127,
+          2616.5499078923235,
+          -826.8343368844698,
+          7.43008470810088,
+          508.1238124818976,
+          -232.81644079086584,
+          -2530.9066677501705,
+          2063.3622108081686
+        ]
+      }
+    },
+    {
+      "fold": 4,
+      "fit_observations": 297,
+      "evaluation_observations": 69,
+      "nuisance": {
+        "standardization_means": [
+          27.730639730639716,
+          10.37373737373737,
+          0.4074074074074071,
+          0.12457912457912454,
+          0.4276094276094272,
+          0.6127946127946116,
+          5.027204423636542,
+          4.414105200888866
+        ],
+        "standardization_scales": [
+          9.817604468667634,
+          2.6192213299894864,
+          0.491351820793392,
+          0.3302410730030769,
+          0.4947318516418427,
+          0.487111255592101,
+          4.13555066322157,
+          3.841996217550236
+        ],
+        "propensity": {
+          "observations": 297,
+          "iterations": 7,
+          "converged": true,
+          "separation_suspected": false,
+          "maximum_absolute_coefficient": 1.6229477341779341,
+          "minimum_raw_probability": 0.004910118305348244,
+          "maximum_raw_probability": 0.9116788878609102,
+          "coefficients_include_intercept_first": true
+        },
+        "outcome_control": {
+          "observations": 208,
+          "coefficients_include_intercept_first": true,
+          "residual_sum_of_squares": 9787427576.597876
+        },
+        "outcome_treated": {
+          "observations": 89,
+          "coefficients_include_intercept_first": true,
+          "residual_sum_of_squares": 7164781640.334926
+        },
+        "deployed_propensity_coefficients": [
+          -1.6229477341779341,
+          0.21749002330466105,
+          0.5881995029404342,
+          1.6162189944573704,
+          0.22855708625449545,
+          -0.5771025340639019,
+          0.34602257484959315,
+          -0.7696997142329765,
+          0.10738696425089228
+        ],
+        "deployed_outcome_control_coefficients": [
+          5846.978140110047,
+          549.9294985122881,
+          1305.5746790551925,
+          -617.3621863325081,
+          429.3060147153718,
+          851.1229365661209,
+          217.47273142818074,
+          1375.5805462080132,
+          289.6007686938963
+        ],
+        "deployed_outcome_treated_coefficients": [
+          8299.33052596802,
+          1012.174312416884,
+          1765.5363473534599,
+          -284.2614511562017,
+          1159.6405397591423,
+          1561.1071777191976,
+          -478.92820607356316,
+          -2932.6176231606437,
+          3164.2892209764645
+        ]
+      }
+    }
+  ],
+  "deployed_nuisance_diagnostics": {
+    "standardization_means": [
+      27.816939890710373,
+      10.27322404371582,
+      0.3797814207650277,
+      0.13934426229508207,
+      0.4371584699453556,
+      0.6092896174863394,
+      5.198682650800022,
+      4.629084186239458
+    ],
+    "standardization_scales": [
+      9.94915145524717,
+      2.687085891658228,
+      0.48533235334843,
+      0.34630541269307563,
+      0.49603522264088373,
+      0.48790960178058496,
+      4.14093169359397,
+      3.809678579035928
+    ],
+    "propensity": {
+      "observations": 366,
+      "iterations": 7,
+      "converged": true,
+      "separation_suspected": false,
+      "maximum_absolute_coefficient": 1.6786054324237267,
+      "minimum_raw_probability": 0.0063393265172025865,
+      "maximum_raw_probability": 0.9055132372271862,
+      "coefficients_include_intercept_first": true
+    },
+    "outcome_control": {
+      "observations": 262,
+      "coefficients_include_intercept_first": true,
+      "residual_sum_of_squares": 13026619028.36326
+    },
+    "outcome_treated": {
+      "observations": 104,
+      "coefficients_include_intercept_first": true,
+      "residual_sum_of_squares": 7783732589.49966
+    },
+    "deployed_propensity_coefficients": [
+      -1.6786054324237267,
+      0.14395707635369687,
+      0.524464256665465,
+      1.5785302799865448,
+      0.3314766333363369,
+      -0.4597932726313488,
+      0.29702224865328675,
+      -0.8017849671477715,
+      0.16520733854768244
+    ],
+    "deployed_outcome_control_coefficients": [
+      6130.638734043587,
+      823.057361803383,
+      1442.628198101097,
+      -332.43861758072234,
+      603.622267214956,
+      599.2226087296692,
+      289.6798551596702,
+      1601.5225610331288,
+      188.46256392654863
+    ],
+    "deployed_outcome_treated_coefficients": [
+      7140.027987311602,
+      1583.7883587462575,
+      1997.9135459837605,
+      -95.43498730503521,
+      461.31211516141866,
+      807.9593720638679,
+      -258.38154097282484,
+      -2921.8216486544925,
+      2844.4315178543616
+    ]
+  },
+  "calibration": {
+    "observations": 114,
+    "propensity_log_loss": 0.3949926729122338,
+    "propensity_brier_score": 0.12462925418750335,
+    "overlap": {
+      "minimum_raw_propensity": 0.0035619270992954064,
+      "maximum_raw_propensity": 0.87525940125749,
+      "mean_raw_propensity": 0.32847528144263466,
+      "p05_raw_propensity": 0.012052185773052795,
+      "median_raw_propensity": 0.11893297419178772,
+      "p95_raw_propensity": 0.8449569852523039,
+      "raw_propensity_at_or_below_0_01": 4,
+      "raw_propensity_at_or_above_0_99": 0,
+      "raw_propensity_outside_0_05_to_0_95": 44,
+      "share_outside_0_05_to_0_95": 0.38596491228070173
+    },
+    "gate_passed": true,
+    "gate_reasons": [],
+    "permitted_use": "Computational and treatment-propensity gate using X/T only; descriptive calibration outcome means may subsequently be reported, never used for model selection or recalibration.",
+    "outcome_used": false,
+    "outcome_used_in_gate": false,
+    "outcomes_reported_descriptively": true,
+    "outcome_use_semantics": "The legacy outcome_used field mirrors outcome_used_in_gate. Descriptive calibration outcome means are computed after the gate and reported as associations only; neither the gate nor descriptive reporting selects or revises models.",
+    "gate_interpretation": "gate_passed is a computational X/T-only result, not scientific approval, positivity verification, or causal identification; inspect the weak-overlap counts beside it."
+  },
+  "holdout": {
+    "aipw": {
+      "role": "holdout_external_nuisance",
+      "observations": 134,
+      "treated_observations": 44,
+      "control_observations": 90,
+      "adjusted_mean_difference": 426.32713230941573,
+      "influence_function_standard_error": 1821.9472518394034,
+      "confidence_level": 0.95,
+      "normal_interval_label": "normal 95% interval",
+      "normal_interval_lower": -3144.623865906476,
+      "normal_interval_upper": 3997.278130525308,
+      "normal_95_interval_lower": -3144.623865906476,
+      "normal_95_interval_upper": 3997.278130525308,
+      "propensity_clip": 0.05,
+      "overlap": {
+        "minimum_raw_propensity": 0.007054464669360499,
+        "maximum_raw_propensity": 0.8839305137839497,
+        "mean_raw_propensity": 0.33180060796757904,
+        "p05_raw_propensity": 0.01256113945473674,
+        "median_raw_propensity": 0.15467059109626904,
+        "p95_raw_propensity": 0.8483769327687803,
+        "raw_propensity_at_or_below_0_01": 4,
+        "raw_propensity_at_or_above_0_99": 0,
+        "raw_propensity_outside_0_05_to_0_95": 41,
+        "share_outside_0_05_to_0_95": 0.30597014925373134
+      },
+      "interpretation": "Adjusted sample contrast, causal only under the stated untestable identification assumptions; interval omits confounding and transport uncertainty."
+    },
+    "ledger_event_id": "H001-final-only",
+    "access_sequence": 1,
+    "reused_for_tuning": false
+  },
+  "sensitivity": [
+    {
+      "role": "train_cross_fitted",
+      "propensity_clip": 0.01,
+      "adjusted_mean_difference": -261.5318596403203,
+      "confidence_level": 0.95,
+      "normal_interval_label": "normal 95% interval",
+      "normal_interval_lower": -2263.720421099513,
+      "normal_interval_upper": 1740.656701818872,
+      "normal_95_interval_lower": -2263.720421099513,
+      "normal_95_interval_upper": 1740.656701818872,
+      "selection_rule": "Predeclared sensitivity output; never choose a preferred clip by results."
+    },
+    {
+      "role": "holdout_external_nuisance",
+      "propensity_clip": 0.01,
+      "adjusted_mean_difference": 1137.360256736678,
+      "confidence_level": 0.95,
+      "normal_interval_label": "normal 95% interval",
+      "normal_interval_lower": -3173.5979698707406,
+      "normal_interval_upper": 5448.318483344096,
+      "normal_95_interval_lower": -3173.5979698707406,
+      "normal_95_interval_upper": 5448.318483344096,
+      "selection_rule": "Predeclared sensitivity output; never choose a preferred clip by results."
+    },
+    {
+      "role": "train_cross_fitted",
+      "propensity_clip": 0.1,
+      "adjusted_mean_difference": 98.577618034138,
+      "confidence_level": 0.95,
+      "normal_interval_label": "normal 95% interval",
+      "normal_interval_lower": -1687.271187141765,
+      "normal_interval_upper": 1884.4264232100409,
+      "normal_95_interval_lower": -1687.271187141765,
+      "normal_95_interval_upper": 1884.4264232100409,
+      "selection_rule": "Predeclared sensitivity output; never choose a preferred clip by results."
+    },
+    {
+      "role": "holdout_external_nuisance",
+      "propensity_clip": 0.1,
+      "adjusted_mean_difference": 75.5437556017696,
+      "confidence_level": 0.95,
+      "normal_interval_label": "normal 95% interval",
+      "normal_interval_lower": -2443.190040323861,
+      "normal_interval_upper": 2594.2775515274,
+      "normal_95_interval_lower": -2443.190040323861,
+      "normal_95_interval_upper": 2594.2775515274,
+      "selection_rule": "Predeclared sensitivity output; never choose a preferred clip by results."
+    }
+  ],
+  "warnings": [],
+  "limitations": [
+    "Unadjusted group differences are associational and include measured and unmeasured selection.",
+    "The NSW treated and PSID comparison samples do not create random assignment; unconfoundedness remains unverifiable.",
+    "Normal-reference influence-function intervals quantify a particular sampling approximation, not uncertainty from unmeasured confounding, dataset construction, model choice, or target-population transport.",
+    "Clipping changes inverse-probability weights and can hide weak overlap or introduce bias; sensitivity clips are not bias bounds.",
+    "Linear outcome models can predict negative earnings; model misspecification remains possible despite double robustness.",
+    "There are no repeated epochs, cluster-robust intervals, inflation adjustment, individual treatment-effect estimates, policy thresholds, or deployment claims."
+  ],
+  "holdout_outcomes_used_for_model_selection": false
+}

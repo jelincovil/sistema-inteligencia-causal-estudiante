@@ -15,6 +15,7 @@ import subprocess
 import tempfile
 from pathlib import Path
 
+from . import puerta as puerta_mod
 from . import tarjeta as tarjeta_mod
 
 ALIAS_POR_DEFECTO = "champion"
@@ -83,19 +84,57 @@ def verificar_integridad(raiz: Path, version: str) -> bool:
     return all(sha256_archivo(carpeta / n) == h for n, h in manifiesto["archivos"].items())
 
 
-def promover(raiz: Path, version: str, alias: str = ALIAS_POR_DEFECTO, aceptar_alerta: bool = False) -> None:
-    """Apunta el alias a la versión. "falla" nunca se promueve; "alerta" exige aceptarla explícitamente."""
+def promover(
+    raiz: Path,
+    version: str,
+    alias: str = ALIAS_POR_DEFECTO,
+    aceptar_alerta: bool = False,
+    *,
+    ahora=None,
+    max_antiguedad=puerta_mod.MAX_ANTIGUEDAD_PROMOCION,
+) -> None:
+    """Promueve solo evidencia íntegra, coherente, positiva y vigente.
+
+    ``alerta`` mantiene la excepción explícita existente. ``max_antiguedad`` es
+    una convención operativa de frescura, no una garantía de validez causal.
+    """
     raiz = Path(raiz)
     carpeta = raiz / version
     if not carpeta.is_dir():
         raise PromocionRechazada(f"no existe {version}")
-    if not verificar_integridad(raiz, version):
-        raise PromocionRechazada(f"{version}: los archivos no coinciden con su manifiesto")
-    estado = json.loads((carpeta / "manifest.json").read_text(encoding="utf-8"))["puerta"]
-    if estado == "falla":
-        raise PromocionRechazada(f"{version}: la puerta causal falló; no se promueve")
-    if estado == "alerta" and not aceptar_alerta:
-        raise PromocionRechazada(f"{version}: la puerta quedó en alerta; exige aceptar_alerta=True")
+    try:
+        manifiesto = json.loads((carpeta / "manifest.json").read_text(encoding="utf-8"))
+        if not isinstance(manifiesto, dict):
+            raise ValueError("manifest.json no contiene un objeto")
+        if manifiesto.get("version") != version:
+            raise PromocionRechazada(f"{version}: el manifiesto pertenece a otra versión o no la declara")
+        archivos = manifiesto.get("archivos")
+        if not isinstance(archivos, dict) or not {"estimacion.json", "tarjeta.json"}.issubset(archivos):
+            raise PromocionRechazada(f"{version}: el manifiesto no cubre estimación y tarjeta")
+        if not verificar_integridad(raiz, version):
+            raise PromocionRechazada(f"{version}: los archivos no coinciden con su manifiesto")
+        tarjeta = json.loads((carpeta / "tarjeta.json").read_text(encoding="utf-8"))
+        tarjeta_mod.validar(tarjeta)
+    except PromocionRechazada:
+        raise
+    except (OSError, ValueError, TypeError, KeyError, AttributeError) as exc:
+        raise PromocionRechazada(f"{version}: evidencia de promoción ilegible o mal formada: {exc}") from exc
+
+    if "puerta" not in manifiesto:
+        raise PromocionRechazada(f"{version}: falta el estado de la puerta en el manifiesto")
+    estado = manifiesto["puerta"]
+    if not isinstance(estado, str) or estado not in puerta_mod.ORDEN:
+        raise PromocionRechazada(f"{version}: estado de puerta desconocido: {estado!r}")
+    motivos = puerta_mod.motivos_rechazo_evidencia(
+        tarjeta,
+        estado_manifiesto=estado,
+        aceptar_alerta=aceptar_alerta,
+        ahora=ahora,
+        max_antiguedad=max_antiguedad,
+    )
+    if motivos:
+        raise PromocionRechazada(f"{version}: " + "; ".join(motivos))
+
     destino = raiz / f"alias_{alias}.json"
     fd, tmp = tempfile.mkstemp(dir=raiz, prefix=".alias_", suffix=".tmp")
     try:

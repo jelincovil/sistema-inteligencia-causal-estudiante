@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0",
+  "claims": [
+    {
+      "id": "C.ssch.risk",
+      "book_key": "ssch-one-decision",
+      "kind": "empirical",
+      "statement": "The synthetic one-decision risk calculation has a recorded computational specification but no admitted replay.",
+      "expression": {"op": "atom", "id": "ssch_risk"},
+      "scope": {"experiment": "ssch_one_decision_exact_v1"},
+      "assumptions": []
+    }
+  ],
+  "arguments": [
+    {
+      "id": "A.ssch.risk",
+      "conclusion": "C.ssch.risk",
+      "premises": [],
+      "rule": "EMPIRICAL_RECORD",
+      "evidence_specs": ["E.ssch"]
+    }
+  ],
+  "evidence_specs": [
+    {
+      "id": "E.ssch",
+      "kind": "python",
+      "claim_id": "C.ssch.risk",
+      "runner_id": "legacy.synthetic_replay",
+      "target": "synthetic:ssch_one_decision_exact_v1",
+      "scope": {"experiment": "ssch_one_decision_exact_v1"},
+      "availability": "pending"
+    }
+  ]
+}

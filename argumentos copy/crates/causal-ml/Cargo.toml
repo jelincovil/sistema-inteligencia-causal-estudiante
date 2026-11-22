@@ -1,0 +1,26 @@
+[package]
+name = "causal-ml"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+description = "Deterministic, Rust-only data audits and doubly robust Causal ML case studies."
+
+[lib]
+name = "causal_ml"
+path = "src/lib.rs"
+
+[[bin]]
+name = "causal-ml"
+path = "src/main.rs"
+
+[dependencies]
+anyhow = { workspace = true }
+clap = { workspace = true }
+csv = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+sha2 = { workspace = true }
+thiserror = { workspace = true }
+
+[dev-dependencies]
+arg-model = { path = "../arg-model" }

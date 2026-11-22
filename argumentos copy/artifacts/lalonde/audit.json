@@ -1,0 +1,251 @@
+{
+  "schema_version": "1.0",
+  "generated_by": "causal-ml 0.1.0",
+  "status": "pass",
+  "dataset_id": "rdatasets-matchit-lalonde-pinned-v1",
+  "input_path": "data/real/lalonde.csv",
+  "contract_sha256": "f66da858ea890ec4b89eb0fd2e4e4a167dd4a7815e450cd64acdcea8c23e5f86",
+  "source": {
+    "raw_url": "https://raw.githubusercontent.com/vincentarelbundock/Rdatasets/1dcc2bf5f955cc1224a3e1307256e1fe86b68dae/csv/MatchIt/lalonde.csv",
+    "documentation_url": "https://raw.githubusercontent.com/vincentarelbundock/Rdatasets/1dcc2bf5f955cc1224a3e1307256e1fe86b68dae/doc/MatchIt/lalonde.html",
+    "expected_bytes": 27509,
+    "actual_bytes": 27509,
+    "expected_sha256": "a49703ca0233ba0a27fa9cda959a38a07f6825def0f7743cf2380ce4e57dd3ef",
+    "actual_sha256": "a49703ca0233ba0a27fa9cda959a38a07f6825def0f7743cf2380ce4e57dd3ef",
+    "bytes_match": true,
+    "sha256_matches": true
+  },
+  "observation_count": 614,
+  "columns": [
+    {
+      "name": "rownames",
+      "declared_type": "string",
+      "required": true,
+      "present": true,
+      "non_missing": 614,
+      "missing": 0,
+      "distinct": 614,
+      "minimum": null,
+      "maximum": null,
+      "observed_categories": {}
+    },
+    {
+      "name": "treat",
+      "declared_type": "binary",
+      "required": true,
+      "present": true,
+      "non_missing": 614,
+      "missing": 0,
+      "distinct": 2,
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "observed_categories": {}
+    },
+    {
+      "name": "re78",
+      "declared_type": "number",
+      "required": true,
+      "present": true,
+      "non_missing": 614,
+      "missing": 0,
+      "distinct": 457,
+      "minimum": 0.0,
+      "maximum": 60307.93,
+      "observed_categories": {}
+    },
+    {
+      "name": "age",
+      "declared_type": "integer",
+      "required": true,
+      "present": true,
+      "non_missing": 614,
+      "missing": 0,
+      "distinct": 40,
+      "minimum": 16.0,
+      "maximum": 55.0,
+      "observed_categories": {}
+    },
+    {
+      "name": "educ",
+      "declared_type": "integer",
+      "required": true,
+      "present": true,
+      "non_missing": 614,
+      "missing": 0,
+      "distinct": 19,
+      "minimum": 0.0,
+      "maximum": 18.0,
+      "observed_categories": {}
+    },
+    {
+      "name": "race",
+      "declared_type": "categorical",
+      "required": true,
+      "present": true,
+      "non_missing": 614,
+      "missing": 0,
+      "distinct": 3,
+      "minimum": null,
+      "maximum": null,
+      "observed_categories": {
+        "black": 243,
+        "hispan": 72,
+        "white": 299
+      }
+    },
+    {
+      "name": "married",
+      "declared_type": "binary",
+      "required": true,
+      "present": true,
+      "non_missing": 614,
+      "missing": 0,
+      "distinct": 2,
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "observed_categories": {}
+    },
+    {
+      "name": "nodegree",
+      "declared_type": "binary",
+      "required": true,
+      "present": true,
+      "non_missing": 614,
+      "missing": 0,
+      "distinct": 2,
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "observed_categories": {}
+    },
+    {
+      "name": "re74",
+      "declared_type": "number",
+      "required": true,
+      "present": true,
+      "non_missing": 614,
+      "missing": 0,
+      "distinct": 358,
+      "minimum": 0.0,
+      "maximum": 35040.07,
+      "observed_categories": {}
+    },
+    {
+      "name": "re75",
+      "declared_type": "number",
+      "required": true,
+      "present": true,
+      "non_missing": 614,
+      "missing": 0,
+      "distinct": 356,
+      "minimum": 0.0,
+      "maximum": 25142.24,
+      "observed_categories": {}
+    }
+  ],
+  "outcome_summary": {
+    "count": 614,
+    "mean": 6792.834482980456,
+    "standard_deviation": 7470.730792065293,
+    "minimum": 0.0,
+    "maximum": 60307.93
+  },
+  "treatment_counts": {
+    "0": 429,
+    "1": 185
+  },
+  "duplicate_unit_or_unit_epoch_ids": [],
+  "exact_duplicate_record_count": 0,
+  "duplicate_measurement_rows_excluding_id": 5,
+  "feature_availability": [
+    {
+      "name": "re78",
+      "available_at": "post-treatment outcome; never an adjustment feature",
+      "causal_role": "outcome",
+      "transform": "identity",
+      "excluded_from_adjustment": true
+    },
+    {
+      "name": "age",
+      "available_at": "baseline_before_NSW_assignment",
+      "causal_role": "pre_treatment_adjustment",
+      "transform": "identity",
+      "excluded_from_adjustment": false
+    },
+    {
+      "name": "educ",
+      "available_at": "baseline_before_NSW_assignment",
+      "causal_role": "pre_treatment_adjustment",
+      "transform": "identity",
+      "excluded_from_adjustment": false
+    },
+    {
+      "name": "race",
+      "available_at": "baseline_before_NSW_assignment",
+      "causal_role": "pre_treatment_adjustment",
+      "transform": "identity",
+      "excluded_from_adjustment": false
+    },
+    {
+      "name": "married",
+      "available_at": "baseline_before_NSW_assignment",
+      "causal_role": "pre_treatment_adjustment",
+      "transform": "identity",
+      "excluded_from_adjustment": false
+    },
+    {
+      "name": "nodegree",
+      "available_at": "baseline_before_NSW_assignment",
+      "causal_role": "pre_treatment_adjustment",
+      "transform": "identity",
+      "excluded_from_adjustment": false
+    },
+    {
+      "name": "re74",
+      "available_at": "calendar_year_1974_before_NSW_assignment",
+      "causal_role": "pre_treatment_adjustment",
+      "transform": "log1p",
+      "excluded_from_adjustment": false
+    },
+    {
+      "name": "re75",
+      "available_at": "calendar_year_1975_before_NSW_assignment",
+      "causal_role": "pre_treatment_adjustment",
+      "transform": "log1p",
+      "excluded_from_adjustment": false
+    }
+  ],
+  "split_manifest_sha256": "d50097fadd29eca6e39dbd9aee8410a65e6f34233e6a057b975ba7f54b70c17f",
+  "split_counts": {
+    "calibration": 114,
+    "holdout": 134,
+    "train": 366
+  },
+  "fold_counts": {
+    "0": 74,
+    "1": 91,
+    "2": 64,
+    "3": 68,
+    "4": 69
+  },
+  "leakage_checks": {
+    "train_calibration_unit_overlap": 0,
+    "train_holdout_unit_overlap": 0,
+    "calibration_holdout_unit_overlap": 0,
+    "train_calibration_epoch_overlap": 0,
+    "train_holdout_epoch_overlap": 0,
+    "calibration_holdout_epoch_overlap": 0,
+    "epoch_disjoint_verified": false,
+    "entity_disjoint_verified": true,
+    "detail": "No epoch column: temporal separation is unavailable, not inferred."
+  },
+  "temporal_governance": "No epoch is available. Stable IDs provide entity-disjoint splits only; temporal leakage cannot be assessed.",
+  "issues": [
+    {
+      "severity": "warning",
+      "code": "duplicate_measurements",
+      "row": null,
+      "detail": "Repeated measurement vectors excluding ID are counted but not automatically errors."
+    }
+  ],
+  "scientific_scope": "Data contract, provenance and split checks only. No causal identification assumption is verified."
+}

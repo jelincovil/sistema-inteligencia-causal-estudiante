@@ -63,8 +63,13 @@ def predict_rows(
     else:
         X = np.asarray([[float(r[n]) for n in names] for r in rows], dtype=float)
     if bundle is not None:
-        row_dict = {name: float(X[0, i]) for i, name in enumerate(names)} if len(X) == 1 else None
-        reasons = bundle.outside_support(row_dict) if row_dict is not None else []
+        reasons = []
+        for row_number, row in enumerate(X):
+            row_dict = {name: float(row[i]) for i, name in enumerate(names)}
+            row_reasons = bundle.outside_support(row_dict)
+            if len(X) > 1:
+                row_reasons = [f"fila {row_number}: {reason}" for reason in row_reasons]
+            reasons.extend(row_reasons)
         if reasons:
             return {
                 "estimando": "valor_de_politica",

@@ -1,0 +1,18 @@
+{
+  "schema_version": "2.0",
+  "dataset_id": "rdatasets-matchit-lalonde-pinned-v1",
+  "source_sha256": "a49703ca0233ba0a27fa9cda959a38a07f6825def0f7743cf2380ce4e57dd3ef",
+  "contract_sha256": "f66da858ea890ec4b89eb0fd2e4e4a167dd4a7815e450cd64acdcea8c23e5f86",
+  "audit_sha256": "6756aa706657f74b16abeae26b54df28281555bfac2de13470e3e4d1da19520c",
+  "split_manifest_sha256": "d50097fadd29eca6e39dbd9aee8410a65e6f34233e6a057b975ba7f54b70c17f",
+  "events": [
+    {
+      "event_id": "H001-final-only",
+      "purpose": "Final predeclared external-nuisance AIPW evaluation; no subsequent model changes.",
+      "accessed_at_unix_seconds": 1795317536,
+      "report_sha256": "9193ea4574ab202e0b771cc0b5db7f4f74c6ddd6f24c676dd0850dfb7beba70b",
+      "split_manifest_sha256": "d50097fadd29eca6e39dbd9aee8410a65e6f34233e6a057b975ba7f54b70c17f",
+      "model_changes_permitted": false
+    }
+  ]
+}

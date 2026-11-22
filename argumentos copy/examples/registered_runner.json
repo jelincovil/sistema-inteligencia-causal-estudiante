@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.1",
+  "profile": "scientific_audit",
+  "corpus": {
+    "id": "external-lab",
+    "kind": "dataset"
+  },
+  "claims": [
+    {
+      "id": "C.run",
+      "book_key": null,
+      "source": {
+        "system": "dataset",
+        "key": "batch-7"
+      },
+      "kind": "empirical",
+      "statement": "A registered runner is named and not used as an argument. Naming it does not reproduce the run.",
+      "expression": {
+        "op": "atom",
+        "id": "run_named"
+      },
+      "scope": {
+        "experiment": "batch-7"
+      },
+      "assumptions": []
+    }
+  ],
+  "arguments": [],
+  "evidence_specs": [
+    {
+      "id": "E.run",
+      "kind": "registered",
+      "claim_id": "C.run",
+      "runner_id": "lab.batch",
+      "target": "batch-7",
+      "scope": {
+        "experiment": "batch-7"
+      },
+      "availability": "candidate"
+    }
+  ]
+}

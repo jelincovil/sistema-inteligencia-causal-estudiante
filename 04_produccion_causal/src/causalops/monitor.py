@@ -19,6 +19,7 @@ Acciones, en orden de precedencia:
 from __future__ import annotations
 
 import math
+from collections.abc import Mapping
 from dataclasses import dataclass
 
 import numpy as np
@@ -61,9 +62,60 @@ def metricas_ventana(ref: pd.DataFrame, ventana: pd.DataFrame, ate_ref: float, s
     }
 
 
+REQUIRED_MONITOR_METRICS = (
+    "frac_ps_extremo",
+    "ess_rel_min",
+    "smd_pond_max",
+    "nc_z",
+    "psi_max",
+    "z_efecto",
+)
+UNIT_INTERVAL_METRICS = frozenset({"frac_ps_extremo", "ess_rel_min"})
+NONNEGATIVE_METRICS = frozenset({"smd_pond_max", "psi_max"})
+
+
+def _validar_metricas(m: dict) -> tuple[dict[str, float], list[str]]:
+    if not isinstance(m, Mapping):
+        return {}, ["las métricas no forman un objeto"]
+    valores = {}
+    invalidas = []
+    for name in REQUIRED_MONITOR_METRICS:
+        if name not in m:
+            invalidas.append(f"{name} (ausente)")
+            continue
+        raw = m[name]
+        if isinstance(raw, (str, bytes, bool)) or raw is None:
+            invalidas.append(f"{name} (tipo no numérico)")
+            continue
+        try:
+            value = float(raw)
+        except (TypeError, ValueError, OverflowError):
+            invalidas.append(f"{name} (mal formada)")
+            continue
+        if not math.isfinite(value):
+            invalidas.append(f"{name} (no finita)")
+            continue
+        if name in UNIT_INTERVAL_METRICS and not 0.0 <= value <= 1.0:
+            invalidas.append(f"{name} (fuera del dominio físico [0, 1])")
+            continue
+        if name in NONNEGATIVE_METRICS and value < 0.0:
+            invalidas.append(f"{name} (fuera del dominio físico [0, inf))")
+            continue
+        valores[name] = value
+    return valores, invalidas
+
+
 def decidir(m: dict, u: UmbralesMonitor = UmbralesMonitor()) -> dict:
-    """Aplica la regla de decisión a las métricas de una ventana."""
-    puerta = evaluar({k: m[k] for k in ("frac_ps_extremo", "ess_rel_min", "smd_pond_max") if k in m})
+    """Aplica la regla solo con evidencia completa, finita y físicamente válida."""
+    m, invalidas = _validar_metricas(m)
+    if invalidas:
+        return {
+            "accion": "abstenerse",
+            "motivo": "evidencia de monitoreo ausente o inválida: " + ", ".join(invalidas),
+        }
+    diagnosticos_puerta = {k: m[k] for k in ("frac_ps_extremo", "ess_rel_min", "smd_pond_max")}
+    diagnosticos_puerta["nc_abs_z"] = abs(m["nc_z"])
+    puerta = evaluar(diagnosticos_puerta)
     drift_grande = m["psi_max"] >= u.psi_grande
     efecto_roto = abs(m["z_efecto"]) >= u.z_efecto
     nc_rechaza = abs(m["nc_z"]) >= u.z_control_negativo

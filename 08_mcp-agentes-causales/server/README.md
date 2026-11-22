@@ -1,6 +1,10 @@
-# MCP Causal Server — Especificación mínima
+# MCP Causal Server — material legado 0.1.0
 
-**Stack:** FastMCP (Python) stdio. Sin Docker obligatorio para iteración 1.
+> **No es el entrypoint soportado.** El paquete actual es `mcp-causal` 2.0.0 en la raíz del proyecto (`src/mcp_causal/`). Instálalo desde la raíz con `pip install -e '.[test]'` y arráncalo con `mcp-causal serve --workspace .mcp_causal_workspace`. Consulta `../README.md` para la API vigente.
+>
+> Este directorio conserva la implementación histórica para sus pruebas. Su distribución aislada se renombró `mcp-causal-legacy` y su comando `mcp-causal-legacy`, de modo que no sustituye al paquete actual. Las firmas y el roadmap siguientes describen únicamente ese legado.
+
+**Stack histórico:** FastMCP (Python) stdio. Sin Docker obligatorio para iteración 1.
 
 ## Estructura
 
@@ -44,27 +48,27 @@ def abstenerse_soporte(perfil: dict, soporte: dict) -> dict: ...
 
 Cada tool devuelve `{estado, motivo, accion, evidencia}` mapeado a 5 acciones.
 
-## Config cliente (Claude/Cursor/VS Code)
+## Config histórica del legado (no usar para el servidor actual)
 
 
 ```json
 {
   "mcpServers": {
     "causal": {
-      "command": "python",
-      "args": ["-m", "mcp_causal.server"],
+      "command": "mcp-causal-legacy",
+      "args": [],
       "cwd": "08_mcp-agentes-causales/server"
     }
   }
 }
 ```
 
-## Instalación dev
+## Instalación explícita del legado (no soportada como distribución actual)
 
 ```bash
 cd 08_mcp-agentes-causales/server
 pip install -e .
-python -m mcp_causal.server  # stdio, espera handshake
+mcp-causal-legacy  # stdio del servidor histórico, espera handshake
 pytest tests/test_gates.py -v
 ```
 

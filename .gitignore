@@ -10,6 +10,9 @@ __pycache__/
 04_produccion_causal/**/artifacts/*
 04_produccion_causal/**/reports/*
 04_produccion_causal/artefactos/*
+07_docencia/**/_scratch*/
+07_docencia/**/.venv*/
+07_docencia/**/target/
 !**/.gitkeep
 
 # macOS

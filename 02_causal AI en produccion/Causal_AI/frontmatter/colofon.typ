@@ -12,7 +12,7 @@
     #block(width: 80%, inset: 20pt, stroke: 0.5pt + gray.lighten(40%), radius: 3pt)[
       #align(center)[
         #text(font: sans-font, size: 14pt, weight: "bold", fill: navy)[
-          Sistema de Inteligencia Causal
+          Contenido teórico y técnico para implementar causal AI
         ]
         #v(0.3em)
         #text(font: sans-font, size: 11pt, fill: gray)[

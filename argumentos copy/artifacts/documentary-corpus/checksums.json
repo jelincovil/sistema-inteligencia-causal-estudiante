@@ -1,0 +1,16 @@
+{
+  "algorithm": "sha256",
+  "files": {
+    "REPORT.md": "f14f6ed0b8a6d3df3f9cc62b010845e3a2516c9788af4420da31f32f0fe1b82c",
+    "argument_candidates.jsonl": "540a64d4b72253fe0b189627d14c59bd9fb0906878fc62437a1d0bf2d39e1c96",
+    "coverage.json": "c1336704eb8c482363b269a890a1026ad9028895893adde51ed671fdebe450ff",
+    "exclusions.jsonl": "b890bd5d6ae38d3fed4ca648490a38739bdec84fb15220f42f0cb6b955d2f804",
+    "manifest.json": "78f92be4af1503737cf64f5ac7566064b7b95b2c04e412522f5af31d36375036",
+    "relations.jsonl": "209d7c669c7c5bd3b3cb41e0f4ed2fc627ab1f152d9fa0564547c314002500cd",
+    "source_inventory.jsonl": "1545ee520bcedecfbd7e9767753ef20eaae6196cf3bea83b76b9a24d4f1dec7a",
+    "source_units.jsonl": "c526b8924d84a1d70fe5435ea5b1471a48006ef29d603dcffea3e859cd447c7d",
+    "sources.jsonl": "69cfef24555ea23a7fe2e108fb6b658d2cdd7fbcd1e0bb75fea1f2a3be3baef7"
+  },
+  "schema_version": "arg-ingest/1",
+  "self_excluded": "checksums.json"
+}

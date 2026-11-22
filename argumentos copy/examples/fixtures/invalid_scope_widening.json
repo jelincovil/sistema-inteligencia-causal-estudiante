@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.1",
+  "profile": "scientific_audit",
+  "corpus": {"id": "invalid-scope-widening", "kind": "case"},
+  "claims": [
+    {
+      "id": "C.H",
+      "book_key": null,
+      "source": {"system": "fixture", "key": "finite-hypothesis"},
+      "kind": "formal",
+      "statement": "H is scoped to a finite domain.",
+      "expression": {"op": "atom", "id": "H"},
+      "scope": {"domain": "finite"},
+      "assumptions": []
+    },
+    {
+      "id": "C.S",
+      "book_key": null,
+      "source": {"system": "fixture", "key": "widened-scenario"},
+      "kind": "conditional",
+      "statement": "The scenario improperly widens H to a countable domain.",
+      "expression": {"op": "atom", "id": "S"},
+      "scope": {"domain": "countable"},
+      "assumptions": ["C.H"]
+    }
+  ],
+  "arguments": [
+    {
+      "id": "A.S",
+      "conclusion": "C.S",
+      "premises": ["C.H"],
+      "rule": "CONDITIONAL_APPLICATION",
+      "evidence_specs": []
+    }
+  ],
+  "evidence_specs": []
+}

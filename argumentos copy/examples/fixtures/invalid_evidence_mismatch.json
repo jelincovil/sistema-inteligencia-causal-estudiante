@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.1",
+  "profile": "scientific_audit",
+  "corpus": {"id": "invalid-evidence-link", "kind": "case"},
+  "claims": [
+    {
+      "id": "C.result",
+      "book_key": null,
+      "source": {"system": "fixture", "key": "result"},
+      "kind": "empirical",
+      "statement": "This result attempts to borrow evidence addressed to another claim.",
+      "expression": {"op": "atom", "id": "R"},
+      "scope": {"experiment": "result"},
+      "assumptions": []
+    },
+    {
+      "id": "C.other",
+      "book_key": null,
+      "source": {"system": "fixture", "key": "other"},
+      "kind": "empirical",
+      "statement": "The computational specification belongs to this other claim.",
+      "expression": {"op": "atom", "id": "O"},
+      "scope": {"experiment": "other"},
+      "assumptions": []
+    }
+  ],
+  "arguments": [
+    {
+      "id": "A.result",
+      "conclusion": "C.result",
+      "premises": [],
+      "rule": "EMPIRICAL_RECORD",
+      "evidence_specs": ["E.other"]
+    }
+  ],
+  "evidence_specs": [
+    {
+      "id": "E.other",
+      "kind": "python",
+      "claim_id": "C.other",
+      "runner_id": "legacy.other_replay",
+      "target": "synthetic:other",
+      "scope": {"experiment": "other"},
+      "availability": "pending"
+    }
+  ]
+}

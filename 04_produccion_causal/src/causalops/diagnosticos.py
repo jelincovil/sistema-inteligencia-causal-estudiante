@@ -6,6 +6,8 @@ hay que recalibrarlos para cada caso.
 
 from __future__ import annotations
 
+import math
+
 import numpy as np
 from scipy import stats
 
@@ -88,19 +90,48 @@ def calibracion_ps_z(e_hat: np.ndarray, t: np.ndarray, bins: int = 10, minimo: i
 
 
 def psi_drift(ref: np.ndarray, nuevo: np.ndarray, bins: int = 10, eps: float = 1e-4) -> float:
-    """Population Stability Index de una covariable (cortes por cuantiles de la referencia).
+    """Population Stability Index de una covariable con cortes derivados de la referencia.
 
-    Convención habitual: < 0.1 estable, 0.1-0.25 cambio moderado, > 0.25 cambio grande.
-    Es una convención de la práctica (origen: scoring de crédito), no un test con p-valor.
+    Referencias no constantes usan cortes únicos por cuantiles. Una referencia
+    constante ``c`` usa ``x < c``, ``x == c`` y ``x > c`` para detectar desplazamientos
+    en ambas direcciones. Con proporciones ``pr`` y ``pn``, recortando celdas vacías
+    a ``eps`` sin renormalizar, PSI = ``sum((pn - pr) * log(pn / pr))``.
+
+    Mantiene ``eps=1e-4`` por compatibilidad; B4 usa la misma convención de bins
+    con ``eps=1e-6``. Las muestras vacías o no finitas y los parámetros inválidos
+    se rechazan. Convención habitual: < 0.1 estable, 0.1-0.25 cambio moderado y
+    > 0.25 cambio grande; es una heurística práctica, no un test con p-valor.
     """
-    ref = np.asarray(ref, dtype=float)
-    nuevo = np.asarray(nuevo, dtype=float)
-    cortes = np.unique(np.quantile(ref, np.linspace(0, 1, bins + 1)[1:-1]))
-    pr = np.bincount(np.searchsorted(cortes, ref, side="right"), minlength=len(cortes) + 1) / len(ref)
-    pn = np.bincount(np.searchsorted(cortes, nuevo, side="right"), minlength=len(cortes) + 1) / len(nuevo)
+    ref = np.asarray(ref, dtype=float).reshape(-1)
+    nuevo = np.asarray(nuevo, dtype=float).reshape(-1)
+    if len(ref) == 0 or len(nuevo) == 0:
+        raise ValueError("PSI requiere muestras de referencia y ventana no vacías")
+    if not np.isfinite(ref).all() or not np.isfinite(nuevo).all():
+        raise ValueError("PSI requiere observaciones finitas")
+    if isinstance(bins, (bool, np.bool_)) or not isinstance(bins, (int, np.integer)) or bins < 1:
+        raise ValueError("PSI requiere un número entero positivo de bins")
+    try:
+        eps = float(eps)
+    except (TypeError, ValueError, OverflowError) as exc:
+        raise ValueError("PSI requiere un epsilon numérico") from exc
+    if not math.isfinite(eps) or not 0.0 < eps < 1.0:
+        raise ValueError("PSI requiere 0 < epsilon < 1")
+
+    if np.all(ref == ref[0]):
+        constante = ref[0]
+        ref_bins = (ref >= constante).astype(int) + (ref > constante).astype(int)
+        nuevo_bins = (nuevo >= constante).astype(int) + (nuevo > constante).astype(int)
+        pr = np.bincount(ref_bins, minlength=3) / len(ref)
+        pn = np.bincount(nuevo_bins, minlength=3) / len(nuevo)
+    else:
+        cortes = np.unique(np.quantile(ref, np.linspace(0, 1, bins + 1)[1:-1]))
+        pr = np.bincount(np.searchsorted(cortes, ref, side="right"), minlength=len(cortes) + 1) / len(ref)
+        pn = np.bincount(np.searchsorted(cortes, nuevo, side="right"), minlength=len(cortes) + 1) / len(nuevo)
     pr = np.clip(pr, eps, None)
     pn = np.clip(pn, eps, None)
-    return float(np.sum((pn - pr) * np.log(pn / pr)))
+    # La diferencia de logaritmos equivale a log(pn / pr) y evita overflow
+    # cuando eps es un float subnormal positivo.
+    return float(np.sum((pn - pr) * (np.log(pn) - np.log(pr))))
 
 
 def ks_drift(ref: np.ndarray, nuevo: np.ndarray) -> tuple[float, float]:

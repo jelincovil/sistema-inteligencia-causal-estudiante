@@ -1,59 +1,87 @@
-# MCP Causal — Servidor de Criterios de Calidad y Contratos de Construcción
+# MCP Causal — Criterios de calidad y contratos de construcción
 
 **Para agentes que construyen sistemas causales y ML productivo.**
 
-Este MCP expone los contratos C-01…C-12 del libro *Ingeniería de Datos Causales* como herramientas verificables. Cualquier agente (Claude, Cursor, VS Code, Codex) conectado **no puede proponer un estimador, una feature o un deploy sin pasar la puerta**.
+Este paquete expone contratos verificables del libro *Ingeniería de Datos Causales* mediante MCP. La regla central es: primero se declara el estimando; después se ejecutan validaciones o estimaciones asociadas al proyecto.
 
-## Filosofía
+## Distribución soportada
 
-> El estimando no se descubre en los datos: se declara antes de mirar.
-> Un contrato no es documentación: es prueba de aceptación ejecutable.
+La distribución canónica es **`mcp-causal` 2.0.0**, definida en el `pyproject.toml` de esta raíz y con código en `src/mcp_causal/`. El entrypoint soportado es:
 
-El MCP implementa 3 capas:
-
-1. **Criterios de calidad (Quality Gates)** — ¿el sistema puede afirmar causalidad?
-2. **Contratos de construcción (Build Contracts)** — ¿cómo se construye sin romper identificación?
-3. **Evals** — escenarios sintéticos con verdad conocida que no perdonan.
-
-## Arquitectura MCP
-
-```
-08_mcp-agentes-causales/
-├── criterios/           # Criterios de calidad Q-01..Q-08
-├── contratos/           # Contratos C-01..C-12 como JSON Schema + prompts
-├── server/              # Servidor MCP (FastMCP/TS)
-├── plan-capitulos/      # Planificación capítulo a capítulo
-└── evals/               # Escenarios con verdad (como tests)
+```bash
+mcp-causal serve --workspace .mcp_causal_workspace
 ```
 
-### Tools expuestas
+`server/` conserva una implementación histórica 0.1.0 y sus pruebas. No es el servidor actual ni debe instalarse como `mcp-causal`; su distribución y comando se llaman `mcp-causal-legacy`.
 
-| Tool | Contrato origen | Qué valida |
-|------|----------------|------------|
-| `declarar_estimando` | Q-01 / C-01 | ATE/ATT/CATE, población, supuestos declarados antes de mirar |
-| `validar_esquema_roles` | C-01 | Cada columna un solo rol (Y, D, X, Z, timestamp) |
-| `auditar_validez_temporal` | C-03 | Ninguna feature mira el futuro |
-| `verificar_version_linaje` | C-09 | Hash, semilla, split inmutable, alias champion |
-| `verificar_particion_pared` | C-10 | Semilla, cobertura, `truth` nunca en `observed` |
-| `verificar_benchmark_producto` | C-11 | DGP versionado, régimen de pared |
-| `entregar_exigencias_estimador` | C-12 | Cross-fitting OOS, ESS, trimming declarado |
-| `evaluar_puerta_causal` | C-06 / Q-06 | Tres señales → pasa/alerta/falla; solo pasa promueve champion |
-| `abstenerse_soporte` | C-04 / Q-07 | Fuera de soporte → abstención sin número |
-| `evaluar_heterogeneidad_policy` | C-12 ext / Q-04 | Qini OOS y valor IPW vs aleatorio |
-| `evaluar_sensibilidad` | C-08 / Q-02 | Placebo, control negativo y Gamma* |
-| `monitorear_produccion` | C-07 / Q-06 | Cuatro señales → orden de preguntas → una acción |
-| `emitir_tarjeta` | C-05 / Q-02+Q-08 | Construye y valida la tarjeta causal |
-| `auditar_equidad` | C-13 / Q-02+Q-04 | Compara efectos por grupo protegido y mide la brecha |
-| `declarar_poblacion_excluida` | C-14 / Q-02+Q-07 | Cuantifica y declara quién queda fuera del soporte |
-| `evaluar_impacto_dano` | C-15 / Q-02+Q-07 | Estima el daño si el efecto es incorrecto |
+## Instalación
 
-**17 tools · 15 contratos · 15 capítulos.**
-| `emitir_tarjeta` | Q-08 / C-05 | Model Card computable, sin `truth` en el bundle |
+Desde `08_mcp-agentes-causales/`:
 
-Ver `server/README.md` para instalación y prueba local.
+```bash
+# Biblioteca y CLI de conocimiento/proyectos, sin dependencias del servidor MCP
+python -m pip install -e .
 
-## Uso por agentes
+# Servidor MCP por stdio
+python -m pip install -e '.[mcp]'
 
-El agente conectado **debe** llamar `declarar_estimando` como primera herramienta. Sin estimando declarado, todas las demás tools devuelven `PRECONDITION_FAILED`.
+# Desarrollo y pruebas: incluye mcp y jsonschema
+python -m pip install -e '.[test]'
+python -m pytest -q
+```
 
-Esto replica la regla del libro: *primero el estimando, luego el dato*.
+El extra `full` reúne las dependencias de ejecución MCP y pruebas. Python 3.10 o posterior es obligatorio.
+
+## Flujo mínimo
+
+1. Crear el proyecto con `crear_proyecto`.
+2. Declarar el estimando con `declarar_estimando`.
+3. Ejecutar las verificaciones y registrar la evidencia necesaria.
+4. Consultar `consultar_elegibilidad` antes de emitir o promover un resultado.
+
+`validar_esquema`, `evaluar_puerta_causal`, `ejecutar_verificacion` y `generar_y_estimar` comprueban la declaración **antes** de invocar validadores o estimadores y antes de guardar resultados. Si falta o está dañada, devuelven `PRECONDITION_FAILED`. Una revisión de declaración vacía o desactualizada tampoco permite promover.
+
+## Tools actuales
+
+| Área | Tools |
+|---|---|
+| Declaración y validación | `declarar_estimando`, `validar_esquema`, `evaluar_puerta_causal`, `ejecutar_verificacion` |
+| Proyectos | `crear_proyecto`, `consultar_proyecto`, `consultar_elegibilidad`, `emitir_tarjeta` |
+| Evidencia | `registrar_artefacto_tool`, `consultar_evidencia`, `verificar_evidencia_tool`, `verificar_vigencia`, `invalidar_por_artefacto` |
+| Revisión | `aceptar_advertencia_tool` |
+| Estimación sintética | `generar_y_estimar` |
+| Conocimiento y soporte | `buscar`, `abstenerse_soporte` |
+
+`ejecutar_verificacion` acepta los tipos `esquema_roles`, `validez_temporal`, `version_linaje`, `particion_pared`, `observabilidad`, `sensibilidad`, `puerta`, `abstencion`, `equidad`, `impacto_dano` y `exigencias_estimador`. Las rutas de datos y artefactos se resuelven y deben permanecer dentro del workspace, incluso cuando hay enlaces simbólicos.
+
+## Configuración MCP
+
+`mcp.json` usa el comando canónico. El workspace puede configurarse con `MCP_CAUSAL_WORKSPACE` o con `--workspace` en `serve`:
+
+```json
+{
+  "mcpServers": {
+    "causal": {
+      "command": "mcp-causal",
+      "args": ["serve", "--workspace", ".mcp_causal_workspace"]
+    }
+  }
+}
+```
+
+El servidor también expone dos resources (`causal://knowledge` y `causal://knowledge/{ficha_id}`) y dos prompts.
+
+## Docker local
+
+La imagen instala el extra `mcp` y arranca el servidor; ya no termina tras imprimir la versión:
+
+```bash
+docker build -t mcp-causal:local -f deploy/Dockerfile .
+docker run --rm -i -v mcp-causal-workspace:/workspace mcp-causal:local
+```
+
+MCP usa **stdio**, sin puerto HTTP ni health check HTTP. La ejecución de la imagen requiere un daemon Docker disponible; una revisión estática del Dockerfile no demuestra que la imagen construya o arranque. Cloud Run no es un destino soportado mientras no exista y se verifique un adaptador HTTP.
+
+## Alcance estadístico
+
+El DGP y AIPW incluidos son referencias reproducibles para ATE. ATT, CATE, IV, DiD y RD disponen de material de conocimiento, pero no de estimadores productivos equivalentes en esta distribución.

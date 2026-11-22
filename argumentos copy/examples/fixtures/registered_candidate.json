@@ -1,0 +1,57 @@
+{
+  "schema_version": "1.1",
+  "profile": "scientific_audit",
+  "corpus": {"id": "local-registered-fixture", "kind": "case"},
+  "claims": [
+    {
+      "id": "C.observed",
+      "book_key": null,
+      "source": {"system": "fixture", "key": "observation"},
+      "kind": "factual",
+      "statement": "A source note records P.",
+      "expression": {"op": "atom", "id": "P"},
+      "scope": {"domain": "notes"},
+      "assumptions": []
+    },
+    {
+      "id": "C.alias",
+      "book_key": null,
+      "source": {"system": "fixture", "key": "alias"},
+      "kind": "factual",
+      "statement": "The same atom P is tracked under an editorial alias.",
+      "expression": {"op": "atom", "id": "P"},
+      "scope": {"domain": "notes"},
+      "assumptions": []
+    },
+    {
+      "id": "C.run",
+      "book_key": null,
+      "source": {"system": "fixture", "key": "candidate-run"},
+      "kind": "empirical",
+      "statement": "A Rust run is registered as a candidate, not as replayed empirical evidence.",
+      "expression": {"op": "atom", "id": "candidate_run"},
+      "scope": {"experiment": "local-rust-candidate"},
+      "assumptions": []
+    }
+  ],
+  "arguments": [
+    {
+      "id": "A.alias",
+      "conclusion": "C.alias",
+      "premises": ["C.observed"],
+      "rule": "ALIAS_EXACT",
+      "evidence_specs": []
+    }
+  ],
+  "evidence_specs": [
+    {
+      "id": "E.run",
+      "kind": "registered",
+      "claim_id": "C.run",
+      "runner_id": "rust.causal_ml.prepare",
+      "target": "fixtures/registered-run.json",
+      "scope": {"experiment": "local-rust-candidate"},
+      "availability": "candidate"
+    }
+  ]
+}

@@ -27,6 +27,23 @@ ESCENARIOS = {
 COLUMNAS_GUARDADAS = ("t", "y", "nc", "holdout")
 
 
+def _intentar_promover(
+    raiz_artefactos: Path,
+    version: str,
+    card: dict,
+    aceptar_alerta: bool = False,
+) -> tuple[bool, str]:
+    """Bloquea en el flujo incluso si otro registro no aplicara la validación estricta."""
+    motivos = puerta.motivos_rechazo_evidencia(card, aceptar_alerta=aceptar_alerta)
+    if motivos:
+        return False, f"{version}: " + "; ".join(motivos)
+    try:
+        registro_local.promover(raiz_artefactos, version, aceptar_alerta=aceptar_alerta)
+    except registro_local.PromocionRechazada as exc:
+        return False, str(exc)
+    return True, ""
+
+
 def ejecutar_escenario(
     nombre: str,
     raiz_artefactos: Path,
@@ -81,12 +98,7 @@ def ejecutar_escenario(
         commit=registro_local.commit_limpio(),
     )
     version = registro_local.registrar_version(raiz_artefactos, r.a_dict(), card, sha)
-    promovida, motivo = False, ""
-    try:
-        registro_local.promover(raiz_artefactos, version, aceptar_alerta=aceptar_alerta)
-        promovida = True
-    except registro_local.PromocionRechazada as exc:
-        motivo = str(exc)
+    promovida, motivo = _intentar_promover(raiz_artefactos, version, card, aceptar_alerta)
 
     return {
         "escenario": nombre,

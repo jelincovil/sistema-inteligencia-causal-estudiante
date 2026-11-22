@@ -7,9 +7,20 @@ from __future__ import annotations
 
 import hashlib
 import json
+import math
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
+
+
+REQUIRED_ARTIFACTS = (
+    "dml_estimator.joblib",
+    "feature_list.json",
+    "training_meta.json",
+    "version.json",
+    "support.json",
+    "model_card.json",
+)
 
 
 @dataclass(frozen=True)
@@ -25,8 +36,14 @@ class RuntimeBundle:
         reasons: list[str] = []
         for row_number, row in enumerate(rows):
             for name, value in zip(feature_names, row):
-                lo, hi = self.support.get(name, (-float("inf"), float("inf")))
-                if value < lo or value > hi:
+                bounds = self.support.get(name)
+                if bounds is None:
+                    reasons.append(f"fila {row_number}: {name}: sin soporte registrado")
+                    continue
+                lo, hi = bounds
+                if not math.isfinite(value):
+                    reasons.append(f"fila {row_number}: {name}={value:g} no es finito; soporte indeterminado")
+                elif value < lo or value > hi:
                     reasons.append(f"fila {row_number}: {name}={value:g} fuera de [{lo:g}, {hi:g}]")
         return reasons
 
@@ -47,7 +64,16 @@ def _read_json(path: Path) -> dict[str, Any]:
 def load_runtime(artifacts_dir: Path) -> RuntimeBundle:
     root = Path(artifacts_dir)
     manifest = _read_json(root / "manifest.json")
-    for filename, expected in manifest.get("files", {}).items():
+    files = manifest.get("files")
+    if not isinstance(files, dict):
+        raise ValueError("El manifiesto debe declarar un objeto 'files' con cobertura hash")
+    missing_coverage = [name for name in REQUIRED_ARTIFACTS if name not in files]
+    if missing_coverage:
+        raise ValueError(
+            "El manifiesto no declara cobertura hash para artefactos requeridos: "
+            + ", ".join(missing_coverage)
+        )
+    for filename, expected in files.items():
         path = root / filename
         if not path.is_file() or _sha256(path) != expected:
             raise ValueError(f"Hash inválido o archivo ausente en el manifiesto: {filename}")
@@ -58,9 +84,20 @@ def load_runtime(artifacts_dir: Path) -> RuntimeBundle:
     }
     version = _read_json(root / "version.json")
     card = _read_json(root / "model_card.json")
-    gate_status = str(version.get("gate_status", card.get("puerta", {}).get("estado", "falla")))
-    if gate_status == "falla":
-        raise ValueError("La versión tiene la puerta causal en falla y no puede ser servida")
+    gate_status = version.get("gate_status")
+    if gate_status != "pasa":
+        received = "ausente" if "gate_status" not in version else repr(gate_status)
+        raise ValueError(
+            "La versión no puede ser servida: la puerta causal debe estar "
+            f"explícitamente en 'pasa'; estado recibido: {received}"
+        )
+    card_gate = card.get("puerta")
+    card_status = card_gate.get("estado") if isinstance(card_gate, dict) else None
+    if card_status != gate_status:
+        raise ValueError(
+            "Estados de puerta incoherentes entre version.json "
+            f"({gate_status!r}) y model_card.json ({card_status!r}); ambos deben ser 'pasa'"
+        )
     return RuntimeBundle(
         version=str(version.get("version", "desconocida")),
         alias=str(version.get("alias", "champion")),

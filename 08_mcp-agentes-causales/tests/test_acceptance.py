@@ -124,15 +124,15 @@ class TestA03Manifest:
         r = validar_version_linaje(None)
         assert r.status == Status.FAIL
 
-    def test_hash_alterado(self):
-        with tempfile.NamedTemporaryFile(mode="w", suffix=".csv", delete=False) as f:
-            f.write("a,b\n1,2\n")
+    def test_hash_alterado(self, tmp_path):
+        datos = tmp_path / "datos.csv"
+        datos.write_text("a,b\n1,2\n")
         r = validar_version_linaje({
-            "version": "v1", "dataset_sha256": "hash_falso_123",
-            "_ruta_datos": f.name,
-        })
+            "version": "v1", "dataset_sha256": "0" * 64,
+            "_ruta_datos": str(datos),
+        }, workspace=tmp_path)
         assert r.status == Status.FAIL
-        assert any("hash" in rc for rc in r.reason_codes)
+        assert "hash_no_coincide" in r.reason_codes
 
 
 # ================================================================ A04
@@ -262,6 +262,26 @@ class TestA10Puerta:
     def test_senales_vacias(self):
         r = evaluar_puerta({}, {"solape_min": 0.5})
         assert r.status == Status.UNKNOWN  # Señales ausentes -> UNKNOWN y bloquea
+
+    @pytest.mark.parametrize("valor", [math.nan, math.inf, "0.5", True, -0.1, 1.1])
+    def test_umbral_solape_invalido_es_unknown_accionable(self, valor):
+        r = evaluar_puerta(
+            {"solape": 0.8, "psi": 0.1, "smd_max": 0.1},
+            {"solape_min": valor, "psi_alerta": 0.25, "smd_max": 0.25},
+        )
+        assert r.status == Status.UNKNOWN
+        assert r.recommended_action == Accion.ABSTENERSE
+        assert "solape_min" in r.mensaje_humano
+
+    @pytest.mark.parametrize("nombre", ["psi_alerta", "smd_max"])
+    def test_umbral_no_negativo_es_unknown_accionable(self, nombre):
+        umbrales = {"solape_min": 0.5, "psi_alerta": 0.25, "smd_max": 0.25}
+        umbrales[nombre] = -0.01
+        r = evaluar_puerta(
+            {"solape": 0.8, "psi": 0.1, "smd_max": 0.1}, umbrales
+        )
+        assert r.status == Status.UNKNOWN
+        assert nombre in r.mensaje_humano
 
     def test_fail_no_promueve(self):
         store = _store_temp()

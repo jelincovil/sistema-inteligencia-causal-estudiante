@@ -1,0 +1,38 @@
+name: Semana 4 — prototipo Puente
+
+on:
+  push:
+    branches: [main, "semana4/**"]
+    paths:
+      - "07_docencia/semana_4_proyecto/**"
+      - ".github/workflows/semana4-proyecto.yml"
+  pull_request:
+    paths:
+      - "07_docencia/semana_4_proyecto/**"
+      - ".github/workflows/semana4-proyecto.yml"
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: 07_docencia/semana_4_proyecto
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: 07_docencia/semana_4_proyecto/requirements.txt
+
+      - name: Dependencias del sistema (DOT / Graphviz)
+        run: sudo apt-get update && sudo apt-get install -y graphviz
+
+      - name: Dependencias Python
+        run: python -m pip install --upgrade pip && pip install -r requirements.txt
+
+      - name: verificar, pruebas y demo (synthetic/ihdp)
+        env:
+          SIC_ESCENARIO: synthetic/ihdp
+        run: make verificar pruebas demo

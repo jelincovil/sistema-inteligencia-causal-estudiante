@@ -1,0 +1,2199 @@
+{
+  "argument_count": 4,
+  "argument_obligations": 7,
+  "claim_count": 52,
+  "claim_kinds": {
+    "conditional": 16,
+    "empirical": 12,
+    "factual": 21,
+    "formal": 3
+  },
+  "claim_pending_axes": 52,
+  "claim_supported": false,
+  "claims": [
+    {
+      "file": "corpus/causal_ml.json",
+      "finding": {
+        "argumentation": "not_run",
+        "editorial": "pending",
+        "empirical": "pending",
+        "formal": "not_applicable",
+        "id": "C.argument.reconstruction_limits",
+        "structure": "pending"
+      },
+      "id": "C.argument.reconstruction_limits",
+      "kind": "factual",
+      "source": {
+        "key": "book/chapters/09-argument-kernel.typ#reconstruction",
+        "system": "local"
+      },
+      "statement": "Canonical hashes, exact expression rules, cycle checks, and registered candidates reconstruct an administrative argument dossier; Lean execution, independent process replay, and scientific approval remain outside this checker."
+    },
+    {
+      "file": "corpus/causal_ml.json",
+      "finding": {
+        "argumentation": "not_run",
+        "editorial": "pending",
+        "empirical": "conditional",
+        "formal": "conditional",
+        "id": "C.assumption.consistency",
+        "structure": "pending"
+      },
+      "id": "C.assumption.consistency",
+      "kind": "conditional",
+      "source": {
+        "key": "book/chapters/02-potential-outcomes.typ#consistency",
+        "system": "local"
+      },
+      "statement": "For each unit and actually received treatment, the observed outcome equals the corresponding potential outcome under a well-defined treatment version; this premise is substantive and unverified here."
+    },
+    {
+      "file": "corpus/causal_ml.json",
+      "finding": {
+        "argumentation": "not_run",
+        "editorial": "pending",
+        "empirical": "conditional",
+        "formal": "conditional",
+        "id": "C.assumption.exchangeability",
+        "structure": "pending"
+      },
+      "id": "C.assumption.exchangeability",
+      "kind": "conditional",
+      "source": {
+        "key": "book/chapters/03-identification.typ#exchangeability",
+        "system": "local"
+      },
+      "statement": "Conditional mean exchangeability holds given the declared baseline covariates; this is an untestable assumption, not a balance-test conclusion."
+    },
+    {
+      "file": "corpus/causal_ml.json",
+      "finding": {
+        "argumentation": "not_run",
+        "editorial": "pending",
+        "empirical": "conditional",
+        "formal": "conditional",
+        "id": "C.assumption.noninterference",
+        "structure": "pending"
+      },
+      "id": "C.assumption.noninterference",
+      "kind": "conditional",
+      "source": {
+        "key": "book/chapters/02-potential-outcomes.typ#interference",
+        "system": "local"
+      },
+      "statement": "A unit's potential outcomes do not depend on other units' treatment assignments under the declared exposure model; this premise is substantive and unverified here."
+    },
+    {
+      "file": "corpus/causal_ml.json",
+      "finding": {
+        "argumentation": "not_run",
+        "editorial": "pending",
+        "empirical": "conditional",
+        "formal": "conditional",
+        "id": "C.assumption.positivity",
+        "structure": "pending"
+      },
+      "id": "C.assumption.positivity",
+      "kind": "conditional",
+      "source": {
+        "key": "book/chapters/04-overlap.typ#positivity",
+        "system": "local"
+      },
+      "statement": "Every covariate pattern in the target support has strictly positive probability of either treatment level; clipping does not repair structural nonpositivity."
+    },
+    {
+      "file": "corpus/causal_ml.json",
+      "finding": {
+        "argumentation": "not_run",
+        "editorial": "pending",
+        "empirical": "conditional",
+        "formal": "conditional",
+        "id": "C.assumptions.conjunction",
+        "structure": "valid"
+      },
+      "id": "C.assumptions.conjunction",
+      "kind": "conditional",
+      "source": {
+        "key": "book/chapters/03-identification.typ#backdoor",
+        "system": "local"
+      },
+      "statement": "The identification conjunction contains consistency, noninterference, conditional mean exchangeability, positivity on target support, and a valid baseline adjustment set; none of the five atoms is certified here."
+    },
+    {
+      "file": "corpus/causal_ml.json",
+      "finding": {
+        "argumentation": "not_run",
+        "editorial": "pending",
+        "empirical": "conditional",
+        "formal": "conditional",
+        "id": "C.backdoor.theorem",
+        "structure": "pending"
+      },
+      "id": "C.backdoor.theorem",
+      "kind": "conditional",
+      "source": {
+        "key": "book/chapters/03-identification.typ#backdoor",
+        "system": "local"
+      },
+      "statement": "If consistency, noninterference, conditional mean exchangeability, positivity on target support, and a valid baseline adjustment set all hold, then the interventional mean is recovered from the observed distribution by covariate standardization. This is the implication only; whether the premises hold is substantive and remains unverified."
+    },
+    {
+      "file": "corpus/causal_ml.json",
+      "finding": {
+        "argumentation": "not_run",
+        "editorial": "pending",
+        "empirical": "conditional",
+        "formal": "conditional",
+        "id": "C.claim.conditional_causal",
+        "structure": "valid"
+      },
+      "id": "C.claim.conditional_causal",
+      "kind": "conditional",
+      "source": {
+        "key": "book/chapters/06-lalonde-case.typ#evidence-boundary",
+        "system": "local"
+      },
+      "statement": "Only if the causal question, identification premises, measurement model, target support, and protocol were substantively established could the adjusted contrast receive the stated split-specific causal interpretation; the holdout sensitivity clips 0.01, 0.05 and 0.10 diverge from one another. This project explicitly leaves that scientific verification unresolved; the dossier is conditional only and establishes no causal effect."
+    },
+    {
+      "file": "corpus/causal_ml.json",
+      "finding": {
+        "argumentation": "not_run",
+        "editorial": "pending",
+        "empirical": "pending",
+        "formal": "not_applicable",
+        "id": "C.data.epoch_unavailable",
+        "structure": "pending"
+      },
+      "id": "C.data.epoch_unavailable",
+      "kind": "factual",
+      "source": {
+        "key": "artifacts/lalonde/audit.json#leakage_checks",
+        "system": "local"
+      },
+      "statement": "No epoch is present, so temporal separation is unavailable rather than verified (epoch_disjoint_verified is false); entity-disjoint splitting is the only implemented role separation for this CSV."
+    },
+    {
+      "file": "corpus/causal_ml.json",
+      "finding": {
+        "argumentation": "not_run",
+        "editorial": "pending",
+        "empirical": "pending",
+        "formal": "not_applicable",
+        "id": "C.data.feature_availability",
+        "structure": "pending"
+      },
+      "id": "C.data.feature_availability",
+      "kind": "factual",
+      "source": {
+        "key": "config/lalonde.contract.json#features",
+        "system": "local"
+      },
+      "statement": "Every declared adjustment feature is available at or before the 1975 pre-NSW baseline and carries the pre_treatment_adjustment role in the contract."
+    },
+    {
+      "file": "corpus/causal_ml.json",
+      "finding": {
+        "argumentation": "not_run",
+        "editorial": "pending",
+        "empirical": "pending",
+        "formal": "not_applicable",
+        "id": "C.data.features.log1p_transform",
+        "structure": "pending"
+      },
+      "id": "C.data.features.log1p_transform",
+      "kind": "factual",
+      "source": {
+        "key": "config/lalonde.contract.json#features",
+        "system": "local"
+      },
+      "statement": "re74 and re75 carry the frozen log1p transform; every other declared adjustment feature uses the identity transform."
+    },
+    {
+      "file": "corpus/causal_ml.json",
+      "finding": {
+        "argumentation": "not_run",
+        "editorial": "pending",
+        "empirical": "pending",
+        "formal": "not_applicable",
+        "id": "C.data.features.outcome_excluded",
+        "structure": "pending"
+      },
+      "id": "C.data.features.outcome_excluded",
+      "kind": "factual",
+      "source": {
+        "key": "config/lalonde.contract.json#outcome",
+        "system": "local"
+      },
+      "statement": "re78 is declared under contract outcome and is not among the adjustment features; adjustment therefore excludes the outcome column."
+    },
+    {
+      "file": "corpus/causal_ml.json",
+      "finding": {
+        "argumentation": "not_run",
+        "editorial": "pending",
+        "empirical": "pending",
+        "formal": "not_applicable",
+        "id": "C.data.license",
+        "structure": "pending"
+      },
+      "id": "C.data.license",
+      "kind": "factual",
+      "source": {
+        "key": "data/real/PROVENANCE.md#License/status: explicitly unresolved for the data values",
+        "system": "local"
+      },
+      "statement": "The data-value license remains unresolved_upstream; package-level licensing is not silently assigned to the data values."
+    },
+    {
+      "file": "corpus/causal_ml.json",
+      "finding": {
+        "argumentation": "not_run",
+        "editorial": "pending",
+        "empirical": "pending",
+        "formal": "not_applicable",
+        "id": "C.data.provenance.pin",
+        "structure": "pending"
+      },
+      "id": "C.data.provenance.pin",
+      "kind": "factual",
+      "source": {
+        "key": "data/real/PROVENANCE.md#Retrieved object",
+        "system": "local"
+      },
+      "statement": "The local data/real/lalonde.csv is 27,509 bytes with SHA-256 a49703ca0233ba0a27fa9cda959a38a07f6825def0f7743cf2380ce4e57dd3ef, matching the recorded expected size and hash."
+    },
+    {
+      "file": "corpus/causal_ml.json",
+      "finding": {
+        "argumentation": "not_run",
+        "editorial": "pending",
+        "empirical": "pending",
+        "formal": "not_applicable",
+        "id": "C.data.provenance.url",
+        "structure": "pending"
+      },
+      "id": "C.data.provenance.url",
+      "kind": "factual",
+      "source": {
+        "key": "data/real/PROVENANCE.md#Retrieved object",
+        "system": "local"
+      },
+      "statement": "The raw object was pinned to the commit-bound Rdatasets MatchIt lalonde.csv URL at commit 1dcc2bf5f955cc1224a3e1307256e1fe86b68dae, retrieved on 2026-11-22, per the recorded provenance."
+    },
+    {
+      "file": "corpus/causal_ml.json",
+      "finding": {
+        "argumentation": "not_run",
+        "editorial": "pending",
+        "empirical": "pending",
+        "formal": "not_applicable",
+        "id": "C.data.schema.columns",
+        "structure": "pending"
+      },
+      "id": "C.data.schema.columns",
+      "kind": "factual",
+      "source": {
+        "key": "artifacts/lalonde/audit.json#columns",
+        "system": "local"
+      },
+      "statement": "All ten declared column records are present, and the total number of missing declared cells is zero."
+    },
+    {
+      "file": "corpus/causal_ml.json",
+      "finding": {
+        "argumentation": "not_run",
+        "editorial": "pending",
+        "empirical": "pending",
+        "formal": "not_applicable",
+        "id": "C.data.schema.duplicate_ids",
+        "structure": "pending"
+      },
+      "id": "C.data.schema.duplicate_ids",
+      "kind": "factual",
+      "source": {
+        "key": "artifacts/lalonde/audit.json#duplicate_unit_or_unit_epoch_ids",
+        "system": "local"
+      },
+      "statement": "The audit records duplicate_unit_or_unit_epoch_ids as empty."
+    },
+    {
+      "file": "corpus/causal_ml.json",
+      "finding": {
+        "argumentation": "not_run",
+        "editorial": "pending",
+        "empirical": "pending",
+        "formal": "not_applicable",
+        "id": "C.data.schema.exact_duplicates",
+        "structure": "pending"
+      },
+      "id": "C.data.schema.exact_duplicates",
+      "kind": "factual",
+      "source": {
+        "key": "artifacts/lalonde/audit.json#exact_duplicate_record_count",
+        "system": "local"
+      },
+      "statement": "The audit records exact_duplicate_record_count 0."
+    },
+    {
+      "file": "corpus/causal_ml.json",
+      "finding": {
+        "argumentation": "not_run",
+        "editorial": "pending",
+        "empirical": "pending",
+        "formal": "not_applicable",
+        "id": "C.data.schema.repeated_measurements",
+        "structure": "pending"
+      },
+      "id": "C.data.schema.repeated_measurements",
+      "kind": "factual",
+      "source": {
+        "key": "artifacts/lalonde/audit.json#duplicate_measurement_rows_excluding_id",
+        "system": "local"
+      },
+      "statement": "The audit counts five repeated measurement vectors excluding the identifier; these remain warnings, not proof of duplicate people."
+    },
+    {
+      "file": "corpus/causal_ml.json",
+      "finding": {
+        "argumentation": "not_run",
+        "editorial": "pending",
+        "empirical": "pending",
+        "formal": "not_applicable",
+        "id": "C.data.schema.rows",
+        "structure": "pending"
+      },
+      "id": "C.data.schema.rows",
+      "kind": "factual",
+      "source": {
+        "key": "artifacts/lalonde/audit.json#observation_count",
+        "system": "local"
+      },
+      "statement": "The audit records observation_count 614."
+    },
+    {
+      "file": "corpus/causal_ml.json",
+      "finding": {
+        "argumentation": "not_run",
+        "editorial": "pending",
+        "empirical": "pending",
+        "formal": "not_applicable",
+        "id": "C.data.split.entity_disjoint",
+        "structure": "pending"
+      },
+      "id": "C.data.split.entity_disjoint",
+      "kind": "factual",
+      "source": {
+        "key": "artifacts/lalonde/audit.json#leakage_checks",
+        "system": "local"
+      },
+      "statement": "The audit's leakage checks report zero train/calibration, train/holdout and calibration/holdout unit overlap, with entity-disjoint verification true."
+    },
+    {
+      "file": "corpus/causal_ml.json",
+      "finding": {
+        "argumentation": "not_run",
+        "editorial": "pending",
+        "empirical": "pending",
+        "formal": "not_applicable",
+        "id": "C.data.split.fractions",
+        "structure": "pending"
+      },
+      "id": "C.data.split.fractions",
+      "kind": "factual",
+      "source": {
+        "key": "config/lalonde.contract.json#split",
+        "system": "local"
+      },
+      "statement": "The declared train, calibration and holdout fractions are 0.6, 0.2 and 0.2 of entity-hashed rows."
+    },
+    {
+      "file": "corpus/causal_ml.json",
+      "finding": {
+        "argumentation": "not_run",
+        "editorial": "pending",
+        "empirical": "pending",
+        "formal": "not_applicable",
+        "id": "C.data.split_governance",
+        "structure": "pending"
+      },
+      "id": "C.data.split_governance",
+      "kind": "factual",
+      "source": {
+        "key": "config/lalonde.contract.json#split",
+        "system": "local"
+      },
+      "statement": "The split strategy is entity_hash keyed by the protocol salt causal-ml-lalonde-protocol-v1-no-outcome-tuning; assignment is deterministic for a given salt."
+    },
+    {
+      "file": "corpus/causal_ml.json",
+      "finding": {
+        "argumentation": "not_run",
+        "editorial": "pending",
+        "empirical": "conditional",
+        "formal": "conditional",
+        "id": "C.deployment.monitoring",
+        "structure": "pending"
+      },
+      "id": "C.deployment.monitoring",
+      "kind": "conditional",
+      "source": {
+        "key": "book/chapters/08-governance.typ#monitoring",
+        "system": "local"
+      },
+      "statement": "Any future deployment needs versioned feature timestamps, role-specific data audits, drift and override monitoring, and rollback criteria; none is implemented as a production service here."
+    },
+    {
+      "file": "corpus/causal_ml.json",
+      "finding": {
+        "argumentation": "not_run",
+        "editorial": "pending",
+        "empirical": "pending",
+        "formal": "not_applicable",
+        "id": "C.empirical.aipw_holdout",
+        "structure": "pending"
+      },
+      "id": "C.empirical.aipw_holdout",
+      "kind": "empirical",
+      "source": {
+        "key": "artifacts/lalonde/causal_report.json#holdout.aipw",
+        "system": "local"
+      },
+      "statement": "At the frozen 0.05 clip, the generated single holdout external-nuisance AIPW summary is 426.3 with influence-function SE 1821.9 and normal 95 percent interval [-3144.6, 3997.3], all in nominal dollars after rounding."
+    },
+    {
+      "file": "corpus/causal_ml.json",
+      "finding": {
+        "argumentation": "not_run",
+        "editorial": "pending",
+        "empirical": "pending",
+        "formal": "not_applicable",
+        "id": "C.empirical.aipw_holdout_clip_001",
+        "structure": "pending"
+      },
+      "id": "C.empirical.aipw_holdout_clip_001",
+      "kind": "empirical",
+      "source": {
+        "key": "artifacts/lalonde/causal_report.json#sensitivity",
+        "system": "local"
+      },
+      "statement": "At predeclared sensitivity clip 0.01, the generated holdout external-nuisance AIPW summary is 1137.4 with normal 95 percent interval [-3173.6, 5448.3], in nominal dollars after rounding; the selection rule forbids choosing a preferred clip by results."
+    },
+    {
+      "file": "corpus/causal_ml.json",
+      "finding": {
+        "argumentation": "not_run",
+        "editorial": "pending",
+        "empirical": "pending",
+        "formal": "not_applicable",
+        "id": "C.empirical.aipw_holdout_clip_010",
+        "structure": "pending"
+      },
+      "id": "C.empirical.aipw_holdout_clip_010",
+      "kind": "empirical",
+      "source": {
+        "key": "artifacts/lalonde/causal_report.json#sensitivity",
+        "system": "local"
+      },
+      "statement": "At predeclared sensitivity clip 0.10, the generated holdout external-nuisance AIPW summary is 75.5 with normal 95 percent interval [-2443.2, 2594.3], in nominal dollars after rounding; the selection rule forbids choosing a preferred clip by results."
+    },
+    {
+      "file": "corpus/causal_ml.json",
+      "finding": {
+        "argumentation": "not_run",
+        "editorial": "pending",
+        "empirical": "pending",
+        "formal": "not_applicable",
+        "id": "C.empirical.aipw_train",
+        "structure": "pending"
+      },
+      "id": "C.empirical.aipw_train",
+      "kind": "empirical",
+      "source": {
+        "key": "artifacts/lalonde/causal_report.json#train_cross_fitted_aipw",
+        "system": "local"
+      },
+      "statement": "At the frozen 0.05 clip, the generated train cross-fitted AIPW summary is -269.3 with influence-function SE 1023.1 and normal 95 percent interval [-2274.4, 1735.9], all in nominal dollars after rounding."
+    },
+    {
+      "file": "corpus/causal_ml.json",
+      "finding": {
+        "argumentation": "not_run",
+        "editorial": "pending",
+        "empirical": "pending",
+        "formal": "not_applicable",
+        "id": "C.empirical.computational_deployed",
+        "structure": "pending"
+      },
+      "id": "C.empirical.computational_deployed",
+      "kind": "empirical",
+      "source": {
+        "key": "artifacts/lalonde/causal_report.json#deployed_nuisance_diagnostics",
+        "system": "local"
+      },
+      "statement": "The deployed propensity fit on the train rows reports converged true and separation_suspected false, in 7 IRLS iterations; numerical convergence does not establish identification or model correctness."
+    },
+    {
+      "file": "corpus/causal_ml.json",
+      "finding": {
+        "argumentation": "not_run",
+        "editorial": "pending",
+        "empirical": "pending",
+        "formal": "not_applicable",
+        "id": "C.empirical.computational_train_folds",
+        "structure": "pending"
+      },
+      "id": "C.empirical.computational_train_folds",
+      "kind": "empirical",
+      "source": {
+        "key": "artifacts/lalonde/causal_report.json#train_fold_diagnostics",
+        "system": "local"
+      },
+      "statement": "All five recorded train-fold propensity fits report converged true and separation_suspected false, in 7 IRLS iterations each; numerical convergence does not establish identification or model correctness."
+    },
+    {
+      "file": "corpus/causal_ml.json",
+      "finding": {
+        "argumentation": "not_run",
+        "editorial": "pending",
+        "empirical": "pending",
+        "formal": "not_applicable",
+        "id": "C.empirical.holdout.access",
+        "structure": "pending"
+      },
+      "id": "C.empirical.holdout.access",
+      "kind": "empirical",
+      "source": {
+        "key": "artifacts/lalonde/causal_report.json#holdout",
+        "system": "local"
+      },
+      "statement": "The report records access_sequence 1 for the single final holdout evaluation."
+    },
+    {
+      "file": "corpus/causal_ml.json",
+      "finding": {
+        "argumentation": "not_run",
+        "editorial": "pending",
+        "empirical": "pending",
+        "formal": "not_applicable",
+        "id": "C.empirical.holdout.event",
+        "structure": "pending"
+      },
+      "id": "C.empirical.holdout.event",
+      "kind": "empirical",
+      "source": {
+        "key": "artifacts/lalonde/holdout_ledger.json#events",
+        "system": "local"
+      },
+      "statement": "The holdout ledger records exactly one final-only event, H001-final-only; the ledger is a local record, not a tamper-proof timestamp authority."
+    },
+    {
+      "file": "corpus/causal_ml.json",
+      "finding": {
+        "argumentation": "not_run",
+        "editorial": "pending",
+        "empirical": "pending",
+        "formal": "not_applicable",
+        "id": "C.empirical.holdout.tuning",
+        "structure": "pending"
+      },
+      "id": "C.empirical.holdout.tuning",
+      "kind": "empirical",
+      "source": {
+        "key": "artifacts/lalonde/causal_report.json#holdout",
+        "system": "local"
+      },
+      "statement": "The report records reused_for_tuning false for the holdout evaluation."
+    },
+    {
+      "file": "corpus/causal_ml.json",
+      "finding": {
+        "argumentation": "not_run",
+        "editorial": "pending",
+        "empirical": "pending",
+        "formal": "not_applicable",
+        "id": "C.empirical.overlap.holdout",
+        "structure": "pending"
+      },
+      "id": "C.empirical.overlap.holdout",
+      "kind": "empirical",
+      "source": {
+        "key": "artifacts/lalonde/causal_report.json#holdout.aipw.overlap",
+        "system": "local"
+      },
+      "statement": "At diagnostic thresholds fixed in the contract, 41 of 134 holdout rows (30.60 percent) have raw estimated propensity outside [0.05, 0.95], indicating material estimated-overlap weakness on holdout."
+    },
+    {
+      "file": "corpus/causal_ml.json",
+      "finding": {
+        "argumentation": "not_run",
+        "editorial": "pending",
+        "empirical": "pending",
+        "formal": "not_applicable",
+        "id": "C.empirical.overlap.train",
+        "structure": "pending"
+      },
+      "id": "C.empirical.overlap.train",
+      "kind": "empirical",
+      "source": {
+        "key": "artifacts/lalonde/causal_report.json#train_cross_fitted_aipw.overlap",
+        "system": "local"
+      },
+      "statement": "At diagnostic thresholds fixed in the contract, 138 of 366 train rows (37.70 percent) have raw estimated propensity outside [0.05, 0.95], indicating material estimated-overlap weakness on train."
+    },
+    {
+      "file": "corpus/causal_ml.json",
+      "finding": {
+        "argumentation": "not_run",
+        "editorial": "pending",
+        "empirical": "pending",
+        "formal": "not_applicable",
+        "id": "C.empirical.unadjusted_all",
+        "structure": "pending"
+      },
+      "id": "C.empirical.unadjusted_all",
+      "kind": "empirical",
+      "source": {
+        "key": "artifacts/lalonde/causal_report.json#descriptive.all_observations",
+        "system": "local"
+      },
+      "statement": "The generated report gives an all-observation unadjusted mean difference of -635.0 nominal dollars (rounded for prose); this is explicitly association_only."
+    },
+    {
+      "file": "corpus/causal_ml.json",
+      "finding": {
+        "argumentation": "not_run",
+        "editorial": "pending",
+        "empirical": "not_applicable",
+        "formal": "pending",
+        "id": "C.estimator.aipw",
+        "structure": "pending"
+      },
+      "id": "C.estimator.aipw",
+      "kind": "formal",
+      "source": {
+        "key": "book/chapters/05-estimation.typ#aipw",
+        "system": "local"
+      },
+      "statement": "The implemented AIPW score adds inverse-propensity residual corrections to the outcome-regression contrast; cross-fitting separates nuisance fitting from score evaluation on train folds."
+    },
+    {
+      "file": "corpus/causal_ml.json",
+      "finding": {
+        "argumentation": "not_run",
+        "editorial": "pending",
+        "empirical": "conditional",
+        "formal": "conditional",
+        "id": "C.identification.adjustment_set",
+        "structure": "pending"
+      },
+      "id": "C.identification.adjustment_set",
+      "kind": "conditional",
+      "source": {
+        "key": "book/chapters/03-identification.typ#backdoor",
+        "system": "local"
+      },
+      "statement": "A declared baseline adjustment set blocks the declared backdoor paths for the declared causal question; selecting the set is a substantive modeling decision, not a balance-check or tuning result."
+    },
+    {
+      "file": "corpus/causal_ml.json",
+      "finding": {
+        "argumentation": "not_run",
+        "editorial": "pending",
+        "empirical": "conditional",
+        "formal": "conditional",
+        "id": "C.identified",
+        "structure": "valid"
+      },
+      "id": "C.identified",
+      "kind": "conditional",
+      "source": {
+        "key": "book/chapters/03-identification.typ#backdoor",
+        "system": "local"
+      },
+      "statement": "Only conditionally on the full five-atom identification conjunction is the ATE identified from the observed distribution; no premise is certified by this syntactic derivation."
+    },
+    {
+      "file": "corpus/causal_ml.json",
+      "finding": {
+        "argumentation": "not_run",
+        "editorial": "pending",
+        "empirical": "conditional",
+        "formal": "conditional",
+        "id": "C.limit.transportability",
+        "structure": "pending"
+      },
+      "id": "C.limit.transportability",
+      "kind": "conditional",
+      "source": {
+        "key": "book/chapters/07-uncertainty.typ#transportability",
+        "system": "local"
+      },
+      "statement": "No target-population sampling design or effect-modifier transport formula is supplied, so the computed sample contrast does not establish effects in other populations or periods."
+    },
+    {
+      "file": "corpus/causal_ml.json",
+      "finding": {
+        "argumentation": "not_run",
+        "editorial": "pending",
+        "empirical": "conditional",
+        "formal": "conditional",
+        "id": "C.limit.uncertainty",
+        "structure": "pending"
+      },
+      "id": "C.limit.uncertainty",
+      "kind": "conditional",
+      "source": {
+        "key": "book/chapters/07-uncertainty.typ#uncertainty",
+        "system": "local"
+      },
+      "statement": "Normal-reference influence-function intervals address one sampling approximation only; clipping sensitivity is a set of alternate weighted estimates, not a sensitivity analysis for hidden bias."
+    },
+    {
+      "file": "corpus/causal_ml.json",
+      "finding": {
+        "argumentation": "not_run",
+        "editorial": "pending",
+        "empirical": "conditional",
+        "formal": "conditional",
+        "id": "C.limit.unmeasured_confounding",
+        "structure": "pending"
+      },
+      "id": "C.limit.unmeasured_confounding",
+      "kind": "conditional",
+      "source": {
+        "key": "book/chapters/07-uncertainty.typ#sensitivity",
+        "system": "local"
+      },
+      "statement": "Neither balance nor AIPW fit rules out unmeasured selection between NSW participants and PSID comparisons; adjusted intervals are not hidden-confounding bounds."
+    },
+    {
+      "file": "corpus/causal_ml.json",
+      "finding": {
+        "argumentation": "not_run",
+        "editorial": "pending",
+        "empirical": "conditional",
+        "formal": "conditional",
+        "id": "C.protocol.complete",
+        "structure": "valid"
+      },
+      "id": "C.protocol.complete",
+      "kind": "conditional",
+      "source": {
+        "key": "config/lalonde.contract.json",
+        "system": "local"
+      },
+      "statement": "The frozen protocol dossier names the declared baseline features and transforms, outcome exclusion, entity-hash split roles and fractions, the cross-fitted IRLS logistic propensity with treatment-level ridge-linear outcome models, the frozen clips, and the single final-only holdout event with access sequence 1 and no tuning reuse. It is a reproducibility dossier of mixed factual and empirical records, not an identification proof; MIXED_DOSSIER obligations apply."
+    },
+    {
+      "file": "corpus/causal_ml.json",
+      "finding": {
+        "argumentation": "not_run",
+        "editorial": "pending",
+        "empirical": "pending",
+        "formal": "not_applicable",
+        "id": "C.protocol.cross_fitting",
+        "structure": "pending"
+      },
+      "id": "C.protocol.cross_fitting",
+      "kind": "factual",
+      "source": {
+        "key": "config/lalonde.contract.json#estimator",
+        "system": "local"
+      },
+      "statement": "The predeclared estimator cross_fitted_aipw_logistic_linear_v1 uses 5 train folds; nuisance fits are separated from evaluation on the held-out folds."
+    },
+    {
+      "file": "corpus/causal_ml.json",
+      "finding": {
+        "argumentation": "not_run",
+        "editorial": "pending",
+        "empirical": "pending",
+        "formal": "not_applicable",
+        "id": "C.protocol.outcome_models",
+        "structure": "pending"
+      },
+      "id": "C.protocol.outcome_models",
+      "kind": "factual",
+      "source": {
+        "key": "artifacts/lalonde/causal_report.json#protocol.outcome_learner",
+        "system": "local"
+      },
+      "statement": "The outcome models are separate treatment-level ridge-linear least squares on standardized contract features; predictions are not truncated to nonnegative earnings."
+    },
+    {
+      "file": "corpus/causal_ml.json",
+      "finding": {
+        "argumentation": "not_run",
+        "editorial": "pending",
+        "empirical": "pending",
+        "formal": "not_applicable",
+        "id": "C.protocol.primary_clip",
+        "structure": "pending"
+      },
+      "id": "C.protocol.primary_clip",
+      "kind": "factual",
+      "source": {
+        "key": "config/lalonde.contract.json#estimator",
+        "system": "local"
+      },
+      "statement": "The primary propensity clip is 0.05."
+    },
+    {
+      "file": "corpus/causal_ml.json",
+      "finding": {
+        "argumentation": "not_run",
+        "editorial": "pending",
+        "empirical": "pending",
+        "formal": "not_applicable",
+        "id": "C.protocol.propensity_fit",
+        "structure": "pending"
+      },
+      "id": "C.protocol.propensity_fit",
+      "kind": "factual",
+      "source": {
+        "key": "config/lalonde.contract.json#estimator",
+        "system": "local"
+      },
+      "statement": "The propensity model is a main-effects logistic IRLS fit with maximum 100 iterations, tolerance 1E-8, and fixed ridge 1E-6."
+    },
+    {
+      "file": "corpus/causal_ml.json",
+      "finding": {
+        "argumentation": "not_run",
+        "editorial": "pending",
+        "empirical": "pending",
+        "formal": "not_applicable",
+        "id": "C.protocol.sensitivity_clips",
+        "structure": "pending"
+      },
+      "id": "C.protocol.sensitivity_clips",
+      "kind": "factual",
+      "source": {
+        "key": "config/lalonde.contract.json#estimator",
+        "system": "local"
+      },
+      "statement": "The predeclared sensitivity propensity clips are 0.01 and 0.1."
+    },
+    {
+      "file": "corpus/causal_ml.json",
+      "finding": {
+        "argumentation": "not_run",
+        "editorial": "pending",
+        "empirical": "not_applicable",
+        "formal": "pending",
+        "id": "C.taxonomy.association",
+        "structure": "pending"
+      },
+      "id": "C.taxonomy.association",
+      "kind": "formal",
+      "source": {
+        "key": "book/chapters/01-claims.typ#taxonomy",
+        "system": "local"
+      },
+      "statement": "An associational contrast is a functional of the observed joint distribution and does not, by itself, identify a potential-outcome contrast."
+    },
+    {
+      "file": "corpus/causal_ml.json",
+      "finding": {
+        "argumentation": "not_run",
+        "editorial": "pending",
+        "empirical": "conditional",
+        "formal": "conditional",
+        "id": "C.taxonomy.counterfactual",
+        "structure": "pending"
+      },
+      "id": "C.taxonomy.counterfactual",
+      "kind": "conditional",
+      "source": {
+        "key": "book/chapters/01-claims.typ#taxonomy",
+        "system": "local"
+      },
+      "statement": "A counterfactual claim requires an intervention definition, an estimand, and identification assumptions beyond predictive fit."
+    },
+    {
+      "file": "corpus/causal_ml.json",
+      "finding": {
+        "argumentation": "not_run",
+        "editorial": "pending",
+        "empirical": "conditional",
+        "formal": "conditional",
+        "id": "C.taxonomy.operational",
+        "structure": "pending"
+      },
+      "id": "C.taxonomy.operational",
+      "kind": "conditional",
+      "source": {
+        "key": "book/chapters/01-claims.typ#taxonomy",
+        "system": "local"
+      },
+      "statement": "Operational claims concern a versioned pipeline, its monitoring, and its rollback rules; even an executable artifact only marks operational readiness, never causal validity."
+    },
+    {
+      "file": "corpus/causal_ml.json",
+      "finding": {
+        "argumentation": "not_run",
+        "editorial": "pending",
+        "empirical": "not_applicable",
+        "formal": "pending",
+        "id": "C.taxonomy.prediction",
+        "structure": "pending"
+      },
+      "id": "C.taxonomy.prediction",
+      "kind": "formal",
+      "source": {
+        "key": "book/chapters/01-claims.typ#taxonomy",
+        "system": "local"
+      },
+      "statement": "Predictive generalization concerns unseen draws from a stated prediction target and does not identify intervention effects."
+    }
+  ],
+  "corpus_closed": false,
+  "cross_file_duplicate_ids": [],
+  "cycle_diagnostics": 0,
+  "diagnostic_codes": {},
+  "evidence": [
+    {
+      "availability": "candidate",
+      "claim_id": "C.data.schema.columns",
+      "file": "corpus/causal_ml.json",
+      "id": "E.data.audit.columns",
+      "kind": "registered",
+      "runner_id": "rust.causal_ml.prepare",
+      "scientific_status": "unverified",
+      "target": "artifacts/lalonde/audit.json#columns"
+    },
+    {
+      "availability": "candidate",
+      "claim_id": "C.data.schema.duplicate_ids",
+      "file": "corpus/causal_ml.json",
+      "id": "E.data.audit.duplicate_ids",
+      "kind": "registered",
+      "runner_id": "rust.causal_ml.prepare",
+      "scientific_status": "unverified",
+      "target": "artifacts/lalonde/audit.json#duplicate_unit_or_unit_epoch_ids"
+    },
+    {
+      "availability": "candidate",
+      "claim_id": "C.data.schema.exact_duplicates",
+      "file": "corpus/causal_ml.json",
+      "id": "E.data.audit.exact_duplicates",
+      "kind": "registered",
+      "runner_id": "rust.causal_ml.prepare",
+      "scientific_status": "unverified",
+      "target": "artifacts/lalonde/audit.json#exact_duplicate_record_count"
+    },
+    {
+      "availability": "candidate",
+      "claim_id": "C.data.schema.repeated_measurements",
+      "file": "corpus/causal_ml.json",
+      "id": "E.data.audit.repeated_measurements",
+      "kind": "registered",
+      "runner_id": "rust.causal_ml.prepare",
+      "scientific_status": "unverified",
+      "target": "artifacts/lalonde/audit.json#duplicate_measurement_rows_excluding_id"
+    },
+    {
+      "availability": "candidate",
+      "claim_id": "C.data.schema.rows",
+      "file": "corpus/causal_ml.json",
+      "id": "E.data.audit.rows",
+      "kind": "registered",
+      "runner_id": "rust.causal_ml.prepare",
+      "scientific_status": "unverified",
+      "target": "artifacts/lalonde/audit.json#observation_count"
+    },
+    {
+      "availability": "candidate",
+      "claim_id": "C.data.epoch_unavailable",
+      "file": "corpus/causal_ml.json",
+      "id": "E.data.epoch",
+      "kind": "registered",
+      "runner_id": "rust.causal_ml.prepare",
+      "scientific_status": "unverified",
+      "target": "artifacts/lalonde/audit.json#leakage_checks"
+    },
+    {
+      "availability": "candidate",
+      "claim_id": "C.data.feature_availability",
+      "file": "corpus/causal_ml.json",
+      "id": "E.data.features.baseline",
+      "kind": "registered",
+      "runner_id": "rust.causal_ml.prepare",
+      "scientific_status": "unverified",
+      "target": "config/lalonde.contract.json#features"
+    },
+    {
+      "availability": "candidate",
+      "claim_id": "C.data.features.log1p_transform",
+      "file": "corpus/causal_ml.json",
+      "id": "E.data.features.log1p",
+      "kind": "registered",
+      "runner_id": "rust.causal_ml.prepare",
+      "scientific_status": "unverified",
+      "target": "config/lalonde.contract.json#features"
+    },
+    {
+      "availability": "candidate",
+      "claim_id": "C.data.features.outcome_excluded",
+      "file": "corpus/causal_ml.json",
+      "id": "E.data.features.outcome_excluded",
+      "kind": "registered",
+      "runner_id": "rust.causal_ml.prepare",
+      "scientific_status": "unverified",
+      "target": "config/lalonde.contract.json#outcome"
+    },
+    {
+      "availability": "candidate",
+      "claim_id": "C.data.provenance.pin",
+      "file": "corpus/causal_ml.json",
+      "id": "E.data.raw",
+      "kind": "registered",
+      "runner_id": "rust.causal_ml.prepare",
+      "scientific_status": "unverified",
+      "target": "data/real/lalonde.csv"
+    },
+    {
+      "availability": "candidate",
+      "claim_id": "C.data.split.entity_disjoint",
+      "file": "corpus/causal_ml.json",
+      "id": "E.data.split.entity_disjoint",
+      "kind": "registered",
+      "runner_id": "rust.causal_ml.prepare",
+      "scientific_status": "unverified",
+      "target": "artifacts/lalonde/audit.json#leakage_checks"
+    },
+    {
+      "availability": "candidate",
+      "claim_id": "C.data.split.fractions",
+      "file": "corpus/causal_ml.json",
+      "id": "E.data.split.fractions",
+      "kind": "registered",
+      "runner_id": "rust.causal_ml.prepare",
+      "scientific_status": "unverified",
+      "target": "config/lalonde.contract.json#split"
+    },
+    {
+      "availability": "candidate",
+      "claim_id": "C.data.split_governance",
+      "file": "corpus/causal_ml.json",
+      "id": "E.data.splits",
+      "kind": "registered",
+      "runner_id": "rust.causal_ml.prepare",
+      "scientific_status": "unverified",
+      "target": "artifacts/lalonde/splits.csv"
+    },
+    {
+      "availability": "candidate",
+      "claim_id": "C.empirical.computational_deployed",
+      "file": "corpus/causal_ml.json",
+      "id": "E.empirical.convergence.deployed",
+      "kind": "registered",
+      "runner_id": "rust.causal_ml.estimate",
+      "scientific_status": "unverified",
+      "target": "artifacts/lalonde/causal_report.json#deployed_nuisance_diagnostics"
+    },
+    {
+      "availability": "candidate",
+      "claim_id": "C.empirical.computational_train_folds",
+      "file": "corpus/causal_ml.json",
+      "id": "E.empirical.convergence.train_folds",
+      "kind": "registered",
+      "runner_id": "rust.causal_ml.estimate",
+      "scientific_status": "unverified",
+      "target": "artifacts/lalonde/causal_report.json#train_fold_diagnostics"
+    },
+    {
+      "availability": "candidate",
+      "claim_id": "C.empirical.aipw_holdout",
+      "file": "corpus/causal_ml.json",
+      "id": "E.empirical.holdout",
+      "kind": "registered",
+      "runner_id": "rust.causal_ml.estimate",
+      "scientific_status": "unverified",
+      "target": "artifacts/lalonde/causal_report.json#holdout.aipw"
+    },
+    {
+      "availability": "candidate",
+      "claim_id": "C.empirical.aipw_holdout_clip_001",
+      "file": "corpus/causal_ml.json",
+      "id": "E.empirical.holdout.clip_001",
+      "kind": "registered",
+      "runner_id": "rust.causal_ml.estimate",
+      "scientific_status": "unverified",
+      "target": "artifacts/lalonde/causal_report.json#sensitivity"
+    },
+    {
+      "availability": "candidate",
+      "claim_id": "C.empirical.aipw_holdout_clip_010",
+      "file": "corpus/causal_ml.json",
+      "id": "E.empirical.holdout.clip_010",
+      "kind": "registered",
+      "runner_id": "rust.causal_ml.estimate",
+      "scientific_status": "unverified",
+      "target": "artifacts/lalonde/causal_report.json#sensitivity"
+    },
+    {
+      "availability": "candidate",
+      "claim_id": "C.empirical.holdout.access",
+      "file": "corpus/causal_ml.json",
+      "id": "E.empirical.ledger.access",
+      "kind": "registered",
+      "runner_id": "rust.causal_ml.estimate",
+      "scientific_status": "unverified",
+      "target": "artifacts/lalonde/causal_report.json#holdout"
+    },
+    {
+      "availability": "candidate",
+      "claim_id": "C.empirical.holdout.event",
+      "file": "corpus/causal_ml.json",
+      "id": "E.empirical.ledger.event",
+      "kind": "registered",
+      "runner_id": "rust.causal_ml.estimate",
+      "scientific_status": "unverified",
+      "target": "artifacts/lalonde/holdout_ledger.json#events"
+    },
+    {
+      "availability": "candidate",
+      "claim_id": "C.empirical.holdout.tuning",
+      "file": "corpus/causal_ml.json",
+      "id": "E.empirical.ledger.tuning",
+      "kind": "registered",
+      "runner_id": "rust.causal_ml.estimate",
+      "scientific_status": "unverified",
+      "target": "artifacts/lalonde/causal_report.json#holdout"
+    },
+    {
+      "availability": "candidate",
+      "claim_id": "C.empirical.overlap.holdout",
+      "file": "corpus/causal_ml.json",
+      "id": "E.empirical.overlap.holdout",
+      "kind": "registered",
+      "runner_id": "rust.causal_ml.estimate",
+      "scientific_status": "unverified",
+      "target": "artifacts/lalonde/causal_report.json#holdout.aipw.overlap"
+    },
+    {
+      "availability": "candidate",
+      "claim_id": "C.empirical.overlap.train",
+      "file": "corpus/causal_ml.json",
+      "id": "E.empirical.overlap.train",
+      "kind": "registered",
+      "runner_id": "rust.causal_ml.estimate",
+      "scientific_status": "unverified",
+      "target": "artifacts/lalonde/causal_report.json#train_cross_fitted_aipw.overlap"
+    },
+    {
+      "availability": "candidate",
+      "claim_id": "C.empirical.aipw_train",
+      "file": "corpus/causal_ml.json",
+      "id": "E.empirical.train",
+      "kind": "registered",
+      "runner_id": "rust.causal_ml.estimate",
+      "scientific_status": "unverified",
+      "target": "artifacts/lalonde/causal_report.json#train_cross_fitted_aipw"
+    },
+    {
+      "availability": "candidate",
+      "claim_id": "C.empirical.unadjusted_all",
+      "file": "corpus/causal_ml.json",
+      "id": "E.empirical.unadjusted",
+      "kind": "registered",
+      "runner_id": "rust.causal_ml.estimate",
+      "scientific_status": "unverified",
+      "target": "artifacts/lalonde/causal_report.json#descriptive.all_observations"
+    },
+    {
+      "availability": "candidate",
+      "claim_id": "C.protocol.cross_fitting",
+      "file": "corpus/causal_ml.json",
+      "id": "E.protocol.cross_fitting",
+      "kind": "registered",
+      "runner_id": "rust.causal_ml.estimate",
+      "scientific_status": "unverified",
+      "target": "config/lalonde.contract.json#estimator"
+    },
+    {
+      "availability": "candidate",
+      "claim_id": "C.protocol.outcome_models",
+      "file": "corpus/causal_ml.json",
+      "id": "E.protocol.outcome_models",
+      "kind": "registered",
+      "runner_id": "rust.causal_ml.estimate",
+      "scientific_status": "unverified",
+      "target": "artifacts/lalonde/causal_report.json#protocol.outcome_learner"
+    },
+    {
+      "availability": "candidate",
+      "claim_id": "C.protocol.primary_clip",
+      "file": "corpus/causal_ml.json",
+      "id": "E.protocol.primary_clip",
+      "kind": "registered",
+      "runner_id": "rust.causal_ml.estimate",
+      "scientific_status": "unverified",
+      "target": "config/lalonde.contract.json#estimator"
+    },
+    {
+      "availability": "candidate",
+      "claim_id": "C.protocol.propensity_fit",
+      "file": "corpus/causal_ml.json",
+      "id": "E.protocol.propensity_fit",
+      "kind": "registered",
+      "runner_id": "rust.causal_ml.estimate",
+      "scientific_status": "unverified",
+      "target": "config/lalonde.contract.json#estimator"
+    },
+    {
+      "availability": "candidate",
+      "claim_id": "C.protocol.sensitivity_clips",
+      "file": "corpus/causal_ml.json",
+      "id": "E.protocol.sensitivity_clips",
+      "kind": "registered",
+      "runner_id": "rust.causal_ml.estimate",
+      "scientific_status": "unverified",
+      "target": "config/lalonde.contract.json#estimator"
+    }
+  ],
+  "evidence_availability": {
+    "candidate": 30
+  },
+  "evidence_count": 30,
+  "evidence_replayed": false,
+  "file_count": 1,
+  "files": [
+    {
+      "argument_obligations": 7,
+      "arguments": 4,
+      "canonical_sha256": "e17bfc7667cfe5a43a39e9222475379c9b96551628aa0489d5157bf75e97bb8e",
+      "claim_pending_axes": 52,
+      "claim_supported": false,
+      "claims": 52,
+      "decision": "structurally_valid",
+      "diagnostics": [],
+      "evidence_specs": 30,
+      "file": "corpus/causal_ml.json",
+      "file_sha256": "880789de76c3beef5176f7e79ad7f602426f8e089240b91110382602877f71b1",
+      "pending_obligations": 59,
+      "profile": "scientific_audit"
+    }
+  ],
+  "limits": "Passing structure does not verify prose anchors, identification, computations, or scientific claims. Candidate and pending evidence remain unverified. Current hashes are not trusted timestamps. Source systems other than `local` are tallied in source_system_counts and listed in unchecked_sources; they are never byte-verified. Symlinked JSON corpus entries are rejected and listed in skipped_entries.",
+  "load_errors": [],
+  "local_sources": [
+    {
+      "anchor": "reconstruction",
+      "anchor_verified": false,
+      "bytes": 12998,
+      "claim_id": "C.argument.reconstruction_limits",
+      "error": null,
+      "exists": true,
+      "locator": "book/chapters/09-argument-kernel.typ#reconstruction",
+      "path": "book/chapters/09-argument-kernel.typ",
+      "sha256": "b19cd043fb039e94cf775f73450f5e868de2ef3cd79769d3969cc2ef16e89737"
+    },
+    {
+      "anchor": "consistency",
+      "anchor_verified": false,
+      "bytes": 8720,
+      "claim_id": "C.assumption.consistency",
+      "error": null,
+      "exists": true,
+      "locator": "book/chapters/02-potential-outcomes.typ#consistency",
+      "path": "book/chapters/02-potential-outcomes.typ",
+      "sha256": "e138ec3ba56fd0888f7b5d1378dee0c040f9f9ac0c5fd7f518c2a21f48c2b7e8"
+    },
+    {
+      "anchor": "exchangeability",
+      "anchor_verified": false,
+      "bytes": 8079,
+      "claim_id": "C.assumption.exchangeability",
+      "error": null,
+      "exists": true,
+      "locator": "book/chapters/03-identification.typ#exchangeability",
+      "path": "book/chapters/03-identification.typ",
+      "sha256": "d918cc4622ac1c9004867605b9a96c475e4185a86e5dfd05b2f1cff701a5e609"
+    },
+    {
+      "anchor": "interference",
+      "anchor_verified": false,
+      "bytes": 8720,
+      "claim_id": "C.assumption.noninterference",
+      "error": null,
+      "exists": true,
+      "locator": "book/chapters/02-potential-outcomes.typ#interference",
+      "path": "book/chapters/02-potential-outcomes.typ",
+      "sha256": "e138ec3ba56fd0888f7b5d1378dee0c040f9f9ac0c5fd7f518c2a21f48c2b7e8"
+    },
+    {
+      "anchor": "positivity",
+      "anchor_verified": false,
+      "bytes": 7996,
+      "claim_id": "C.assumption.positivity",
+      "error": null,
+      "exists": true,
+      "locator": "book/chapters/04-overlap.typ#positivity",
+      "path": "book/chapters/04-overlap.typ",
+      "sha256": "811c51c3c96ba0f98f09404c3c837adade3453889e5e521dfc9a20ed98f090e5"
+    },
+    {
+      "anchor": "backdoor",
+      "anchor_verified": false,
+      "bytes": 8079,
+      "claim_id": "C.assumptions.conjunction",
+      "error": null,
+      "exists": true,
+      "locator": "book/chapters/03-identification.typ#backdoor",
+      "path": "book/chapters/03-identification.typ",
+      "sha256": "d918cc4622ac1c9004867605b9a96c475e4185a86e5dfd05b2f1cff701a5e609"
+    },
+    {
+      "anchor": "backdoor",
+      "anchor_verified": false,
+      "bytes": 8079,
+      "claim_id": "C.backdoor.theorem",
+      "error": null,
+      "exists": true,
+      "locator": "book/chapters/03-identification.typ#backdoor",
+      "path": "book/chapters/03-identification.typ",
+      "sha256": "d918cc4622ac1c9004867605b9a96c475e4185a86e5dfd05b2f1cff701a5e609"
+    },
+    {
+      "anchor": "evidence-boundary",
+      "anchor_verified": false,
+      "bytes": 5190,
+      "claim_id": "C.claim.conditional_causal",
+      "error": null,
+      "exists": true,
+      "locator": "book/chapters/06-lalonde-case.typ#evidence-boundary",
+      "path": "book/chapters/06-lalonde-case.typ",
+      "sha256": "d2d0098ff702517889718fd13f696e768c66f4c7f435d483cd53ccdf880b4c8c"
+    },
+    {
+      "anchor": "leakage_checks",
+      "anchor_verified": false,
+      "bytes": 6903,
+      "claim_id": "C.data.epoch_unavailable",
+      "error": null,
+      "exists": true,
+      "locator": "artifacts/lalonde/audit.json#leakage_checks",
+      "path": "artifacts/lalonde/audit.json",
+      "sha256": "6756aa706657f74b16abeae26b54df28281555bfac2de13470e3e4d1da19520c"
+    },
+    {
+      "anchor": "features",
+      "anchor_verified": false,
+      "bytes": 3784,
+      "claim_id": "C.data.feature_availability",
+      "error": null,
+      "exists": true,
+      "locator": "config/lalonde.contract.json#features",
+      "path": "config/lalonde.contract.json",
+      "sha256": "f66da858ea890ec4b89eb0fd2e4e4a167dd4a7815e450cd64acdcea8c23e5f86"
+    },
+    {
+      "anchor": "features",
+      "anchor_verified": false,
+      "bytes": 3784,
+      "claim_id": "C.data.features.log1p_transform",
+      "error": null,
+      "exists": true,
+      "locator": "config/lalonde.contract.json#features",
+      "path": "config/lalonde.contract.json",
+      "sha256": "f66da858ea890ec4b89eb0fd2e4e4a167dd4a7815e450cd64acdcea8c23e5f86"
+    },
+    {
+      "anchor": "outcome",
+      "anchor_verified": false,
+      "bytes": 3784,
+      "claim_id": "C.data.features.outcome_excluded",
+      "error": null,
+      "exists": true,
+      "locator": "config/lalonde.contract.json#outcome",
+      "path": "config/lalonde.contract.json",
+      "sha256": "f66da858ea890ec4b89eb0fd2e4e4a167dd4a7815e450cd64acdcea8c23e5f86"
+    },
+    {
+      "anchor": "License/status: explicitly unresolved for the data values",
+      "anchor_verified": false,
+      "bytes": 5114,
+      "claim_id": "C.data.license",
+      "error": null,
+      "exists": true,
+      "locator": "data/real/PROVENANCE.md#License/status: explicitly unresolved for the data values",
+      "path": "data/real/PROVENANCE.md",
+      "sha256": "e1eb5c12a605c7eb545fb3a455c598aa50c153df8e732904efd7b52d55d7e7f7"
+    },
+    {
+      "anchor": "Retrieved object",
+      "anchor_verified": false,
+      "bytes": 5114,
+      "claim_id": "C.data.provenance.pin",
+      "error": null,
+      "exists": true,
+      "locator": "data/real/PROVENANCE.md#Retrieved object",
+      "path": "data/real/PROVENANCE.md",
+      "sha256": "e1eb5c12a605c7eb545fb3a455c598aa50c153df8e732904efd7b52d55d7e7f7"
+    },
+    {
+      "anchor": "Retrieved object",
+      "anchor_verified": false,
+      "bytes": 5114,
+      "claim_id": "C.data.provenance.url",
+      "error": null,
+      "exists": true,
+      "locator": "data/real/PROVENANCE.md#Retrieved object",
+      "path": "data/real/PROVENANCE.md",
+      "sha256": "e1eb5c12a605c7eb545fb3a455c598aa50c153df8e732904efd7b52d55d7e7f7"
+    },
+    {
+      "anchor": "columns",
+      "anchor_verified": false,
+      "bytes": 6903,
+      "claim_id": "C.data.schema.columns",
+      "error": null,
+      "exists": true,
+      "locator": "artifacts/lalonde/audit.json#columns",
+      "path": "artifacts/lalonde/audit.json",
+      "sha256": "6756aa706657f74b16abeae26b54df28281555bfac2de13470e3e4d1da19520c"
+    },
+    {
+      "anchor": "duplicate_unit_or_unit_epoch_ids",
+      "anchor_verified": false,
+      "bytes": 6903,
+      "claim_id": "C.data.schema.duplicate_ids",
+      "error": null,
+      "exists": true,
+      "locator": "artifacts/lalonde/audit.json#duplicate_unit_or_unit_epoch_ids",
+      "path": "artifacts/lalonde/audit.json",
+      "sha256": "6756aa706657f74b16abeae26b54df28281555bfac2de13470e3e4d1da19520c"
+    },
+    {
+      "anchor": "exact_duplicate_record_count",
+      "anchor_verified": false,
+      "bytes": 6903,
+      "claim_id": "C.data.schema.exact_duplicates",
+      "error": null,
+      "exists": true,
+      "locator": "artifacts/lalonde/audit.json#exact_duplicate_record_count",
+      "path": "artifacts/lalonde/audit.json",
+      "sha256": "6756aa706657f74b16abeae26b54df28281555bfac2de13470e3e4d1da19520c"
+    },
+    {
+      "anchor": "duplicate_measurement_rows_excluding_id",
+      "anchor_verified": false,
+      "bytes": 6903,
+      "claim_id": "C.data.schema.repeated_measurements",
+      "error": null,
+      "exists": true,
+      "locator": "artifacts/lalonde/audit.json#duplicate_measurement_rows_excluding_id",
+      "path": "artifacts/lalonde/audit.json",
+      "sha256": "6756aa706657f74b16abeae26b54df28281555bfac2de13470e3e4d1da19520c"
+    },
+    {
+      "anchor": "observation_count",
+      "anchor_verified": false,
+      "bytes": 6903,
+      "claim_id": "C.data.schema.rows",
+      "error": null,
+      "exists": true,
+      "locator": "artifacts/lalonde/audit.json#observation_count",
+      "path": "artifacts/lalonde/audit.json",
+      "sha256": "6756aa706657f74b16abeae26b54df28281555bfac2de13470e3e4d1da19520c"
+    },
+    {
+      "anchor": "leakage_checks",
+      "anchor_verified": false,
+      "bytes": 6903,
+      "claim_id": "C.data.split.entity_disjoint",
+      "error": null,
+      "exists": true,
+      "locator": "artifacts/lalonde/audit.json#leakage_checks",
+      "path": "artifacts/lalonde/audit.json",
+      "sha256": "6756aa706657f74b16abeae26b54df28281555bfac2de13470e3e4d1da19520c"
+    },
+    {
+      "anchor": "split",
+      "anchor_verified": false,
+      "bytes": 3784,
+      "claim_id": "C.data.split.fractions",
+      "error": null,
+      "exists": true,
+      "locator": "config/lalonde.contract.json#split",
+      "path": "config/lalonde.contract.json",
+      "sha256": "f66da858ea890ec4b89eb0fd2e4e4a167dd4a7815e450cd64acdcea8c23e5f86"
+    },
+    {
+      "anchor": "split",
+      "anchor_verified": false,
+      "bytes": 3784,
+      "claim_id": "C.data.split_governance",
+      "error": null,
+      "exists": true,
+      "locator": "config/lalonde.contract.json#split",
+      "path": "config/lalonde.contract.json",
+      "sha256": "f66da858ea890ec4b89eb0fd2e4e4a167dd4a7815e450cd64acdcea8c23e5f86"
+    },
+    {
+      "anchor": "monitoring",
+      "anchor_verified": false,
+      "bytes": 10754,
+      "claim_id": "C.deployment.monitoring",
+      "error": null,
+      "exists": true,
+      "locator": "book/chapters/08-governance.typ#monitoring",
+      "path": "book/chapters/08-governance.typ",
+      "sha256": "9b4febbbf9297c4287b34b3764e01a5492600f0f54edd2ce753aa93fca1651be"
+    },
+    {
+      "anchor": "holdout.aipw",
+      "anchor_verified": false,
+      "bytes": 26083,
+      "claim_id": "C.empirical.aipw_holdout",
+      "error": null,
+      "exists": true,
+      "locator": "artifacts/lalonde/causal_report.json#holdout.aipw",
+      "path": "artifacts/lalonde/causal_report.json",
+      "sha256": "9193ea4574ab202e0b771cc0b5db7f4f74c6ddd6f24c676dd0850dfb7beba70b"
+    },
+    {
+      "anchor": "sensitivity",
+      "anchor_verified": false,
+      "bytes": 26083,
+      "claim_id": "C.empirical.aipw_holdout_clip_001",
+      "error": null,
+      "exists": true,
+      "locator": "artifacts/lalonde/causal_report.json#sensitivity",
+      "path": "artifacts/lalonde/causal_report.json",
+      "sha256": "9193ea4574ab202e0b771cc0b5db7f4f74c6ddd6f24c676dd0850dfb7beba70b"
+    },
+    {
+      "anchor": "sensitivity",
+      "anchor_verified": false,
+      "bytes": 26083,
+      "claim_id": "C.empirical.aipw_holdout_clip_010",
+      "error": null,
+      "exists": true,
+      "locator": "artifacts/lalonde/causal_report.json#sensitivity",
+      "path": "artifacts/lalonde/causal_report.json",
+      "sha256": "9193ea4574ab202e0b771cc0b5db7f4f74c6ddd6f24c676dd0850dfb7beba70b"
+    },
+    {
+      "anchor": "train_cross_fitted_aipw",
+      "anchor_verified": false,
+      "bytes": 26083,
+      "claim_id": "C.empirical.aipw_train",
+      "error": null,
+      "exists": true,
+      "locator": "artifacts/lalonde/causal_report.json#train_cross_fitted_aipw",
+      "path": "artifacts/lalonde/causal_report.json",
+      "sha256": "9193ea4574ab202e0b771cc0b5db7f4f74c6ddd6f24c676dd0850dfb7beba70b"
+    },
+    {
+      "anchor": "deployed_nuisance_diagnostics",
+      "anchor_verified": false,
+      "bytes": 26083,
+      "claim_id": "C.empirical.computational_deployed",
+      "error": null,
+      "exists": true,
+      "locator": "artifacts/lalonde/causal_report.json#deployed_nuisance_diagnostics",
+      "path": "artifacts/lalonde/causal_report.json",
+      "sha256": "9193ea4574ab202e0b771cc0b5db7f4f74c6ddd6f24c676dd0850dfb7beba70b"
+    },
+    {
+      "anchor": "train_fold_diagnostics",
+      "anchor_verified": false,
+      "bytes": 26083,
+      "claim_id": "C.empirical.computational_train_folds",
+      "error": null,
+      "exists": true,
+      "locator": "artifacts/lalonde/causal_report.json#train_fold_diagnostics",
+      "path": "artifacts/lalonde/causal_report.json",
+      "sha256": "9193ea4574ab202e0b771cc0b5db7f4f74c6ddd6f24c676dd0850dfb7beba70b"
+    },
+    {
+      "anchor": "holdout",
+      "anchor_verified": false,
+      "bytes": 26083,
+      "claim_id": "C.empirical.holdout.access",
+      "error": null,
+      "exists": true,
+      "locator": "artifacts/lalonde/causal_report.json#holdout",
+      "path": "artifacts/lalonde/causal_report.json",
+      "sha256": "9193ea4574ab202e0b771cc0b5db7f4f74c6ddd6f24c676dd0850dfb7beba70b"
+    },
+    {
+      "anchor": "events",
+      "anchor_verified": false,
+      "bytes": 887,
+      "claim_id": "C.empirical.holdout.event",
+      "error": null,
+      "exists": true,
+      "locator": "artifacts/lalonde/holdout_ledger.json#events",
+      "path": "artifacts/lalonde/holdout_ledger.json",
+      "sha256": "673b2d08c03eb1e5d510b2a292685357c647bbe146ce932b29ed8672c440536d"
+    },
+    {
+      "anchor": "holdout",
+      "anchor_verified": false,
+      "bytes": 26083,
+      "claim_id": "C.empirical.holdout.tuning",
+      "error": null,
+      "exists": true,
+      "locator": "artifacts/lalonde/causal_report.json#holdout",
+      "path": "artifacts/lalonde/causal_report.json",
+      "sha256": "9193ea4574ab202e0b771cc0b5db7f4f74c6ddd6f24c676dd0850dfb7beba70b"
+    },
+    {
+      "anchor": "holdout.aipw.overlap",
+      "anchor_verified": false,
+      "bytes": 26083,
+      "claim_id": "C.empirical.overlap.holdout",
+      "error": null,
+      "exists": true,
+      "locator": "artifacts/lalonde/causal_report.json#holdout.aipw.overlap",
+      "path": "artifacts/lalonde/causal_report.json",
+      "sha256": "9193ea4574ab202e0b771cc0b5db7f4f74c6ddd6f24c676dd0850dfb7beba70b"
+    },
+    {
+      "anchor": "train_cross_fitted_aipw.overlap",
+      "anchor_verified": false,
+      "bytes": 26083,
+      "claim_id": "C.empirical.overlap.train",
+      "error": null,
+      "exists": true,
+      "locator": "artifacts/lalonde/causal_report.json#train_cross_fitted_aipw.overlap",
+      "path": "artifacts/lalonde/causal_report.json",
+      "sha256": "9193ea4574ab202e0b771cc0b5db7f4f74c6ddd6f24c676dd0850dfb7beba70b"
+    },
+    {
+      "anchor": "descriptive.all_observations",
+      "anchor_verified": false,
+      "bytes": 26083,
+      "claim_id": "C.empirical.unadjusted_all",
+      "error": null,
+      "exists": true,
+      "locator": "artifacts/lalonde/causal_report.json#descriptive.all_observations",
+      "path": "artifacts/lalonde/causal_report.json",
+      "sha256": "9193ea4574ab202e0b771cc0b5db7f4f74c6ddd6f24c676dd0850dfb7beba70b"
+    },
+    {
+      "anchor": "aipw",
+      "anchor_verified": false,
+      "bytes": 10320,
+      "claim_id": "C.estimator.aipw",
+      "error": null,
+      "exists": true,
+      "locator": "book/chapters/05-estimation.typ#aipw",
+      "path": "book/chapters/05-estimation.typ",
+      "sha256": "1f8a65b4e9e8278773ac2f2c4c841cc99dd0fff41882e311ef825f9419e28080"
+    },
+    {
+      "anchor": "backdoor",
+      "anchor_verified": false,
+      "bytes": 8079,
+      "claim_id": "C.identification.adjustment_set",
+      "error": null,
+      "exists": true,
+      "locator": "book/chapters/03-identification.typ#backdoor",
+      "path": "book/chapters/03-identification.typ",
+      "sha256": "d918cc4622ac1c9004867605b9a96c475e4185a86e5dfd05b2f1cff701a5e609"
+    },
+    {
+      "anchor": "backdoor",
+      "anchor_verified": false,
+      "bytes": 8079,
+      "claim_id": "C.identified",
+      "error": null,
+      "exists": true,
+      "locator": "book/chapters/03-identification.typ#backdoor",
+      "path": "book/chapters/03-identification.typ",
+      "sha256": "d918cc4622ac1c9004867605b9a96c475e4185a86e5dfd05b2f1cff701a5e609"
+    },
+    {
+      "anchor": "transportability",
+      "anchor_verified": false,
+      "bytes": 8206,
+      "claim_id": "C.limit.transportability",
+      "error": null,
+      "exists": true,
+      "locator": "book/chapters/07-uncertainty.typ#transportability",
+      "path": "book/chapters/07-uncertainty.typ",
+      "sha256": "77d10c12242fa6e92c2aa76802f358ac93368b3d6ee285cbe971bd99d1603aac"
+    },
+    {
+      "anchor": "uncertainty",
+      "anchor_verified": false,
+      "bytes": 8206,
+      "claim_id": "C.limit.uncertainty",
+      "error": null,
+      "exists": true,
+      "locator": "book/chapters/07-uncertainty.typ#uncertainty",
+      "path": "book/chapters/07-uncertainty.typ",
+      "sha256": "77d10c12242fa6e92c2aa76802f358ac93368b3d6ee285cbe971bd99d1603aac"
+    },
+    {
+      "anchor": "sensitivity",
+      "anchor_verified": false,
+      "bytes": 8206,
+      "claim_id": "C.limit.unmeasured_confounding",
+      "error": null,
+      "exists": true,
+      "locator": "book/chapters/07-uncertainty.typ#sensitivity",
+      "path": "book/chapters/07-uncertainty.typ",
+      "sha256": "77d10c12242fa6e92c2aa76802f358ac93368b3d6ee285cbe971bd99d1603aac"
+    },
+    {
+      "anchor": null,
+      "anchor_verified": false,
+      "bytes": 3784,
+      "claim_id": "C.protocol.complete",
+      "error": null,
+      "exists": true,
+      "locator": "config/lalonde.contract.json",
+      "path": "config/lalonde.contract.json",
+      "sha256": "f66da858ea890ec4b89eb0fd2e4e4a167dd4a7815e450cd64acdcea8c23e5f86"
+    },
+    {
+      "anchor": "estimator",
+      "anchor_verified": false,
+      "bytes": 3784,
+      "claim_id": "C.protocol.cross_fitting",
+      "error": null,
+      "exists": true,
+      "locator": "config/lalonde.contract.json#estimator",
+      "path": "config/lalonde.contract.json",
+      "sha256": "f66da858ea890ec4b89eb0fd2e4e4a167dd4a7815e450cd64acdcea8c23e5f86"
+    },
+    {
+      "anchor": "protocol.outcome_learner",
+      "anchor_verified": false,
+      "bytes": 26083,
+      "claim_id": "C.protocol.outcome_models",
+      "error": null,
+      "exists": true,
+      "locator": "artifacts/lalonde/causal_report.json#protocol.outcome_learner",
+      "path": "artifacts/lalonde/causal_report.json",
+      "sha256": "9193ea4574ab202e0b771cc0b5db7f4f74c6ddd6f24c676dd0850dfb7beba70b"
+    },
+    {
+      "anchor": "estimator",
+      "anchor_verified": false,
+      "bytes": 3784,
+      "claim_id": "C.protocol.primary_clip",
+      "error": null,
+      "exists": true,
+      "locator": "config/lalonde.contract.json#estimator",
+      "path": "config/lalonde.contract.json",
+      "sha256": "f66da858ea890ec4b89eb0fd2e4e4a167dd4a7815e450cd64acdcea8c23e5f86"
+    },
+    {
+      "anchor": "estimator",
+      "anchor_verified": false,
+      "bytes": 3784,
+      "claim_id": "C.protocol.propensity_fit",
+      "error": null,
+      "exists": true,
+      "locator": "config/lalonde.contract.json#estimator",
+      "path": "config/lalonde.contract.json",
+      "sha256": "f66da858ea890ec4b89eb0fd2e4e4a167dd4a7815e450cd64acdcea8c23e5f86"
+    },
+    {
+      "anchor": "estimator",
+      "anchor_verified": false,
+      "bytes": 3784,
+      "claim_id": "C.protocol.sensitivity_clips",
+      "error": null,
+      "exists": true,
+      "locator": "config/lalonde.contract.json#estimator",
+      "path": "config/lalonde.contract.json",
+      "sha256": "f66da858ea890ec4b89eb0fd2e4e4a167dd4a7815e450cd64acdcea8c23e5f86"
+    },
+    {
+      "anchor": "taxonomy",
+      "anchor_verified": false,
+      "bytes": 8232,
+      "claim_id": "C.taxonomy.association",
+      "error": null,
+      "exists": true,
+      "locator": "book/chapters/01-claims.typ#taxonomy",
+      "path": "book/chapters/01-claims.typ",
+      "sha256": "61f5e117bbf7bb5e59ff187c24bee6c321f1575add3c79ac171d6469665846f4"
+    },
+    {
+      "anchor": "taxonomy",
+      "anchor_verified": false,
+      "bytes": 8232,
+      "claim_id": "C.taxonomy.counterfactual",
+      "error": null,
+      "exists": true,
+      "locator": "book/chapters/01-claims.typ#taxonomy",
+      "path": "book/chapters/01-claims.typ",
+      "sha256": "61f5e117bbf7bb5e59ff187c24bee6c321f1575add3c79ac171d6469665846f4"
+    },
+    {
+      "anchor": "taxonomy",
+      "anchor_verified": false,
+      "bytes": 8232,
+      "claim_id": "C.taxonomy.operational",
+      "error": null,
+      "exists": true,
+      "locator": "book/chapters/01-claims.typ#taxonomy",
+      "path": "book/chapters/01-claims.typ",
+      "sha256": "61f5e117bbf7bb5e59ff187c24bee6c321f1575add3c79ac171d6469665846f4"
+    },
+    {
+      "anchor": "taxonomy",
+      "anchor_verified": false,
+      "bytes": 8232,
+      "claim_id": "C.taxonomy.prediction",
+      "error": null,
+      "exists": true,
+      "locator": "book/chapters/01-claims.typ#taxonomy",
+      "path": "book/chapters/01-claims.typ",
+      "sha256": "61f5e117bbf7bb5e59ff187c24bee6c321f1575add3c79ac171d6469665846f4"
+    }
+  ],
+  "missing_local_sources": 0,
+  "missing_registered_artifacts": 0,
+  "pending_obligations": 59,
+  "registered_artifacts": [
+    {
+      "anchor": "columns",
+      "binding": "current bytes only; not an execution replay or scientific validation",
+      "bytes": 6903,
+      "error": null,
+      "evidence_id": "E.data.audit.columns",
+      "exists": true,
+      "path": "artifacts/lalonde/audit.json",
+      "sha256": "6756aa706657f74b16abeae26b54df28281555bfac2de13470e3e4d1da19520c",
+      "target": "artifacts/lalonde/audit.json#columns"
+    },
+    {
+      "anchor": "duplicate_unit_or_unit_epoch_ids",
+      "binding": "current bytes only; not an execution replay or scientific validation",
+      "bytes": 6903,
+      "error": null,
+      "evidence_id": "E.data.audit.duplicate_ids",
+      "exists": true,
+      "path": "artifacts/lalonde/audit.json",
+      "sha256": "6756aa706657f74b16abeae26b54df28281555bfac2de13470e3e4d1da19520c",
+      "target": "artifacts/lalonde/audit.json#duplicate_unit_or_unit_epoch_ids"
+    },
+    {
+      "anchor": "exact_duplicate_record_count",
+      "binding": "current bytes only; not an execution replay or scientific validation",
+      "bytes": 6903,
+      "error": null,
+      "evidence_id": "E.data.audit.exact_duplicates",
+      "exists": true,
+      "path": "artifacts/lalonde/audit.json",
+      "sha256": "6756aa706657f74b16abeae26b54df28281555bfac2de13470e3e4d1da19520c",
+      "target": "artifacts/lalonde/audit.json#exact_duplicate_record_count"
+    },
+    {
+      "anchor": "duplicate_measurement_rows_excluding_id",
+      "binding": "current bytes only; not an execution replay or scientific validation",
+      "bytes": 6903,
+      "error": null,
+      "evidence_id": "E.data.audit.repeated_measurements",
+      "exists": true,
+      "path": "artifacts/lalonde/audit.json",
+      "sha256": "6756aa706657f74b16abeae26b54df28281555bfac2de13470e3e4d1da19520c",
+      "target": "artifacts/lalonde/audit.json#duplicate_measurement_rows_excluding_id"
+    },
+    {
+      "anchor": "observation_count",
+      "binding": "current bytes only; not an execution replay or scientific validation",
+      "bytes": 6903,
+      "error": null,
+      "evidence_id": "E.data.audit.rows",
+      "exists": true,
+      "path": "artifacts/lalonde/audit.json",
+      "sha256": "6756aa706657f74b16abeae26b54df28281555bfac2de13470e3e4d1da19520c",
+      "target": "artifacts/lalonde/audit.json#observation_count"
+    },
+    {
+      "anchor": "leakage_checks",
+      "binding": "current bytes only; not an execution replay or scientific validation",
+      "bytes": 6903,
+      "error": null,
+      "evidence_id": "E.data.epoch",
+      "exists": true,
+      "path": "artifacts/lalonde/audit.json",
+      "sha256": "6756aa706657f74b16abeae26b54df28281555bfac2de13470e3e4d1da19520c",
+      "target": "artifacts/lalonde/audit.json#leakage_checks"
+    },
+    {
+      "anchor": "features",
+      "binding": "current bytes only; not an execution replay or scientific validation",
+      "bytes": 3784,
+      "error": null,
+      "evidence_id": "E.data.features.baseline",
+      "exists": true,
+      "path": "config/lalonde.contract.json",
+      "sha256": "f66da858ea890ec4b89eb0fd2e4e4a167dd4a7815e450cd64acdcea8c23e5f86",
+      "target": "config/lalonde.contract.json#features"
+    },
+    {
+      "anchor": "features",
+      "binding": "current bytes only; not an execution replay or scientific validation",
+      "bytes": 3784,
+      "error": null,
+      "evidence_id": "E.data.features.log1p",
+      "exists": true,
+      "path": "config/lalonde.contract.json",
+      "sha256": "f66da858ea890ec4b89eb0fd2e4e4a167dd4a7815e450cd64acdcea8c23e5f86",
+      "target": "config/lalonde.contract.json#features"
+    },
+    {
+      "anchor": "outcome",
+      "binding": "current bytes only; not an execution replay or scientific validation",
+      "bytes": 3784,
+      "error": null,
+      "evidence_id": "E.data.features.outcome_excluded",
+      "exists": true,
+      "path": "config/lalonde.contract.json",
+      "sha256": "f66da858ea890ec4b89eb0fd2e4e4a167dd4a7815e450cd64acdcea8c23e5f86",
+      "target": "config/lalonde.contract.json#outcome"
+    },
+    {
+      "anchor": null,
+      "binding": "current bytes only; not an execution replay or scientific validation",
+      "bytes": 27509,
+      "error": null,
+      "evidence_id": "E.data.raw",
+      "exists": true,
+      "path": "data/real/lalonde.csv",
+      "sha256": "a49703ca0233ba0a27fa9cda959a38a07f6825def0f7743cf2380ce4e57dd3ef",
+      "target": "data/real/lalonde.csv"
+    },
+    {
+      "anchor": "leakage_checks",
+      "binding": "current bytes only; not an execution replay or scientific validation",
+      "bytes": 6903,
+      "error": null,
+      "evidence_id": "E.data.split.entity_disjoint",
+      "exists": true,
+      "path": "artifacts/lalonde/audit.json",
+      "sha256": "6756aa706657f74b16abeae26b54df28281555bfac2de13470e3e4d1da19520c",
+      "target": "artifacts/lalonde/audit.json#leakage_checks"
+    },
+    {
+      "anchor": "split",
+      "binding": "current bytes only; not an execution replay or scientific validation",
+      "bytes": 3784,
+      "error": null,
+      "evidence_id": "E.data.split.fractions",
+      "exists": true,
+      "path": "config/lalonde.contract.json",
+      "sha256": "f66da858ea890ec4b89eb0fd2e4e4a167dd4a7815e450cd64acdcea8c23e5f86",
+      "target": "config/lalonde.contract.json#split"
+    },
+    {
+      "anchor": null,
+      "binding": "current bytes only; not an execution replay or scientific validation",
+      "bytes": 10765,
+      "error": null,
+      "evidence_id": "E.data.splits",
+      "exists": true,
+      "path": "artifacts/lalonde/splits.csv",
+      "sha256": "d50097fadd29eca6e39dbd9aee8410a65e6f34233e6a057b975ba7f54b70c17f",
+      "target": "artifacts/lalonde/splits.csv"
+    },
+    {
+      "anchor": "deployed_nuisance_diagnostics",
+      "binding": "current bytes only; not an execution replay or scientific validation",
+      "bytes": 26083,
+      "error": null,
+      "evidence_id": "E.empirical.convergence.deployed",
+      "exists": true,
+      "path": "artifacts/lalonde/causal_report.json",
+      "sha256": "9193ea4574ab202e0b771cc0b5db7f4f74c6ddd6f24c676dd0850dfb7beba70b",
+      "target": "artifacts/lalonde/causal_report.json#deployed_nuisance_diagnostics"
+    },
+    {
+      "anchor": "train_fold_diagnostics",
+      "binding": "current bytes only; not an execution replay or scientific validation",
+      "bytes": 26083,
+      "error": null,
+      "evidence_id": "E.empirical.convergence.train_folds",
+      "exists": true,
+      "path": "artifacts/lalonde/causal_report.json",
+      "sha256": "9193ea4574ab202e0b771cc0b5db7f4f74c6ddd6f24c676dd0850dfb7beba70b",
+      "target": "artifacts/lalonde/causal_report.json#train_fold_diagnostics"
+    },
+    {
+      "anchor": "holdout.aipw",
+      "binding": "current bytes only; not an execution replay or scientific validation",
+      "bytes": 26083,
+      "error": null,
+      "evidence_id": "E.empirical.holdout",
+      "exists": true,
+      "path": "artifacts/lalonde/causal_report.json",
+      "sha256": "9193ea4574ab202e0b771cc0b5db7f4f74c6ddd6f24c676dd0850dfb7beba70b",
+      "target": "artifacts/lalonde/causal_report.json#holdout.aipw"
+    },
+    {
+      "anchor": "sensitivity",
+      "binding": "current bytes only; not an execution replay or scientific validation",
+      "bytes": 26083,
+      "error": null,
+      "evidence_id": "E.empirical.holdout.clip_001",
+      "exists": true,
+      "path": "artifacts/lalonde/causal_report.json",
+      "sha256": "9193ea4574ab202e0b771cc0b5db7f4f74c6ddd6f24c676dd0850dfb7beba70b",
+      "target": "artifacts/lalonde/causal_report.json#sensitivity"
+    },
+    {
+      "anchor": "sensitivity",
+      "binding": "current bytes only; not an execution replay or scientific validation",
+      "bytes": 26083,
+      "error": null,
+      "evidence_id": "E.empirical.holdout.clip_010",
+      "exists": true,
+      "path": "artifacts/lalonde/causal_report.json",
+      "sha256": "9193ea4574ab202e0b771cc0b5db7f4f74c6ddd6f24c676dd0850dfb7beba70b",
+      "target": "artifacts/lalonde/causal_report.json#sensitivity"
+    },
+    {
+      "anchor": "holdout",
+      "binding": "current bytes only; not an execution replay or scientific validation",
+      "bytes": 26083,
+      "error": null,
+      "evidence_id": "E.empirical.ledger.access",
+      "exists": true,
+      "path": "artifacts/lalonde/causal_report.json",
+      "sha256": "9193ea4574ab202e0b771cc0b5db7f4f74c6ddd6f24c676dd0850dfb7beba70b",
+      "target": "artifacts/lalonde/causal_report.json#holdout"
+    },
+    {
+      "anchor": "events",
+      "binding": "current bytes only; not an execution replay or scientific validation",
+      "bytes": 887,
+      "error": null,
+      "evidence_id": "E.empirical.ledger.event",
+      "exists": true,
+      "path": "artifacts/lalonde/holdout_ledger.json",
+      "sha256": "673b2d08c03eb1e5d510b2a292685357c647bbe146ce932b29ed8672c440536d",
+      "target": "artifacts/lalonde/holdout_ledger.json#events"
+    },
+    {
+      "anchor": "holdout",
+      "binding": "current bytes only; not an execution replay or scientific validation",
+      "bytes": 26083,
+      "error": null,
+      "evidence_id": "E.empirical.ledger.tuning",
+      "exists": true,
+      "path": "artifacts/lalonde/causal_report.json",
+      "sha256": "9193ea4574ab202e0b771cc0b5db7f4f74c6ddd6f24c676dd0850dfb7beba70b",
+      "target": "artifacts/lalonde/causal_report.json#holdout"
+    },
+    {
+      "anchor": "holdout.aipw.overlap",
+      "binding": "current bytes only; not an execution replay or scientific validation",
+      "bytes": 26083,
+      "error": null,
+      "evidence_id": "E.empirical.overlap.holdout",
+      "exists": true,
+      "path": "artifacts/lalonde/causal_report.json",
+      "sha256": "9193ea4574ab202e0b771cc0b5db7f4f74c6ddd6f24c676dd0850dfb7beba70b",
+      "target": "artifacts/lalonde/causal_report.json#holdout.aipw.overlap"
+    },
+    {
+      "anchor": "train_cross_fitted_aipw.overlap",
+      "binding": "current bytes only; not an execution replay or scientific validation",
+      "bytes": 26083,
+      "error": null,
+      "evidence_id": "E.empirical.overlap.train",
+      "exists": true,
+      "path": "artifacts/lalonde/causal_report.json",
+      "sha256": "9193ea4574ab202e0b771cc0b5db7f4f74c6ddd6f24c676dd0850dfb7beba70b",
+      "target": "artifacts/lalonde/causal_report.json#train_cross_fitted_aipw.overlap"
+    },
+    {
+      "anchor": "train_cross_fitted_aipw",
+      "binding": "current bytes only; not an execution replay or scientific validation",
+      "bytes": 26083,
+      "error": null,
+      "evidence_id": "E.empirical.train",
+      "exists": true,
+      "path": "artifacts/lalonde/causal_report.json",
+      "sha256": "9193ea4574ab202e0b771cc0b5db7f4f74c6ddd6f24c676dd0850dfb7beba70b",
+      "target": "artifacts/lalonde/causal_report.json#train_cross_fitted_aipw"
+    },
+    {
+      "anchor": "descriptive.all_observations",
+      "binding": "current bytes only; not an execution replay or scientific validation",
+      "bytes": 26083,
+      "error": null,
+      "evidence_id": "E.empirical.unadjusted",
+      "exists": true,
+      "path": "artifacts/lalonde/causal_report.json",
+      "sha256": "9193ea4574ab202e0b771cc0b5db7f4f74c6ddd6f24c676dd0850dfb7beba70b",
+      "target": "artifacts/lalonde/causal_report.json#descriptive.all_observations"
+    },
+    {
+      "anchor": "estimator",
+      "binding": "current bytes only; not an execution replay or scientific validation",
+      "bytes": 3784,
+      "error": null,
+      "evidence_id": "E.protocol.cross_fitting",
+      "exists": true,
+      "path": "config/lalonde.contract.json",
+      "sha256": "f66da858ea890ec4b89eb0fd2e4e4a167dd4a7815e450cd64acdcea8c23e5f86",
+      "target": "config/lalonde.contract.json#estimator"
+    },
+    {
+      "anchor": "protocol.outcome_learner",
+      "binding": "current bytes only; not an execution replay or scientific validation",
+      "bytes": 26083,
+      "error": null,
+      "evidence_id": "E.protocol.outcome_models",
+      "exists": true,
+      "path": "artifacts/lalonde/causal_report.json",
+      "sha256": "9193ea4574ab202e0b771cc0b5db7f4f74c6ddd6f24c676dd0850dfb7beba70b",
+      "target": "artifacts/lalonde/causal_report.json#protocol.outcome_learner"
+    },
+    {
+      "anchor": "estimator",
+      "binding": "current bytes only; not an execution replay or scientific validation",
+      "bytes": 3784,
+      "error": null,
+      "evidence_id": "E.protocol.primary_clip",
+      "exists": true,
+      "path": "config/lalonde.contract.json",
+      "sha256": "f66da858ea890ec4b89eb0fd2e4e4a167dd4a7815e450cd64acdcea8c23e5f86",
+      "target": "config/lalonde.contract.json#estimator"
+    },
+    {
+      "anchor": "estimator",
+      "binding": "current bytes only; not an execution replay or scientific validation",
+      "bytes": 3784,
+      "error": null,
+      "evidence_id": "E.protocol.propensity_fit",
+      "exists": true,
+      "path": "config/lalonde.contract.json",
+      "sha256": "f66da858ea890ec4b89eb0fd2e4e4a167dd4a7815e450cd64acdcea8c23e5f86",
+      "target": "config/lalonde.contract.json#estimator"
+    },
+    {
+      "anchor": "estimator",
+      "binding": "current bytes only; not an execution replay or scientific validation",
+      "bytes": 3784,
+      "error": null,
+      "evidence_id": "E.protocol.sensitivity_clips",
+      "exists": true,
+      "path": "config/lalonde.contract.json",
+      "sha256": "f66da858ea890ec4b89eb0fd2e4e4a167dd4a7815e450cd64acdcea8c23e5f86",
+      "target": "config/lalonde.contract.json#estimator"
+    }
+  ],
+  "rejected_files": 0,
+  "schema_version": "1.0",
+  "scientific_validity_certified": false,
+  "scope": "structural corpus catalog and current local-byte inventory",
+  "skipped_entries": [],
+  "source_system_counts": {},
+  "status": "pass",
+  "unchecked_sources": []
+}

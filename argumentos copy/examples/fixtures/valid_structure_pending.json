@@ -1,0 +1,51 @@
+{
+  "schema_version": "1.1",
+  "profile": "scientific_audit",
+  "corpus": {"id": "local-propositional-fixture", "kind": "specification"},
+  "claims": [
+    {
+      "id": "C.P",
+      "book_key": null,
+      "source": {"system": "fixture", "key": "P"},
+      "kind": "formal",
+      "statement": "P is an abstract premise in an exact-AST fixture.",
+      "expression": {"op": "atom", "id": "P"},
+      "scope": {"domain": "propositional_fixture"},
+      "assumptions": []
+    },
+    {
+      "id": "C.implies",
+      "book_key": null,
+      "source": {"system": "fixture", "key": "P-implies-Q"},
+      "kind": "formal",
+      "statement": "P implies Q in the same abstract fixture scope.",
+      "expression": {
+        "op": "implies",
+        "antecedent": {"op": "atom", "id": "P"},
+        "consequent": {"op": "atom", "id": "Q"}
+      },
+      "scope": {"domain": "propositional_fixture"},
+      "assumptions": []
+    },
+    {
+      "id": "C.Q",
+      "book_key": null,
+      "source": {"system": "fixture", "key": "Q"},
+      "kind": "formal",
+      "statement": "Q follows only at the level of exact syntax; no formal proof is admitted.",
+      "expression": {"op": "atom", "id": "Q"},
+      "scope": {"domain": "propositional_fixture"},
+      "assumptions": []
+    }
+  ],
+  "arguments": [
+    {
+      "id": "A.Q",
+      "conclusion": "C.Q",
+      "premises": ["C.P", "C.implies"],
+      "rule": "MODUS_PONENS",
+      "evidence_specs": []
+    }
+  ],
+  "evidence_specs": []
+}

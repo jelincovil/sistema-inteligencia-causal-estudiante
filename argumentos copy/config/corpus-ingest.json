@@ -1,0 +1,129 @@
+{
+  "schema_version": "arg-ingest-config/1",
+  "corpus_id": "causal-ai-production-technical-mcp-v1",
+  "extractor_version": "documentary-block-extractor-v1",
+  "collections": [
+    {
+      "id": "02_production_monograph",
+      "root": "02_causal AI en produccion",
+      "language": "es"
+    },
+    {
+      "id": "05_technical_snapshot",
+      "root": "05_contenido_tecnico",
+      "language": "es"
+    },
+    {
+      "id": "08_mcp_operations",
+      "root": "08_mcp-agentes-causales",
+      "language": "es"
+    }
+  ],
+  "required_groups": [
+    {
+      "id": "production-main",
+      "collection": "02_production_monograph",
+      "path_prefix": "Causal_AI/main.typ",
+      "path_suffix": "Causal_AI/main.typ",
+      "expected_files": 1
+    },
+    {
+      "id": "production-data-engineering-main",
+      "collection": "02_production_monograph",
+      "path_prefix": "Causal_AI/main_de.typ",
+      "path_suffix": "Causal_AI/main_de.typ",
+      "expected_files": 1
+    },
+    {
+      "id": "production-method-chapters",
+      "collection": "02_production_monograph",
+      "path_prefix": "Causal_AI/capitulos/",
+      "path_suffix": ".typ",
+      "expected_files": 33
+    },
+    {
+      "id": "production-data-engineering-chapters",
+      "collection": "02_production_monograph",
+      "path_prefix": "Causal_AI/capitulos_de/",
+      "path_suffix": ".typ",
+      "expected_files": 15
+    },
+    {
+      "id": "technical-main",
+      "collection": "05_technical_snapshot",
+      "path_prefix": "Causal_AI/main.typ",
+      "path_suffix": "Causal_AI/main.typ",
+      "expected_files": 1
+    },
+    {
+      "id": "technical-method-chapters",
+      "collection": "05_technical_snapshot",
+      "path_prefix": "Causal_AI/capitulos/",
+      "path_suffix": ".typ",
+      "expected_files": 33
+    },
+    {
+      "id": "mcp-root-readme",
+      "collection": "08_mcp_operations",
+      "path_prefix": "README.md",
+      "path_suffix": "README.md",
+      "expected_files": 1
+    },
+    {
+      "id": "mcp-configuration",
+      "collection": "08_mcp_operations",
+      "path_prefix": "mcp.json",
+      "path_suffix": "mcp.json",
+      "expected_files": 1
+    },
+    {
+      "id": "mcp-knowledge-records",
+      "collection": "08_mcp_operations",
+      "path_prefix": "src/mcp_causal/resources/knowledge/",
+      "path_suffix": ".json",
+      "expected_files": 25
+    },
+    {
+      "id": "mcp-workflows",
+      "collection": "08_mcp_operations",
+      "path_prefix": "src/mcp_causal/resources/workflows/",
+      "path_suffix": ".json",
+      "expected_files": 8
+    },
+    {
+      "id": "mcp-current-contract-json",
+      "collection": "08_mcp_operations",
+      "path_prefix": "contratos/",
+      "path_suffix": ".json",
+      "expected_files": 16
+    },
+    {
+      "id": "mcp-current-contract-documentation",
+      "collection": "08_mcp_operations",
+      "path_prefix": "contratos/",
+      "path_suffix": ".md",
+      "expected_files": 1
+    },
+    {
+      "id": "mcp-local-contract",
+      "collection": "08_mcp_operations",
+      "path_prefix": "contracts/local_v1.json",
+      "path_suffix": "contracts/local_v1.json",
+      "expected_files": 1
+    },
+    {
+      "id": "mcp-evaluation-criteria",
+      "collection": "08_mcp_operations",
+      "path_prefix": "criterios/",
+      "path_suffix": ".md",
+      "expected_files": 1
+    },
+    {
+      "id": "mcp-evaluation-specifications",
+      "collection": "08_mcp_operations",
+      "path_prefix": "evals/",
+      "path_suffix": ".md",
+      "expected_files": 7
+    }
+  ]
+}

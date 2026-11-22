@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.1",
+  "profile": "structural",
+  "corpus": {"id": "invalid-self-approval", "kind": "specification"},
+  "claims": [
+    {
+      "id": "C.approved",
+      "book_key": null,
+      "source": {"system": "fixture", "key": "self-approval"},
+      "kind": "factual",
+      "statement": "Self-authored support is forbidden and must fail at load time.",
+      "expression": {"op": "atom", "id": "A"},
+      "scope": {"domain": "approval_fixture"},
+      "assumptions": [],
+      "claim_supported": true
+    }
+  ],
+  "arguments": [],
+  "evidence_specs": []
+}

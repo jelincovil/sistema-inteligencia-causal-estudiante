@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -103,6 +104,7 @@ def main(args: list[str] | None = None) -> int:
 
     elif parsed.comando == "serve":
         try:
+            os.environ["MCP_CAUSAL_WORKSPACE"] = parsed.workspace
             from .server import main as serve_main
             return serve_main()
         except ImportError as e:

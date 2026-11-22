@@ -29,12 +29,15 @@ import hashlib
 import json
 import os
 import platform
+import shlex
 import subprocess
 import sys
 import tempfile
 import traceback
 from datetime import datetime, timezone
 from pathlib import Path
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 # Colores para output
 GREEN = "\033[92m"
@@ -48,13 +51,14 @@ def get_git_info():
     """Obtiene información de git del proyecto."""
     try:
         commit = subprocess.check_output(
-            ["git", "rev-parse", "HEAD"], text=True, timeout=5
+            ["git", "rev-parse", "HEAD"], text=True, timeout=5, cwd=PROJECT_ROOT
         ).strip()
         branch = subprocess.check_output(
-            ["git", "rev-parse", "--abbrev-ref", "HEAD"], text=True, timeout=5
+            ["git", "rev-parse", "--abbrev-ref", "HEAD"], text=True, timeout=5,
+            cwd=PROJECT_ROOT,
         ).strip()
         status = subprocess.check_output(
-            ["git", "status", "--short"], text=True, timeout=5
+            ["git", "status", "--short"], text=True, timeout=5, cwd=PROJECT_ROOT
         ).strip()
         if status:
             commit += " (dirty)"
@@ -83,19 +87,30 @@ def run_command(cmd: str, timeout: int = 30) -> dict:
 
 def load_contract():
     """Carga el contrato local_v1."""
-    contract_path = Path(__file__).parent.parent / "contracts" / "local_v1.json"
-    with open(contract_path) as f:
+    with open(PROJECT_ROOT / "contracts" / "local_v1.json") as f:
         return json.load(f)
 
 
 def find_workspace():
-    """Encuentra la raíz del workspace."""
-    current = Path.cwd()
-    while current != current.parent:
-        if (current / "08_mcp-agentes-causales" / "contracts" / "local_v1.json").exists():
-            return current
-        current = current.parent
-    return Path.cwd()
+    """Ubica el workspace desde el script, independientemente del cwd."""
+    if PROJECT_ROOT.name != "08_mcp-agentes-causales":
+        raise RuntimeError(
+            "No se pudo ubicar 08_mcp-agentes-causales desde la ruta del script: "
+            f"{PROJECT_ROOT}"
+        )
+    return PROJECT_ROOT.parent
+
+
+def estado_aceptacion(required_ids: set[str], results: list[dict]) -> str:
+    """Solo cobertura exacta y PASS ejecutados permiten READY_LOCAL_V1."""
+    result_ids = {r.get("requirement_id") for r in results}
+    ready = (
+        bool(required_ids)
+        and len(results) == len(required_ids)
+        and result_ids == required_ids
+        and all(r.get("status") == "PASS" for r in results)
+    )
+    return "READY_LOCAL_V1" if ready else "BLOCKED_LOCAL_V1"
 
 
 def test_wheel_installation(workspace: Path) -> dict:
@@ -112,30 +127,47 @@ def test_wheel_installation(workspace: Path) -> dict:
         # Intentar instalar en entorno temporal
         with tempfile.TemporaryDirectory(prefix="v1-test-") as tmpdir:
             venv_path = Path(tmpdir) / "venv"
-            subprocess.run(
-                f"python3 -m venv {venv_path}",
-                shell=True,
+            creation = subprocess.run(
+                [sys.executable, "-m", "venv", str(venv_path)],
                 capture_output=True,
+                text=True,
                 timeout=30,
             )
+            result["evidence"]["venv_returncode"] = creation.returncode
+            if creation.returncode != 0:
+                result["status"] = "FAIL"
+                result["reason"] = f"No se pudo crear el venv: {creation.stderr.strip()}"
+                return result
 
             pip = venv_path / "bin" / "pip"
             python = venv_path / "bin" / "python"
 
-            # Instalar wheel
-            install = run_command(
-                f"{pip} install --quiet {wheels[0]} 2>&1 | tail -1", timeout=60
+            # Instalar wheel; red acotada por pip y por el timeout del proceso.
+            install = subprocess.run(
+                [str(pip), "install", "--quiet", "--disable-pip-version-check",
+                 "--timeout", "10", "--retries", "1", str(wheels[0])],
+                capture_output=True,
+                text=True,
+                timeout=60,
             )
+            result["evidence"]["install_returncode"] = install.returncode
+            result["evidence"]["wheel"] = str(wheels[0])
+            if install.returncode != 0:
+                result["status"] = "FAIL"
+                result["reason"] = f"Instalación del wheel falló: {install.stderr.strip()}"
+                return result
 
             # Verificar importaciones documentadas
             imports_ok = True
+            python_command = shlex.quote(str(python))
             for imp in [
                 "import mcp_causal",
                 "from mcp_causal.models import DeclaracionCausal",
                 "from mcp_causal.knowledge import buscar_conocimiento",
             ]:
+                code = f"{imp}; print('OK')"
                 check = run_command(
-                    f"{python} -c \"{imp}; print('OK')\"", timeout=10
+                    f"{python_command} -c {shlex.quote(code)}", timeout=10
                 )
                 if check["returncode"] != 0 or "OK" not in check["stdout"]:
                     imports_ok = False
@@ -244,12 +276,23 @@ def test_empty_gate_blocked(workspace: Path) -> dict:
             {"solape": 0.8, "psi": math.inf, "smd_max": 0.1},
             {"solape_min": 0.5, "psi_alerta": 0.25, "smd_max": 0.25},
         )
+        # Umbrales inválidos: deben producir UNKNOWN, nunca PASS ni una excepción.
+        r_umbral_nan = evaluar_puerta(
+            {"solape": 0.8, "psi": 0.1, "smd_max": 0.1},
+            {"solape_min": math.nan, "psi_alerta": 0.25, "smd_max": 0.25},
+        )
+        r_umbral_tipo = evaluar_puerta(
+            {"solape": 0.8, "psi": 0.1, "smd_max": 0.1},
+            {"solape_min": "0.5", "psi_alerta": 0.25, "smd_max": 0.25},
+        )
 
         checks = [
             (r_vacio.status.value != "pass", "vacío no es PASS"),
             (r_parcial.status.value != "pass", "parcial no es PASS"),
             (r_nan.status.value != "pass", "NaN no es PASS"),
             (r_inf.status.value != "pass", "Inf no es PASS"),
+            (r_umbral_nan.status.value == "unknown", "umbral NaN produce UNKNOWN"),
+            (r_umbral_tipo.status.value == "unknown", "umbral no numérico produce UNKNOWN"),
         ]
 
         if all(ok for ok, _ in checks):
@@ -259,6 +302,8 @@ def test_empty_gate_blocked(workspace: Path) -> dict:
                 "parcial": r_parcial.status.value,
                 "nan": r_nan.status.value,
                 "inf": r_inf.status.value,
+                "umbral_nan": r_umbral_nan.status.value,
+                "umbral_tipo": r_umbral_tipo.status.value,
             }
         else:
             result["status"] = "FAIL"
@@ -283,6 +328,7 @@ def test_evidence_integrity(workspace: Path) -> dict:
     result = {"requirement_id": "V1-07", "status": "UNKNOWN", "evidence": {}}
     try:
         from mcp_causal.projects import ProjectStore
+        from mcp_causal.validators import validar_version_linaje
 
         with tempfile.TemporaryDirectory(prefix="v1-test-") as tmpdir:
             ws = Path(tmpdir) / "workspace"
@@ -291,26 +337,111 @@ def test_evidence_integrity(workspace: Path) -> dict:
 
             store.crear_proyecto("v1_test_07", "Evidencia")
 
-            # Archivo que no existe
+            # Archivo ausente dentro del workspace autorizado.
             try:
-                store.registrar_artefacto("v1_test_07", "/tmp/no_existe_v1_test.zip")
+                store.registrar_artefacto("v1_test_07", ws / "ausente.zip")
                 result["status"] = "FAIL"
                 result["reason"] = "Archivo inexistente no bloqueó"
                 return result
-            except (FileNotFoundError, ValueError):
+            except FileNotFoundError:
                 pass  # Esperado
 
-            # Ruta fuera del workspace
+            # Archivo existente fuera del workspace, pero dentro del temporal de prueba.
+            outside = Path(tmpdir) / "outside"
+            outside.mkdir()
+            outside_file = outside / "datos.csv"
+            outside_file.write_text("x,d,y\n1,0,2\n")
             try:
-                store.registrar_artefacto("v1_test_07", "/etc/passwd")
+                store.registrar_artefacto("v1_test_07", outside_file)
                 result["status"] = "FAIL"
                 result["reason"] = "Ruta fuera del workspace no bloqueó"
                 return result
-            except (FileNotFoundError, ValueError):
+            except ValueError:
                 pass  # Esperado
 
+            # Modificar un artefacto registrado debe invalidar su hash.
+            contained_file = ws / "datos.csv"
+            contained_file.write_text("x,d,y\n1,0,2\n")
+            registro = store.registrar_artefacto("v1_test_07", contained_file)
+            contained_file.write_text("x,d,y\n1,0,99\n")
+            if store.verificar_evidencia("v1_test_07", registro.artifact_id):
+                result["status"] = "FAIL"
+                result["reason"] = "Hash incorrecto no bloqueó"
+                return result
+
+            lineage_file = ws / "lineage.csv"
+            lineage_bytes = b"x,d,y\n1,0,2\n"
+            lineage_file.write_bytes(lineage_bytes)
+            lineage_digest = hashlib.sha256(lineage_bytes).hexdigest()
+            lineage_cases = [
+                (
+                    "no_path",
+                    {"version": "v1", "dataset_sha256": lineage_digest},
+                    "FAIL",
+                    "falta_ruta_datos",
+                ),
+                (
+                    "malformed_digest",
+                    {"version": "v1", "dataset_sha256": "abc123",
+                     "_ruta_datos": str(lineage_file)},
+                    "FAIL",
+                    "hash_invalido",
+                ),
+                (
+                    "missing_data_file",
+                    {"version": "v1", "dataset_sha256": lineage_digest,
+                     "_ruta_datos": str(ws / "lineage-ausente.csv")},
+                    "FAIL",
+                    "ruta_datos_ausente",
+                ),
+                (
+                    "matching_digest",
+                    {"version": "v1", "dataset_sha256": lineage_digest,
+                     "_ruta_datos": str(lineage_file)},
+                    "PASS",
+                    None,
+                ),
+                (
+                    "mismatched_digest",
+                    {"version": "v1", "dataset_sha256": "0" * 64,
+                     "_ruta_datos": str(lineage_file)},
+                    "FAIL",
+                    "hash_no_coincide",
+                ),
+                (
+                    "outside_workspace",
+                    {"version": "v1", "dataset_sha256": lineage_digest,
+                     "_ruta_datos": str(outside_file)},
+                    "FAIL",
+                    "ruta_fuera_workspace",
+                ),
+            ]
+            lineage_evidence = {}
+            lineage_failures = []
+            for name, manifest, expected_status, expected_reason in lineage_cases:
+                lineage_result = validar_version_linaje(manifest, workspace=ws)
+                lineage_evidence[name] = {
+                    "status": lineage_result.status.value,
+                    "reason_codes": lineage_result.reason_codes,
+                }
+                if lineage_result.status.value != expected_status.lower():
+                    lineage_failures.append(f"{name}: estado inesperado")
+                if (expected_reason is not None
+                        and expected_reason not in lineage_result.reason_codes):
+                    lineage_failures.append(f"{name}: falta {expected_reason}")
+
+            result["evidence"] = {
+                "missing_file_blocked": True,
+                "outside_workspace_blocked": True,
+                "hash_mismatch_blocked": True,
+                "lineage": lineage_evidence,
+            }
+            if lineage_failures:
+                result["status"] = "FAIL"
+                result["reason"] = "; ".join(lineage_failures)
+                return result
+
             result["status"] = "PASS"
-            result["evidence"] = "Evidencia correctamente validada"
 
         return result
     except Exception as e:
@@ -328,11 +459,14 @@ def test_support_abstention(workspace: Path) -> dict:
 
         # Perfil vacío
         r_vacio = validar_abstencion({}, {"age": (18, 54)})
+        # Perfil incompleto
+        r_incompleto = validar_abstencion({"age": 30}, {"age": (18, 54), "educ": (10, 20)})
         # Fuera del soporte
         r_fuera = validar_abstencion({"age": 99, "educ": 15}, {"age": (18, 54), "educ": (10, 20)})
 
         checks = [
             (r_vacio.recommended_action.value == "abstenerse", "vacío → abstenerse"),
+            (r_incompleto.recommended_action.value == "abstenerse", "incompleto → abstenerse"),
             (r_fuera.recommended_action.value == "abstenerse", "fuera → abstenerse"),
         ]
 
@@ -392,10 +526,14 @@ def test_full_journey(workspace: Path) -> dict:
             r = estimar_aipw(X, D, Y, semilla=42)
             result["evidence"]["ate"] = round(r.ate, 3)
 
-            # Por ahora, V1-09 verifica el recorrido básico
-            # El contrato completo requiere verificaciones reales
-            result["status"] = "PASS"
-            result["evidence"]["steps"] = (
+            # Estas operaciones parciales no ejecutan el recorrido MCP completo
+            # hasta elegibilidad exigido por V1-09; no deben producir un PASS.
+            result["status"] = "NOT_IMPLEMENTED"
+            result["reason"] = (
+                "No se ejecutó aquí el recorrido MCP completo con verificaciones, "
+                "tarjeta y elegibilidad exigido por V1-09"
+            )
+            result["evidence"]["partial_steps"] = (
                 "crear_proyecto → declarar_estimando → registrar_evidencia → estimar"
             )
 
@@ -415,7 +553,7 @@ def test_evidence_modification_blocks(workspace: Path) -> dict:
         from mcp_causal.models import DeclaracionCausal, Supuesto, ClaseSupuesto, TipoEstimando, ResultadoVerificacion, Status, ClaimLevel, Accion
         import tempfile
         from pathlib import Path
-        
+
         with tempfile.TemporaryDirectory(prefix="v1-test-") as tmpdir:
             ws = Path(tmpdir) / "workspace"
             ws.mkdir()
@@ -433,15 +571,33 @@ def test_evidence_modification_blocks(workspace: Path) -> dict:
             store.guardar_verificacion("v1_test_10",
                 ResultadoVerificacion(check_id="C-01_test", status=Status.PASS, claim_level=ClaimLevel.COMPUTED, recommended_action=Accion.CONTINUAR),
                 artifact_ids=[reg.artifact_id])
-            # Modificar archivo
+            # Completar primero todos los requisitos para alcanzar elegibilidad.
+            for cid in ["C-01_roles", "C-03_temporal", "C-09_linaje", "C-10_particion", "C-02_observabilidad", "C-12_exigencias", "C-06_puerta"]:
+                store.guardar_verificacion(
+                    "v1_test_10",
+                    ResultadoVerificacion(check_id=cid, status=Status.PASS, claim_level=ClaimLevel.COMPUTED, recommended_action=Accion.CONTINUAR),
+                    artifact_ids=[reg.artifact_id] if cid == "C-01_roles" else None,
+                )
+            estado_antes = store.estado_promocion("v1_test_10")
+            # Modificar archivo: la consulta de elegibilidad debe invalidar sin intervención.
             csv_path.write_text("x,d,y\n1,0,9\n2,1,9\n")
-            # Verificar que la evidencia ya no es valida
-            if not store.verificar_evidencia("v1_test_10", reg.artifact_id):
+            estado_despues = store.estado_promocion("v1_test_10")
+            evidencia_vigente = store.verificar_evidencia("v1_test_10", reg.artifact_id)
+            if (estado_antes.get("estado") == "elegible"
+                    and estado_despues.get("estado") == "bloqueado"
+                    and not evidencia_vigente):
                 result["status"] = "PASS"
-                result["evidence"] = {"evidence_invalidated": True}
+                result["evidence"] = {
+                    "before": estado_antes,
+                    "after": estado_despues,
+                    "evidence_invalidated": not evidencia_vigente,
+                }
             else:
                 result["status"] = "FAIL"
-                result["reason"] = "Evidencia modificada sigue siendo valida"
+                result["reason"] = (
+                    f"La modificación no bloqueó elegibilidad: antes={estado_antes}, "
+                    f"después={estado_despues}, evidencia_vigente={evidencia_vigente}"
+                )
 
         return result
     except Exception as e:
@@ -580,13 +736,25 @@ def test_consistency_after_invalidation(workspace: Path) -> dict:
             tarjeta_inv = store.emitir_tarjeta_dict("v1_test_13")
             proyecto_inv = store.consultar_proyecto("v1_test_13")
             # Todas deben concordar: promocion bloqueada
+            verificaciones_inv = {
+                v["check_id"]: v["status"]
+                for v in (proyecto_inv or {}).get("verificaciones", [])
+            }
             checks = [
+                estado_ok.get("estado") == "elegible",
+                tarjeta_ok.get("estado") == "elegible",
                 estado_inv.get("estado") == "bloqueado",
-                tarjeta_inv.get("promocion", {}).get("estado") == "bloqueado" or tarjeta_inv.get("estado") == "bloqueado",
+                tarjeta_inv.get("estado") == "bloqueado",
+                verificaciones_inv.get("C-01_roles") == "unknown",
             ]
             if all(checks):
                 result["status"] = "PASS"
-                result["evidence"] = {"estado_ok": estado_ok.get("estado"), "estado_inv": estado_inv.get("estado"), "tarjeta_inv": tarjeta_inv.get("estado")}
+                result["evidence"] = {
+                    "estado_ok": estado_ok.get("estado"),
+                    "estado_inv": estado_inv.get("estado"),
+                    "tarjeta_inv": tarjeta_inv.get("estado"),
+                    "proyecto_inv": verificaciones_inv,
+                }
             else:
                 result["status"] = "FAIL"
                 result["reason"] = f"Inconsistencia: promocion={estado_inv}, tarjeta={tarjeta_inv}"
@@ -599,27 +767,49 @@ def test_consistency_after_invalidation(workspace: Path) -> dict:
 
 
 def test_json_validation(workspace: Path) -> dict:
-    """V1-14: JSON mal formado → error explícito."""
+    """V1-14: La tool rechaza JSON mal formado sin guardar verificaciones."""
     result = {"requirement_id": "V1-14", "status": "UNKNOWN", "evidence": {}}
     try:
-        import json
+        from mcp_causal import server
+        from mcp_causal.projects import ProjectStore
 
         json_malos = ["{mal formado", '{"incompleto": ', "[1, 2, 3"]
-
-        errores = 0
-        for j in json_malos:
+        with tempfile.TemporaryDirectory(prefix="v1-json-") as tmpdir:
+            original_store = server._store
+            store = ProjectStore(Path(tmpdir) / "workspace")
+            server._store = store
             try:
-                json.loads(j)
-            except json.JSONDecodeError:
-                errores += 1
+                store.crear_proyecto("json-validation", "Validación JSON")
+                declaracion = json.loads(server.declarar_estimando(
+                    project_id="json-validation",
+                    tipo="ate",
+                    tratamiento="D",
+                    resultado="Y",
+                    poblacion="población de prueba",
+                    supuestos_json=json.dumps([{
+                        "nombre": "no confusión",
+                        "clase": "no_observable",
+                        "criterio_revision": "revisar con placebo",
+                    }]),
+                ))
+                if declaracion.get("estado") != "pasa":
+                    raise AssertionError(f"No se pudo preparar la declaración: {declaracion}")
 
-        if errores == len(json_malos):
-            result["status"] = "PASS"
-            result["evidence"] = {"json_errors_detected": errores}
-        else:
-            result["status"] = "FAIL"
-            result["reason"] = "No todos los JSON mal formados producen error"
-
+                respuestas = [json.loads(server.validar_esquema("json-validation", malo))
+                              for malo in json_malos]
+                validas = all(
+                    r.get("estado") == "falla" and "JSON" in r.get("motivo", "")
+                    for r in respuestas
+                )
+                result["evidence"]["responses"] = respuestas
+                result["evidence"]["saved_checks"] = store.listar_verificaciones("json-validation")
+                if validas and not result["evidence"]["saved_checks"]:
+                    result["status"] = "PASS"
+                else:
+                    result["status"] = "FAIL"
+                    result["reason"] = "La tool no rechazó todos los JSON o guardó resultados"
+            finally:
+                server._store = original_store
         return result
     except Exception as e:
         result["status"] = "FAIL"
@@ -728,6 +918,7 @@ def main():
     print(f"Fecha: {datetime.now(timezone.utc).isoformat()}")
     print(f"\n{BOLD}{'='*60}{RESET}")
 
+    required_ids = {req["id"] for req in contract["proof_of_concept"]["requirements"]}
     results = []
     for test_func in ALL_TESTS:
         try:
@@ -752,6 +943,15 @@ def main():
                     "traceback": traceback.format_exc(),
                 }
             )
+
+    # Un requisito sin prueba ejecutada nunca puede desaparecer del reporte.
+    represented_ids = {r.get("requirement_id") for r in results}
+    for requirement_id in sorted(required_ids - represented_ids):
+        results.append({
+            "requirement_id": requirement_id,
+            "status": "NOT_IMPLEMENTED",
+            "reason": "No hay una comprobación ejecutada por este script",
+        })
 
     print(f"\n{BOLD}{'='*60}{RESET}")
 
@@ -780,8 +980,9 @@ def main():
             "skipped": skipped,
             "not_implemented": not_implemented,
         },
-        "status": "READY_LOCAL_V1" if failed == 0 else "BLOCKED_LOCAL_V1",
+        "status": estado_aceptacion(required_ids, results),
     }
+    ready = report["status"] == "READY_LOCAL_V1"
 
     # Guardar reporte
     reports_dir = workspace / "08_mcp-agentes-causales" / "reports"
@@ -792,13 +993,13 @@ def main():
     print(f"Reporte guardado: {report_path}")
 
     # Resumen del estado
-    if failed == 0:
+    if ready:
         print(f"{GREEN}{BOLD}Estado: READY_LOCAL_V1{RESET}")
     else:
         print(f"{RED}{BOLD}Estado: BLOCKED_LOCAL_V1{RESET}")
-        print(f"Requisitos pendientes: {[r['requirement_id'] for r in results if r.get('status') in ('FAIL', 'NOT_IMPLEMENTED')]}")
+        print(f"Requisitos no aprobados: {[(r.get('requirement_id'), r.get('status')) for r in results if r.get('status') != 'PASS']}")
 
-    return 0 if failed == 0 else 1
+    return 0 if ready else 1
 
 
 if __name__ == "__main__":

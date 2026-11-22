@@ -1,60 +1,38 @@
-# Preparación de nube — Cloud Run (referencia)
+# Ejecución local con Docker y límite de despliegue en nube
 
-## Estado: CLOUD_UNVERIFIED
+## Estado: LOCAL_DOCKER_UNVERIFIED / CLOUD_UNSUPPORTED
 
-Esta configuración está preparada pero **no verificada** contra una nube real.
-No se han usado credenciales ni se ha desplegado infraestructura.
+El runtime soportado es el comando `mcp-causal serve` de la distribución de la raíz. El Dockerfile lo ejecuta por **stdio**, con `/workspace` para el estado SQLite y sin privilegios de root.
 
-## Arquitectura
+No se ha verificado aquí la construcción o ejecución de la imagen: requiere un daemon Docker disponible. Tampoco existe un adaptador HTTP implementado y probado para Cloud Run.
 
-```
-Dockerfile (sin privilegios)
-    → Cloud Run (contenedor administrado)
-    → Mismo bundle y contrato que local
-```
+## Construcción y ejecución local
 
-## Configuración
+Desde `08_mcp-agentes-causales/`:
 
 ```bash
-# Construir imagen
-docker build -t mcp-causal -f deploy/Dockerfile .
-
-# Desplegar a Cloud Run (requiere credenciales — NO ejecutar sin autorización)
-# gcloud run deploy mcp-causal --image mcp-causal --memory 512Mi --cpu 1
+docker build -t mcp-causal:local -f deploy/Dockerfile .
+docker run --rm -i -v mcp-causal-workspace:/workspace mcp-causal:local
 ```
 
-## Variables de entorno
+El proceso queda esperando mensajes MCP por stdin; no imprime una versión y termina. Debe ejecutarse en modo interactivo (`-i`) o ser lanzado por un cliente MCP que mantenga stdin/stdout conectados. El volumen con nombre conserva el workspace y permite escribir como el usuario `mcp` (UID 1000).
 
-| Variable | Descripción | Default |
+## Variables y límites
+
+| Variable | Descripción | Default en la imagen |
 |---|---|---|
-| `MCP_CAUSAL_WORKSPACE` | Directorio del workspace SQLite | `.mcp_causal_workspace` |
+| `MCP_CAUSAL_WORKSPACE` | Directorio persistente del proyecto | `/workspace` |
 
-## Secretos
+- No se expone puerto 8000: stdio no es un servicio HTTP.
+- No hay un health check HTTP. Un proceso de una sola ejecución que importa el paquete no prueba la salud de una sesión MCP persistente.
+- No hay secretos en la imagen; cualquier credencial debe gestionarse fuera del código.
 
-- No hay secretos en el código ni en la imagen.
-- En producción, usar el gestor de secretos de la plataforma (Secret Manager, Vault).
-- Nunca hardcodear credenciales.
+## Cloud Run
 
-## Costos estimados (Cloud Run, 2026)
+Cloud Run espera un servicio de red con un ciclo de vida y health checks apropiados. Este contenedor stdio no satisface ese contrato por sí solo. Por tanto:
 
-| Recurso | Configuración | Costo mensual estimado |
-|---|---|---|
-| Cloud Run | 512MB, 1 vCPU, escala a 0 | $0-5 (tráfico bajo) |
-| Artifact Registry | 1 imagen | <$1 |
-| Total | | <$10/mes en desarrollo |
+- no se documenta un comando `gcloud run deploy` como si estuviera soportado;
+- no se afirma equivalencia local/nube;
+- un futuro despliegue requiere un adaptador HTTP autenticado, pruebas de transporte y una verificación de despliegue independiente.
 
-## Equivalencia local/nube
-
-El mismo bundle y contrato de API se sirven en local y en nube.
-La equivalencia es **contractual** (misma respuesta, mismo hash), no bit a bit
-(el cómputo puede diferir en precisión de punto flotante entre plataformas).
-
-## Rollback
-
-```bash
-# Apuntar a la versión anterior
-# gcloud run services update-traffic mcp-causal --to-revisions PREVIOUS=100
-```
-
-El registro local garantiza que ninguna versión en `falla` llega a `champion`.
-El rollback en nube apunta a la revisión anterior del servicio.
+Los resultados locales de validadores no implican que un servicio remoto esté disponible, sea seguro o produzca respuestas idénticas.

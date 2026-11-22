@@ -1,0 +1,9 @@
+# Rust compilation output
+/target/
+**/*.rs.bk
+
+# Typst PDFs and clean-room pipeline replays
+/build/
+
+# Editor/OS noise
+.DS_Store

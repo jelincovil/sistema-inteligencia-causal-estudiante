@@ -20,15 +20,17 @@ from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
 
 
-async def _handshake() -> dict:
+async def _handshake(
+    workspace: Path, *, command: str | None = None, args: list[str] | None = None
+) -> dict:
     """Ejecuta el handshake completo contra el servidor MCP."""
     resultados = {}
 
     # Arrancar el servidor como subproceso stdio
     server_params = StdioServerParameters(
-        command=sys.executable,
-        args=["-m", "mcp_causal.server"],
-        env=None,
+        command=command or sys.executable,
+        args=args or ["-m", "mcp_causal.server"],
+        env={"MCP_CAUSAL_WORKSPACE": str(workspace)},
     )
 
     async with stdio_client(server_params) as (read, write):
@@ -83,8 +85,10 @@ async def _handshake() -> dict:
                     "crear_proyecto",
                     arguments={"project_id": "handshake_test", "nombre": "Prueba handshake"},
                 )
+                respuesta = json.loads(r.content[0].text)
                 resultados["call_tool_proyecto"] = {
-                    "exitoso": "estado" in str(r.content) or "project_id" in str(r.content),
+                    "exitoso": respuesta.get("estado") == "creado",
+                    "respuesta": respuesta,
                 }
             except Exception as e:
                 resultados["call_tool_proyecto"] = {"error": str(e)}
@@ -102,18 +106,16 @@ async def _handshake() -> dict:
     return resultados
 
 
-def test_mcp_handshake():
-    """A15: Cliente MCP real hace initialize, list, call y read."""
-    resultados = asyncio.run(_handshake())
-
-    # Verificar que cada paso funcionó
-    assert "initialize" in resultados, "Falta initialize"
+def _verificar_handshake(resultados: dict) -> None:
+    """Exige todas las operaciones del contrato, no solo un subconjunto."""
     assert resultados["initialize"]["capabilities"], "Initialize sin capabilities"
+    assert resultados["list_tools"]["count"] >= 5
+    assert resultados["list_resources"]["count"] >= 1
+    assert resultados["list_prompts"]["count"] >= 1
+    assert resultados["call_tool_buscar"]["exitoso"]
+    assert resultados["call_tool_proyecto"]["exitoso"]
+    assert resultados["read_resource"]["exitoso"]
 
-    assert "list_tools" in resultados, "Falta list_tools"
-    assert resultados["list_tools"]["count"] >= 5, f"Menos de 5 tools: {resultados['list_tools']}"
-
-    # Imprimir resultados para inspección
     print(f"\n{'='*60}")
     print("HANDSHAKE MCP — RESULTADOS")
     print(f"{'='*60}")
@@ -122,9 +124,24 @@ def test_mcp_handshake():
         print(f"  {estado} {paso}: {json.dumps(r, ensure_ascii=False, default=str)[:120]}")
     print(f"{'='*60}")
 
-    # Al menos 5 pasos deben funcionar
-    exitosos = sum(1 for r in resultados.values() if "error" not in str(r).lower())
-    assert exitosos >= 5, f"Solo {exitosos} pasos exitosos de {len(resultados)}"
+
+def test_mcp_handshake(tmp_path):
+    """A15: Cliente MCP real hace initialize, list, call y read."""
+    resultados = asyncio.run(_handshake(tmp_path / "workspace"))
+    _verificar_handshake(resultados)
+
+
+def test_entrypoint_consola_mcp(tmp_path):
+    """La consola instalada ejecuta el mismo transporte MCP completo."""
+    comando = Path(sys.executable).with_name("mcp-causal")
+    if not comando.is_file():
+        pytest.skip("El entrypoint mcp-causal no está instalado en este intérprete")
+    resultados = asyncio.run(_handshake(
+        tmp_path / "console-workspace",
+        command=str(comando),
+        args=["serve", "--workspace", str(tmp_path / "console-workspace")],
+    ))
+    _verificar_handshake(resultados)
 
 
 if __name__ == "__main__":

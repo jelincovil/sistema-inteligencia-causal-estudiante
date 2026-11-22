@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0",
+  "claims": [
+    {
+      "id": "C.risk_return.finite",
+      "book_key": "risk-return-finite",
+      "kind": "formal",
+      "statement": "A finite risk-return identity is stated for the legacy exchange fixture; no Lean result is asserted.",
+      "expression": {"op": "atom", "id": "risk_return_finite"},
+      "scope": {"domain": "finite_fixture"},
+      "assumptions": []
+    }
+  ],
+  "arguments": [
+    {
+      "id": "A.risk_return.finite",
+      "conclusion": "C.risk_return.finite",
+      "premises": [],
+      "rule": "LEAN_ANCHOR",
+      "evidence_specs": ["E.risk_return.finite"]
+    }
+  ],
+  "evidence_specs": [
+    {
+      "id": "E.risk_return.finite",
+      "kind": "lean",
+      "claim_id": "C.risk_return.finite",
+      "runner_id": "lean.formal_replay",
+      "target": "formal/risk_return_finite.lean",
+      "scope": {"domain": "finite_fixture"},
+      "availability": "pending"
+    }
+  ]
+}
