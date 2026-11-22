@@ -1,0 +1,28 @@
+{
+  "id": "preparar_nube",
+  "titulo": "Preparar nube (opcional)",
+  "descripcion": "Validar Dockerfile y adapter de nube sin credenciales.",
+  "precondiciones": [
+    "Servicio local operativo"
+  ],
+  "pasos": [
+    {
+      "accion": "validar_dockerfile",
+      "tool": "generar_y_estimar",
+      "describe": "Sintaxis Dockerfile, sin privilegios"
+    },
+    {
+      "accion": "validar_adapter",
+      "tool": "generar_y_estimar",
+      "describe": "Config vars, secretos por referencia"
+    }
+  ],
+  "decisiones": [
+    "Nube no bloquea entrega local"
+  ],
+  "salida": "Config validada, estado CLOUD_UNVERIFIED.",
+  "ruta_fallo": "Documentar limitación.",
+  "contratos": [
+    "C-05"
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "id": "seguridad",
+  "titulo": "Seguridad en sistemas causales",
+  "pregunta_operativa": "¿Qué datos no deben salir del sistema y cómo lo garantizo?",
+  "alcance": "Separación de verdad, secretos, y límites del workspace.",
+  "condiciones": [
+    "Pared definida",
+    "Workspace delimitado"
+  ],
+  "principios": [
+    "La verdad del DGP nunca llega al pipeline del agente",
+    "Los secretos van por referencia, no en código",
+    "Rechazar rutas fuera del workspace autorizado"
+  ],
+  "pasos": [
+    "Verificar que truth_* no está en observed_*",
+    "Configurar secretos por variables de entorno",
+    "Validar rutas contra el workspace"
+  ],
+  "evidencia_requerida": [
+    "pared_verificada",
+    "sin_secretos_en_codigo"
+  ],
+  "fallos": [
+    "Truth colado en observed",
+    "Credenciales en el bundle"
+  ],
+  "alternativas": [
+    "Vault para secretos en producción"
+  ],
+  "ejemplo": "comprobar_pared: truth_train.csv no existe en el paquete.",
+  "limitaciones": [
+    "La seguridad física del workspace es responsabilidad del host"
+  ],
+  "fuentes": [
+    {
+      "cita": "Kleppmann 2017",
+      "url": "https://doi.org/10.1093/oso/9780199642611.001.0001",
+      "tipo": "libro"
+    }
+  ],
+  "fecha_revision": "2026-11-07",
+  "contratos_relacionados": [
+    "C-10",
+    "C-11"
+  ],
+  "criterios_relacionados": [
+    "Q-05"
+  ],
+  "etiquetas": [
+    "seguridad",
+    "operación"
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "id": "C-05",
+  "titulo": "Tarjeta causal del modelo",
+  "capitulo": 15,
+  "operaciones": ["construir", "validar", "registrar"],
+  "entrada": { "pregunta": "estimando+poblacion+supuestos", "estimacion": "efecto+SE+IC+semilla", "puerta": "chequeos+umbrales", "sensibilidad": "no observables" },
+  "salida": { "tarjeta_json": "estimando+datos+estimacion+supuestos+umbrales+limitaciones+uso" },
+  "invariantes": ["no observable con sensibilidad o declaración", "observable con prueba+umbral", "hash+semilla en tarjeta", "valida antes de registrar", "limitaciones incluyen soporte", "uso previsto declara alcance"],
+  "fallos": ["sin no observables", "observable sin umbral", "no valida y registra", "uso promete más que estimando"],
+  "aceptacion": { "procedimiento": "traza 9 pasos real/jobs: ATE 1596.0 tarjeta v0001 puerta pasa champion servicio abstención", "semilla": 20260715, "script": "Causal_AI/scripts/cap15_tarjeta.py" },
+  "criterios_calidad": ["Q-02", "Q-08"]
+}

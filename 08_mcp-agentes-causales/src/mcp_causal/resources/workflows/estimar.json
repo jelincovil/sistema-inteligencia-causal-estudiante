@@ -1,0 +1,30 @@
+{
+  "id": "estimar",
+  "titulo": "Estimar el efecto causal",
+  "descripcion": "AIPW con cross-fitting, controles de entrada y verdad separada.",
+  "precondiciones": [
+    "Datos preparados",
+    "Supuestos de identificación declarados"
+  ],
+  "pasos": [
+    {
+      "accion": "generar_estimar",
+      "tool": "generar_y_estimar",
+      "describe": "AIPW K-folds, preprocesamiento dentro del fold"
+    },
+    {
+      "accion": "verificar_observabilidad",
+      "tool": "ejecutar_verificacion",
+      "describe": "ESS, rango de propensidad"
+    }
+  ],
+  "decisiones": [
+    "Si ESS bajo, recortar y cambiar estimando"
+  ],
+  "salida": "ATE con IC, no efecto individual.",
+  "ruta_fallo": "Revisar especificación o soporte y re-estimar.",
+  "contratos": [
+    "C-12",
+    "C-02"
+  ]
+}

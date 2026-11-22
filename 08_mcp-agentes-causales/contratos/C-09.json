@@ -1,0 +1,12 @@
+{
+  "id": "C-09",
+  "titulo": "Versionado, linaje e inmutabilidad",
+  "capitulo": 4,
+  "operaciones": ["hashear", "registrar", "promover_champion", "verificar_integridad"],
+  "entrada": { "tabla": "path", "hash": "sha256", "semilla": "int" },
+  "salida": { "version": "vNNNN", "manifest": "json", "champion": "alias atómico" },
+  "invariantes": ["inmutable: nuevo contenido = nueva versión", "manifest con hashes", "recomputa vs confía", "alias rename atómico", "falla nunca promueve", "hash dato + semilla + commit"],
+  "fallos": ["edición in-place", "tabla sustituida sin registro", "promote con Falla", "commit sucio"],
+  "aceptacion": { "procedimiento": "v0001 OK, mutación detectada, champion fallback bloqueado", "semilla": 20240701, "script": "Causal_AI/scripts/cap04_linaje.py" },
+  "criterios_calidad": ["Q-08"]
+}

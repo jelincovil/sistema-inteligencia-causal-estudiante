@@ -1,0 +1,236 @@
+{
+  "contract_id": "local_v1",
+  "version": "1.0",
+  "description": "Contrato ejecutable para MCP local v1 - primera version funcional",
+  "effective_date": "2026-11-08",
+  "capabilities": [
+    "consulta_conocimiento",
+    "consulta_procedimientos",
+    "crear_proyecto",
+    "recuperar_proyecto",
+    "declarar_estimando",
+    "registrar_evidencia",
+    "ejecutar_verificaciones",
+    "consultar_elegibilidad",
+    "evaluar_puerta",
+    "emitir_tarjeta",
+    "invalidar_aprobacion"
+  ],
+  "required_verifications": [
+    {
+      "check_id": "C-01_roles",
+      "contract_file": "C-01_roles.json",
+      "name": "Validacion de roles de columnas",
+      "status_required": "pass",
+      "max_claim": "computed"
+    },
+    {
+      "check_id": "C-03_temporal",
+      "contract_file": "C-03_temporal.json",
+      "name": "Validacion temporal de features",
+      "status_required": "pass",
+      "max_claim": "computed"
+    },
+    {
+      "check_id": "C-09_linaje",
+      "contract_file": "C-09_linaje.json",
+      "name": "Linaje y versionado de artefactos",
+      "status_required": "pass",
+      "max_claim": "computed"
+    },
+    {
+      "check_id": "C-10_particion",
+      "contract_file": "C-10_particion.json",
+      "name": "Particion y pared de evaluacion",
+      "status_required": "pass",
+      "max_claim": "computed"
+    },
+    {
+      "check_id": "C-02_observabilidad",
+      "contract_file": "C-02_observabilidad.json",
+      "name": "Observabilidad de supuestos",
+      "status_required": "pass",
+      "max_claim": "computed"
+    },
+    {
+      "check_id": "C-12_exigencias",
+      "contract_file": "C-12_exigencias.json",
+      "name": "Exigencias del estimador",
+      "status_required": "pass",
+      "max_claim": "computed"
+    },
+    {
+      "check_id": "C-06_puerta",
+      "contract_file": "C-06_puerta.json",
+      "name": "Puerta causal de elegibilidad",
+      "status_required": "pass",
+      "max_claim": "computed"
+    }
+  ],
+  "status_treatment": {
+    "pass": {
+      "description": "Verificacion exitosa",
+      "allows_approval": true,
+      "requires_acceptance": false
+    },
+    "warn": {
+      "description": "Advertencia que requiere aceptacion explicita",
+      "allows_approval": false,
+      "requires_acceptance": true,
+      "acceptance_tied_to_revision": true
+    },
+    "fail": {
+      "description": "Fallo bloqueante",
+      "allows_approval": false,
+      "blocks_approval": true
+    },
+    "unknown": {
+      "description": "Estado desconocido (datos ausentes o invalidos)",
+      "allows_approval": false,
+      "blocks_approval": true
+    },
+    "not_applicable": {
+      "description": "No aplicable - requiere justificacion y autorizacion del perfil",
+      "allows_approval": false,
+      "requires_authorization": true,
+      "requires_justification": true,
+      "blocks_approval": true
+    }
+  },
+  "evidence_requirements": {
+    "evidence_required": true,
+    "evidence_checks": [
+      "artifact_hash_recomputed",
+      "evidence_linked_to_revision",
+      "evidence_status_consistent"
+    ],
+    "declaration_required": true,
+    "external_file_modification_protection": true
+  },
+  "invalidation_rules": {
+    "declaration_change": "Cambio de declaracion invalida todas las verificaciones del proyecto",
+    "configuration_change": "Cambio de configuracion invalida los resultados afectados",
+    "artifact_change": "Modificacion externa de archivo invalida aprobacion (hash no coincide con registrado)",
+    "revalidation_required": "Re-evaluacion detecta archivos modificados fuera del registro"
+  },
+  "persistence_rules": {
+    "isolation": "Proyectos aislados (A no habilita B)",
+    "recovery": "Estado recuperable tras reinicio",
+    "consistency": "Transacciones consistentes, columnas SQL = JSON persistido"
+  },
+  "validation_rules": {
+    "json_validation": "JSON mal formado produce error explicito (J2)",
+    "type_validation": "Rechaza tipos incorrectos (J3)",
+    "domain_validation": "Rechaza NaN, infinitos, valores fuera de dominio (J3)",
+    "signal_validation": "Senales ausentes -> UNKNOWN, nunca PASS",
+    "empty_support_blocked": "Soporte vacio o desconocido no autoriza una respuesta"
+  },
+  "proof_of_concept": {
+    "requirements": [
+      {
+        "id": "V1-01",
+        "name": "Instalacion limpia e importaciones",
+        "description": "Wheel instalable, importaciones documentadas correctas",
+        "test": "test_v1_01_installation.py"
+      },
+      {
+        "id": "V1-02",
+        "name": "Conocimiento y procedimientos sin red",
+        "description": "Consulta de conocimiento y procedimientos desde paquete instalado",
+        "test": "test_v1_02_knowledge.py"
+      },
+      {
+        "id": "V1-03",
+        "name": "Cliente MCP real",
+        "description": "initialize, list_tools, list_resources, list_prompts, read_resource, call_tool",
+        "test": "test_v1_03_mcp_client.py"
+      },
+      {
+        "id": "V1-04",
+        "name": "Proyecto sin declaracion bloqueado",
+        "description": "Proyecto sin declaracion o con requisitos incompletos queda bloqueado",
+        "test": "test_v1_04_blocked.py"
+      },
+      {
+        "id": "V1-05",
+        "name": "Una verificacion arbitraria no habilita",
+        "description": "Una verificacion en PASS no habilita aprobacion",
+        "test": "test_v1_05_single_verification.py"
+      },
+      {
+        "id": "V1-06",
+        "name": "Puerta vacia nunca aprueba",
+        "description": "Puerta vacia, senales parciales, umbrales invalidos, NaN infinitos nunca producen aprobacion",
+        "test": "test_v1_06_gate.py"
+      },
+      {
+        "id": "V1-07",
+        "name": "Archivo ausente/hash incorrecto bloquea",
+        "description": "Archivo ausente, hash incorrecto o ruta fuera del workspace impiden validar integridad",
+        "test": "test_v1_07_evidence_integrity.py"
+      },
+      {
+        "id": "V1-08",
+        "name": "Soporte vacio produce abstencion",
+        "description": "Soporte vacio, perfil incompleto o fuera del soporte produce abstencion",
+        "test": "test_v1_08_support.py"
+      },
+      {
+        "id": "V1-09",
+        "name": "Recorrido completo elegible",
+        "description": "Crear -> declarar -> registrar -> verificar -> tarjeta -> elegibilidad via MCP",
+        "test": "test_v1_09_full_journey.py"
+      },
+      {
+        "id": "V1-10",
+        "name": "Modificar evidencia bloquea elegibilidad",
+        "description": "Modificar evidencia despues de aprobar bloquea la elegibilidad sin intervencion manual",
+        "test": "test_v1_10_evidence_invalidation.py"
+      },
+      {
+        "id": "V1-11",
+        "name": "Cambiar declaracion invalida resultados",
+        "description": "Cambiar declaracion o configuracion invalida los resultados anteriores",
+        "test": "test_v1_11_declaration_change.py"
+      },
+      {
+        "id": "V1-12",
+        "name": "Reinicio conserva estado, aislamiento",
+        "description": "Reiniciar conserva estado; proyectos diferentes permanecen aislados",
+        "test": "test_v1_12_isolation.py"
+      },
+      {
+        "id": "V1-13",
+        "name": "Todas las consultas concuerdan tras invalidacion",
+        "description": "Todas las consultas concuerdan despues de una invalidacion",
+        "test": "test_v1_13_consistency.py"
+      },
+      {
+        "id": "V1-14",
+        "name": "JSON mal formado error explicito",
+        "description": "JSON mal formado devuelve error explicito y no genera aprobaciones",
+        "test": "test_v1_14_json_validation.py"
+      },
+      {
+        "id": "V1-15",
+        "name": "Tarjeta refleja fielmente estado",
+        "description": "Tarjeta: aprobacion, bloqueo o informacion incompleta fiel",
+        "test": "test_v1_15_card.py"
+      },
+      {
+        "id": "V1-16",
+        "name": "README y API corresponden a implementacion",
+        "description": "Documentacion describe exactamente lo implementado",
+        "test": "test_v1_16_documentation.py"
+      }
+    ]
+  },
+  "notes": "Este contrato sustituye requisitos anteriores que excedian el alcance local. Docker, HTTP, nube, vector DB y nuevos estimadores son opcionales post-v1.",
+  "version_history": [
+    {
+      "version": "1.0",
+      "date": "2026-11-08",
+      "changes": "Contrato inicial v1 local - primera version funcional"
+    }
+  ]
+}

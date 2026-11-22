@@ -1,0 +1,12 @@
+{
+  "id": "C-08",
+  "titulo": "Sensibilidad y falsación sin verdad",
+  "capitulo": 11,
+  "operaciones": ["placebo_permutacion", "control_negativo", "sensibilidad_gamma"],
+  "entrada": { "bundle": "C-12", "Y_nc": "outcome no afectado", "gamma_grid": [0.0,0.5,0.8,1.2] },
+  "salida": { "p_placebo": "float", "ATE_nc": "float", "Gamma_star": "float", "nula": "distr 500 perms" },
+  "invariantes": ["OOS con semilla", "fallo aborta deploy Q-02", "Gamma* en tarjeta C-05"],
+  "fallos": ["20 perms y p", "Y_nc post-hoc", "Gamma sin IC"],
+  "aceptacion": { "procedimiento": "nula [-0.078,0.071] contiene 0 excluye 0.77, p_nc=0.64, Gamma* 0.8 roza 1.2 invierte", "semilla": 20260711, "script": "Causal_AI/scripts/cap11_diagnostico.py" },
+  "criterios_calidad": ["Q-02"]
+}

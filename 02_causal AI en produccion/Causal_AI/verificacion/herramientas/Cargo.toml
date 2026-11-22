@@ -1,0 +1,8 @@
+[package]
+name = "refs_seed"
+version = "0.1.0"
+edition = "2021"
+description = "Extrae un seed JSONL de bibliografia/refs.yml (Hayagriva YAML, subconjunto) sin dependencias externas."
+
+[profile.release]
+opt-level = 2

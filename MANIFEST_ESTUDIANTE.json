@@ -1,8 +1,8 @@
 {
   "schema": "sic.student-manifest.v1",
-  "generated_at": "2026-10-15",
+  "generated_at": "2026-11-22",
   "scope": "public student repository; excludes teacher sources, solutions, truth files and generated artifacts",
-  "notebooks": 31,
+  "notebooks": 4,
   "scenarios": [
     "real/jobs",
     "real/ihdp",
@@ -13,13 +13,13 @@
   "files": [
     {
       "path": ".gitignore",
-      "bytes": 222,
-      "sha256": "24b37a845b19f5115b2473ed46044f1246d64877baa6ea2c203d6b225cb4dbed"
+      "bytes": 696,
+      "sha256": "106539fefe13dc33da7bfc9be7d8efc69d528e4e743b5834e678fa6c72dd5e31"
     },
     {
       "path": "01_silabo/README.md",
-      "bytes": 464,
-      "sha256": "0347442ca1e1df325f3633e2162a7069d4a536ab3984b30b4a672869771260ba"
+      "bytes": 1021,
+      "sha256": "7b7ddf6e40d9c5880d471ffb75f79837b15ab25edf268a5bfab51476fb661fc5"
     },
     {
       "path": "01_silabo/cronograma/calendario.pdf",
@@ -28,23 +28,13 @@
     },
     {
       "path": "01_silabo/lectura_por_sesion.md",
-      "bytes": 982,
-      "sha256": "c31e78100812b18a6af48653535bfbc7904f3ebefc60c5ea1b23356d4f132c1d"
+      "bytes": 992,
+      "sha256": "71e59c5bb15ca64a36a13b7ba7c7f07332511fc2fc9d075341f2bb7a0f91a592"
     },
     {
       "path": "01_silabo/silabo.pdf",
       "bytes": 705981,
       "sha256": "a33acfcbc755143c8b4482fb359c235f91ff073081c4904fc14b67e19c0921f5"
-    },
-    {
-      "path": "02_monografia/README.md",
-      "bytes": 483,
-      "sha256": "102a5f4e03acb9ca80a5136431c476fb3b463d6190745a90f400131aa2cd16f7"
-    },
-    {
-      "path": "02_monografia/monografia_curso.pdf",
-      "bytes": 7834890,
-      "sha256": "9966a8175cf2a61a74764f55d42065f3142ca82ae3987a035f999c6322ab47f9"
     },
     {
       "path": "03_notebooks_caso_estudio/artifacts/.gitkeep",
@@ -198,8 +188,8 @@
     },
     {
       "path": "04_produccion_causal/B2_model_card_ci/schemas/causal-model-card-v1.schema.json",
-      "bytes": 5620,
-      "sha256": "a10cc46eaf01b5ff313160b103686f3b47710e6e66aea7188869ef3e3fd23868"
+      "bytes": 5627,
+      "sha256": "39a1442bbdf01d1297fbd6e1cd7470cf9e0e3bde20253f5fa7718651df0931eb"
     },
     {
       "path": "04_produccion_causal/B2_model_card_ci/schemas/ejemplo_valido.json",
@@ -372,189 +362,14 @@
       "sha256": "2a69e611b1dc4a80ad6ed65ad9bfec1abdb43e7111a767e2878d46ea9b7d7b91"
     },
     {
-      "path": "05_labs_sesion/L01_causalidad_elemental/lab.ipynb",
-      "bytes": 15442,
-      "sha256": "44f3c22183b4aab5dddcc7a7f649d9801606d1c3bdc35dec4b94cfd0c142f198"
-    },
-    {
-      "path": "05_labs_sesion/L02_entorno_local/lab.ipynb",
-      "bytes": 15400,
-      "sha256": "f4800ecb51ac95eae482ad43f30c9ac0cf542d1c311ce719ebd2a282cb58c9d4"
-    },
-    {
-      "path": "05_labs_sesion/L03_scm_jerarquia_causal/lab.ipynb",
-      "bytes": 16184,
-      "sha256": "bf55f4e3a02d3c02eb0fafc99ddb6c627dbd6850c57159f22af77583245b6454"
-    },
-    {
-      "path": "05_labs_sesion/L04_schema_roles_jobs/lab.ipynb",
-      "bytes": 11988,
-      "sha256": "583258e7c9a95eec279120edba94df52a30ec8b03b92e9c222ea735fbc5cd51d"
-    },
-    {
-      "path": "05_labs_sesion/L05_regularizacion_pds/lab.ipynb",
-      "bytes": 14658,
-      "sha256": "2f6b8e080e3d46836a752d89dfc6195fb4c4afe6f04fa2d9a27b175f0850b010"
-    },
-    {
-      "path": "05_labs_sesion/L06_balance_smd/lab.ipynb",
-      "bytes": 16599,
-      "sha256": "3a4c492123079378a68bf93e503aadd6e37e3a2c277e0661e496c780e9c54895"
-    },
-    {
-      "path": "05_labs_sesion/L07_puerta_trasera/lab.ipynb",
-      "bytes": 14105,
-      "sha256": "f2fa71dadf6bc7a888d1912c73f4666807671a4e9a30dc208f5a4b636a5ae391"
-    },
-    {
-      "path": "05_labs_sesion/L08_features_sin_fuga/lab.ipynb",
-      "bytes": 15094,
-      "sha256": "eb51b1a36daaf22b87995a35a9623987a0af35a3932569468f89c18e7a65d7c7"
-    },
-    {
-      "path": "05_labs_sesion/L09_ortogonalidad_crossfitting/lab.ipynb",
-      "bytes": 15891,
-      "sha256": "6f04f24e400d231ec0d3eaa86373af1322945e9654980b373608537302192894"
-    },
-    {
-      "path": "05_labs_sesion/L10_dml_plr_irm/lab.ipynb",
-      "bytes": 11995,
-      "sha256": "40cb685b1afbccc253a5ca44211569961665182d6ebdcb1f177ea67415cbda42"
-    },
-    {
-      "path": "05_labs_sesion/L11_validacion_qini_placebo_evalue/lab.ipynb",
-      "bytes": 8483,
-      "sha256": "46fdfc23391a5643526a6267d29893ecc946509699c5d501ab47939589731c74"
-    },
-    {
-      "path": "05_labs_sesion/L12_servir_estimador/lab.ipynb",
-      "bytes": 19060,
-      "sha256": "722240fc768e6578f453a493b1e698029dff9cbce940708e8d938c692d878d2e"
-    },
-    {
-      "path": "05_labs_sesion/L13_meta_learners/lab.ipynb",
-      "bytes": 7744,
-      "sha256": "c04d70a350ec0619da94b758194fd6c007e915e4adb5606de4bd9e738d158eff"
-    },
-    {
-      "path": "05_labs_sesion/L14_arboles_bosques_causales/lab.ipynb",
-      "bytes": 6249,
-      "sha256": "324ab999327f616cd55f1207a01918b83c0f221ed716a1eb01256435aa6039c6"
-    },
-    {
-      "path": "05_labs_sesion/L15_repaso_integrador/lab.ipynb",
-      "bytes": 18189,
-      "sha256": "4a83e98d851ee48bfb724f58f4950aef6a2c97b12012bb9825b4d091c459ad05"
-    },
-    {
-      "path": "05_labs_sesion/L16_guia_defensa/L16_guia_defensa.md",
-      "bytes": 5798,
-      "sha256": "48e9784123d14e2aead1ac788f76903767fdeb0c9a01f6046d57dde63696152a"
-    },
-    {
-      "path": "05_labs_sesion/L17_model_cards_registro_local/lab.ipynb",
-      "bytes": 20070,
-      "sha256": "f186b9e569c09d6c724da431f4f8ee7373982e907d0e5c8a81074789ae7e4bb7"
-    },
-    {
-      "path": "05_labs_sesion/L18_ci_local_estadistico/lab.ipynb",
-      "bytes": 21280,
-      "sha256": "7bf564eb1d625650382ebe5374faadb765bd98b850d13709722bc4440ec9bf1d"
-    },
-    {
-      "path": "05_labs_sesion/L19_explicacion_causal_equidad_rutas/lab.ipynb",
-      "bytes": 6682,
-      "sha256": "9c50f41c53f8f674599087d9e0f636ed598e454135eef42bee0148385e89ea47"
-    },
-    {
-      "path": "05_labs_sesion/L20_etica_interpretabilidad_comunicacion/lab.ipynb",
-      "bytes": 12808,
-      "sha256": "eec82fa513e879998ad24bcf2c5182b79d1c3166fcc3b35a6fca1762da0a5435"
-    },
-    {
-      "path": "05_labs_sesion/L21_decisiones_estructurales/lab.ipynb",
-      "bytes": 17855,
-      "sha256": "31ff996c9b0ea689195d1894a315f0ecc422be3c115d6563d1ffee3becd3e5f9"
-    },
-    {
-      "path": "05_labs_sesion/L22_politicas_optimas/lab.ipynb",
-      "bytes": 10997,
-      "sha256": "408c7a2caed372307cd7d25aa4554a0c6d74f2097de66f8bd82b0ebfa4970ae5"
-    },
-    {
-      "path": "05_labs_sesion/L23_uplift_app_local/lab.ipynb",
-      "bytes": 3801,
-      "sha256": "0da1df5e7e5f22d64a6d6e18b6dfc9672bec03caeba4a43aa98aa419d110a618"
-    },
-    {
-      "path": "05_labs_sesion/L24_transportabilidad/lab.ipynb",
-      "bytes": 4862,
-      "sha256": "838491d439e12aa6243aef372f21935bf093618752410cb1c9cd3c5c481bfb11"
-    },
-    {
-      "path": "05_labs_sesion/L25_monitoreo_supuestos/lab.ipynb",
-      "bytes": 4597,
-      "sha256": "7bf200cc0ae9edeff19a18ee174b930390c4319f693e48537f6b5a955fdfdd17"
-    },
-    {
-      "path": "05_labs_sesion/L26_descubrimiento_causal/lab.ipynb",
-      "bytes": 29568,
-      "sha256": "3d4ee6b939372153eb1ad01b1894111e32ece651c8047c8c61fccea1ff62c1c1"
-    },
-    {
-      "path": "05_labs_sesion/L27_aprendizaje_continuo_rl_causal/lab.ipynb",
-      "bytes": 29919,
-      "sha256": "fa03909bffb18f62833efee2f13a80eacdf0c2696ce72a9421e8b856d82911f6"
-    },
-    {
-      "path": "05_labs_sesion/L28_lado_humano/lab.ipynb",
-      "bytes": 20232,
-      "sha256": "490210597220fe6f7a56aba40196816467b55f81e353c8877b57a0d117baf84d"
-    },
-    {
-      "path": "05_labs_sesion/README.md",
-      "bytes": 1025,
-      "sha256": "3c2d9d571a35309d4c3597ac200c5d54988bf70f3d1ee57ffb1a0696ad9da98c"
-    },
-    {
-      "path": "05_labs_sesion/lab_artifacts.py",
-      "bytes": 2412,
-      "sha256": "63fdd4103f291a54c2668e8529ef3a55cd3256ca1956ab10577865a964e96b4c"
-    },
-    {
-      "path": "05_labs_sesion/lab_assumptions.py",
-      "bytes": 3338,
-      "sha256": "db2dfd4a475ce3ea9ada9a7e7d369315478fb8cda512b41d70a00d733975b0bb"
-    },
-    {
-      "path": "05_labs_sesion/lab_common.py",
-      "bytes": 20246,
-      "sha256": "d4b593965b4cb398e21fa8ccd7be79a386fb83e7bcac35a6f1457f0cb0036487"
-    },
-    {
-      "path": "05_labs_sesion/lab_data.py",
-      "bytes": 10149,
-      "sha256": "a4f33c2a6d786109c8679b20d5f35612beca9fd5a500d0670af7b0d4458713fb"
-    },
-    {
-      "path": "05_labs_sesion/lab_manifest.json",
-      "bytes": 5971,
-      "sha256": "38247f16827a68ec6b88efc4aa2b3396be9d12f5aa3a8b956ae2987590304636"
-    },
-    {
-      "path": "05_labs_sesion/requirements.txt",
-      "bytes": 405,
-      "sha256": "525bd08d1b0018bf9cb44cc762a21584afc29fefeb3dd22bdeaf22db5b072e80"
-    },
-    {
       "path": "06_proyecto_final/ADENDA_CONTRATOS_EVALUACION.md",
-      "bytes": 3504,
-      "sha256": "69cf3776c2293880392b23d49d06a0bf7fe3ecf63ec3c4465a5d39968e7a9173"
+      "bytes": 3526,
+      "sha256": "1ecbe7c10c23dfe5cda89f176e6ba81e4e481134e4060b92d777dccd99f58e13"
     },
     {
       "path": "06_proyecto_final/README.md",
-      "bytes": 720,
-      "sha256": "9466977d8133fbde35f174d56ea1af9026e321dab3bc037d3fc7677469ab2c42"
+      "bytes": 718,
+      "sha256": "444675b4ee0f1d4a5a42aff655e45b8e4476a397133ec0e7cf6ac91d99589e7a"
     },
     {
       "path": "06_proyecto_final/guia_proyecto.md",
@@ -568,8 +383,8 @@
     },
     {
       "path": "CALENDARIO.md",
-      "bytes": 947,
-      "sha256": "98b2e6dd50e3c13a890e2ed4de4b07a7c304bff304ade534b23d0355c3a73a88"
+      "bytes": 1064,
+      "sha256": "cc869fdcebe8af98258f090cf9b498f0912e9baafdd847b3a2e8609e3d3f5c4d"
     },
     {
       "path": "LICENSE",
@@ -578,13 +393,13 @@
     },
     {
       "path": "README.md",
-      "bytes": 3180,
-      "sha256": "7e9e146b060710f100123074175409f38953bb0dee6a74b6f87e876c25c951bb"
+      "bytes": 2457,
+      "sha256": "f5d89edea9f37ac299f2f697cb4cff35324ea09a60c58cfb0ccbe1eabb5d3565"
     },
     {
       "path": "data_benchmark_causal/README.md",
-      "bytes": 347,
-      "sha256": "8adcbaaaba5fe914782bafcf2e8c013060c5fa503a984a5ef0315b1b2c2c77c1"
+      "bytes": 340,
+      "sha256": "bb82639d12898081c956350fb09c1e358db08dd19bc737d64265904e02141f3b"
     },
     {
       "path": "data_benchmark_causal/causal_benchmark_synthetic/README.md",
@@ -803,13 +618,13 @@
     },
     {
       "path": "docs/REQUISITOS_NOTEBOOKS.md",
-      "bytes": 1389,
-      "sha256": "de67dcc41942e9787239f684db0a4360e02263016dfbdb31cb1465b8832de48e"
+      "bytes": 1543,
+      "sha256": "b51f70f45b448916818da994d93f400e631508e6c565d6bc73f7aeb6f01539e9"
     },
     {
       "path": "requirements.txt",
-      "bytes": 422,
-      "sha256": "44e157bf29ab43df392a4d874918f43e42cefb4f31d58fef51ab2c366905a8e7"
+      "bytes": 416,
+      "sha256": "9f9701c28434d06eed254dfeaa94f692ea0089b510f51a20da5dc24b2a225541"
     },
     {
       "path": "scripts/doctor_minimo.py",
@@ -818,8 +633,8 @@
     },
     {
       "path": "scripts/validate_student_repo.py",
-      "bytes": 1627,
-      "sha256": "83803b0ac1be599a1bd1b9042525062447916f4c3b107c82ddcae090b5cd7880"
+      "bytes": 1845,
+      "sha256": "a1fdfd10e1f0c3944158f2c1a54e1279eeb49b20c12b41d71b622f5acef17d97"
     }
   ]
 }

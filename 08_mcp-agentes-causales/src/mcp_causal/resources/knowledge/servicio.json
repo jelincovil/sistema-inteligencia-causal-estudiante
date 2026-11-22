@@ -1,0 +1,54 @@
+{
+  "id": "servicio",
+  "titulo": "Servicio de estimación causal",
+  "pregunta_operativa": "¿Cómo sirvo el efecto sin exponer los datos?",
+  "alcance": "Servicio local con bundle y abstención.",
+  "condiciones": [
+    "Bundle validado del registro",
+    "Soporte declarado en tarjeta"
+  ],
+  "principios": [
+    "El bundle viaja, el dato no",
+    "La abstención es respuesta de primera clase (HTTP 200)",
+    "Dos consultas idénticas devuelven lo mismo"
+  ],
+  "pasos": [
+    "Cargar bundle del registro (champion)",
+    "Para cada consulta: verificar soporte",
+    "Dentro: responder con efecto, IC, versión",
+    "Fuera: abstenerse sin número"
+  ],
+  "evidencia_requerida": [
+    "humo_servicio",
+    "abstencion_verificada"
+  ],
+  "fallos": [
+    "Servir número fuera de soporte",
+    "Leer tabla de entrenamiento"
+  ],
+  "alternativas": [
+    "CLI equivalente cuando HTTP no aplica"
+  ],
+  "ejemplo": "GET /efecto → 1596.0 [1004.8, 2187.3] v0001; age=99 → abstención.",
+  "limitaciones": [
+    "El servicio no reentrena por request"
+  ],
+  "fuentes": [
+    {
+      "cita": "Huyen 2022 Cap 5",
+      "url": "https://doi.org/10.1093/oso/9780199642611.001.0001",
+      "tipo": "libro"
+    }
+  ],
+  "fecha_revision": "2026-11-07",
+  "contratos_relacionados": [
+    "C-04"
+  ],
+  "criterios_relacionados": [
+    "Q-07"
+  ],
+  "etiquetas": [
+    "operación",
+    "servicio"
+  ]
+}

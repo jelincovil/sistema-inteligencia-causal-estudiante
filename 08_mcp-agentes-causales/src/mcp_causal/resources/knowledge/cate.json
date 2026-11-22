@@ -1,0 +1,53 @@
+{
+  "id": "cate",
+  "titulo": "CATE y heterogeneidad",
+  "pregunta_operativa": "¿En quién difiere el efecto?",
+  "alcance": "Estimación y validación de heterogeneidad de efectos.",
+  "condiciones": [
+    "Estimando declarado (CATE o policy)",
+    "Datos suficientes por estrato"
+  ],
+  "principios": [
+    "El CATE se valida OOS, no in-sample",
+    "La Qini mide ranking, no magnitud",
+    "Intervalos que se solapan: heterogeneidad sugerida, no concluida"
+  ],
+  "pasos": [
+    "Entrenar meta-learner (S/T/X) solo en train",
+    "Evaluar PEHE OOS contra verdad del DGP o Qini OOS",
+    "Reportar por estrato con IC"
+  ],
+  "evidencia_requerida": [
+    "pehe_oos_o_qini",
+    "por_estrato_con_ic"
+  ],
+  "fallos": [
+    "PEHE in-sample",
+    "Elegir corte por máxima diferencia"
+  ],
+  "alternativas": [
+    "Efecto único (ATE) cuando no hay potencia"
+  ],
+  "ejemplo": "nodegree=1: 1060 [233,1887] vs nodegree=0: 2345 [1357,3333]: solapan.",
+  "limitaciones": [
+    "Sin verdad, no hay PEHE: solo Qini"
+  ],
+  "fuentes": [
+    {
+      "cita": "Künzel et al 2019",
+      "url": "https://doi.org/10.1073/pnas.1804597116",
+      "tipo": "articulo"
+    }
+  ],
+  "fecha_revision": "2026-11-07",
+  "contratos_relacionados": [
+    "C-12"
+  ],
+  "criterios_relacionados": [
+    "Q-04"
+  ],
+  "etiquetas": [
+    "estimación",
+    "heterogeneidad"
+  ]
+}

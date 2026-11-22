@@ -1,0 +1,31 @@
+{
+  "metodo": "DoubleMLIIVM",
+  "estimando": "LATE entre compliers; no ATE poblacional",
+  "coeficiente": 1.9015685828752529,
+  "error_estandar": 2.065536942926984,
+  "ic95": [
+    -2.146809433998601,
+    5.949946599749107
+  ],
+  "n_observaciones": 1200,
+  "n_pliegues": 3,
+  "semilla": 20261113,
+  "diferencia_ingenua": 4.219830720677653,
+  "primera_etapa": {
+    "prob_d_si_z1": 0.4744897959183674,
+    "prob_d_si_z0": 0.4526143790849673,
+    "diferencia": 0.021875416833400052,
+    "error_estandar": 0.028790468874637425,
+    "f_descriptivo_sin_covariables": 0.5773181335609053,
+    "nota": "F aproximado: no resume todas las primeras etapas condicionales de DML"
+  },
+  "evaluacion_posterior": {
+    "estimando_referencia": "LATE_compliers",
+    "late_compliers": 2.075955610311649,
+    "ate_poblacional": 1.9876131053530044,
+    "proporcion_compliers": 0.06,
+    "escenario": "debil",
+    "semilla": 20261113,
+    "n_unidades": 1200
+  }
+}

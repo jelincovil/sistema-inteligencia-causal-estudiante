@@ -1,0 +1,53 @@
+{
+  "id": "iv",
+  "titulo": "Variables instrumentales",
+  "pregunta_operativa": "¿Tengo un instrumento válido y suficientemente fuerte?",
+  "alcance": "Condiciones de validez y fuerza de instrumentos.",
+  "condiciones": [
+    "Instrumento candidato identificado"
+  ],
+  "principios": [
+    "Relevancia: el instrumento mueve el tratamiento",
+    "Exclusión: solo afecta el resultado a través del tratamiento",
+    "El F de primera etapa mide la fuerza"
+  ],
+  "pasos": [
+    "Verificar F de primera etapa > 10",
+    "Discutir plausibilidad de exclusión",
+    "Reportar LATE, no ATE"
+  ],
+  "evidencia_requerida": [
+    "f_primera_etapa",
+    "discusion_exclusion"
+  ],
+  "fallos": [
+    "F < 10 con inferencia inválida",
+    "Confundir LATE con ATE"
+  ],
+  "alternativas": [
+    "DML-IV",
+    "Diseño observacional"
+  ],
+  "ejemplo": "Card 1995: cercanía a universidad, F moderado, LATE en compliers.",
+  "limitaciones": [
+    "La exclusión no es comprobable con datos"
+  ],
+  "fuentes": [
+    {
+      "cita": "Card 1995",
+      "url": "https://doi.org/10.2307/2118320",
+      "tipo": "articulo"
+    }
+  ],
+  "fecha_revision": "2026-11-07",
+  "contratos_relacionados": [
+    "C-08"
+  ],
+  "criterios_relacionados": [
+    "Q-02"
+  ],
+  "etiquetas": [
+    "identificación",
+    "iv"
+  ]
+}

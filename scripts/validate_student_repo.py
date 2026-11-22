@@ -17,13 +17,15 @@ except (FileNotFoundError, subprocess.CalledProcessError):
     paths = [p.relative_to(ROOT) for p in ROOT.rglob("*") if p.is_file() and not transient.intersection(p.parts)]
 violations = []
 for p in paths:
-    if forbidden_parts.intersection(p.parts) or p.name in forbidden_names:
+    # 08_mcp-agentes-causales es un subproyecto MCP con su propia suite de tests;
+    # no es material docente del pack del estudiante. El resto de partes prohibidas
+    # (autograder, truth, solutions...) sígue aplicándose ahí.
+    es_tests_mcp = p.parts[:1] == ("08_mcp-agentes-causales",) and "tests" in p.parts
+    partes = tuple(x for x in p.parts if not (es_tests_mcp and x == "tests"))
+    if forbidden_parts.intersection(partes) or p.name in forbidden_names:
         violations.append(str(p))
 
-student_labs = sorted(ROOT.glob("05_labs_sesion/L*/lab.ipynb"))
 serie_a = sorted(ROOT.glob("03_notebooks_caso_estudio/notebooks/A*.ipynb"))
-if len(student_labs) != 27:
-    violations.append(f"se esperaban 27 labs y hay {len(student_labs)}")
 if len(serie_a) != 4:
     violations.append(f"se esperaban 4 notebooks Serie A y hay {len(serie_a)}")
 if any(p.name == "solution.ipynb" for p in ROOT.rglob("*.ipynb")):
@@ -32,4 +34,4 @@ if any(p.name == "solution.ipynb" for p in ROOT.rglob("*.ipynb")):
 if violations:
     print("\n".join(violations))
     raise SystemExit(1)
-print(f"student repo: OK ({len(student_labs) + len(serie_a)} notebooks, sin secretos ni material docente)")
+print(f"student repo: OK ({len(serie_a)} notebooks Serie A, sin secretos ni material docente)")

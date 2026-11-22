@@ -1,0 +1,12 @@
+{
+  "id": "C-12",
+  "titulo": "Exigencias del estimador (DML)",
+  "capitulo": 9,
+  "operaciones": ["entregar_bundle", "verificar_crossfit", "verificar_ess_trimming"],
+  "entrada": { "splits": "C-10", "features": "C-03 auditadas", "nuisances": "hash+semilla" },
+  "salida": { "bundle": "splits+features+nuisances+soporte_doc", "trimming": "declarado si aplica" },
+  "invariantes": ["ningún nuisance predice su fold", "semilla crossfit registrada", "trimming → nuevo estimando"],
+  "fallos": ["prepro fuera del fold", "folds solapados", "trimming silencioso"],
+  "aceptacion": { "procedimiento": "DML 0.95 vs OLS 1.41, ESS 85/3000 con trimming 42%", "semilla": 20260701, "script": "Causal_AI/scripts/cap09_exigencias.py" },
+  "criterios_calidad": ["Q-04", "Q-05"]
+}

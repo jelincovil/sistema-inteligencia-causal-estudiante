@@ -1,0 +1,60 @@
+{
+  "id": "estimando",
+  "titulo": "Estimando: qué compara el sistema",
+  "pregunta_operativa": "¿Qué contraste causal estoy computando y sobre qué población?",
+  "alcance": "Definición y declaración del estimando antes de mirar datos.",
+  "condiciones": [
+    "Pregunta causal formulada",
+    "Población identificada"
+  ],
+  "principios": [
+    "El estimando se declara antes de mirar los datos",
+    "ATE, ATT, CATE y policy value son objetos distintos",
+    "El intervalo cubre el estimando declarado, no efectos individuales"
+  ],
+  "pasos": [
+    "Formular la pregunta causal en una oración",
+    "Elegir el tipo de estimando (ATE/ATT/CATE/policy)",
+    "Declarar la población de validez",
+    "Clasificar los supuestos (observable/no observable)",
+    "Registrar en la declaración del proyecto"
+  ],
+  "evidencia_requerida": [
+    "declaracion_causal",
+    "supuestos_clasificados"
+  ],
+  "fallos": [
+    "Cambiar el estimando después de ver resultados",
+    "No declarar población"
+  ],
+  "alternativas": [
+    "Reportar múltiples estimandos con sus poblaciones"
+  ],
+  "ejemplo": "ATE de treatment sobre re78 en la población de entrenamiento de real/jobs.",
+  "limitaciones": [
+    "La declaración no verifica la corrección del estimando"
+  ],
+  "fuentes": [
+    {
+      "cita": "Imbens & Rubin 2015",
+      "url": "https://doi.org/10.1017/CBO9781139025751",
+      "tipo": "libro"
+    },
+    {
+      "cita": "Hernán & Robins 2020",
+      "url": "https://www.hsph.harvard.edu/miguel-hernan/causal-inference-book/",
+      "tipo": "libro"
+    }
+  ],
+  "fecha_revision": "2026-11-07",
+  "contratos_relacionados": [
+    "C-01"
+  ],
+  "criterios_relacionados": [
+    "Q-01"
+  ],
+  "etiquetas": [
+    "fundamento",
+    "declaración"
+  ]
+}

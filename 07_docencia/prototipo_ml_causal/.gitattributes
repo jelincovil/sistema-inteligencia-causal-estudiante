@@ -1,0 +1,14 @@
+# Los CSV del benchmark y de la extensión son evidencia con hashes fijados en
+# splits.json: CRLF o LF rompería la verificación de los SHA-256.
+*.csv -text
+*.json text eol=lf
+*.md text eol=lf
+*.typ text eol=lf
+*.sha256 text eol=lf
+*.svg text eol=lf
+
+# Binarios explícitos
+*.png binary
+*.jpg binary
+*.pdf binary
+*.zip binary

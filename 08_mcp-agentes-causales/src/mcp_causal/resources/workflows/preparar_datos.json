@@ -1,0 +1,36 @@
+{
+  "id": "preparar_datos",
+  "titulo": "Preparar datos con validez temporal",
+  "descripcion": "Esquema de roles, auditoría temporal y partición sin fuga.",
+  "precondiciones": [
+    "Declaración válida",
+    "Datos brutos disponibles"
+  ],
+  "pasos": [
+    {
+      "accion": "definir_esquema",
+      "tool": "validar_esquema",
+      "describe": "Roles Y/D/X/Z con un solo rol por columna"
+    },
+    {
+      "accion": "auditar_temporal",
+      "tool": "ejecutar_verificacion",
+      "describe": "Timestamps de medición, no de ingesta"
+    },
+    {
+      "accion": "particionar",
+      "tool": "ejecutar_verificacion",
+      "describe": "Semilla fija, sin solapes, con truth separado"
+    }
+  ],
+  "decisiones": [
+    "Feature sin timestamp verificable se excluye"
+  ],
+  "salida": "Esquema, auditoría temporal y partición verificados.",
+  "ruta_fallo": "Corregir roles o timestamps y re-verificar.",
+  "contratos": [
+    "C-01",
+    "C-03",
+    "C-10"
+  ]
+}

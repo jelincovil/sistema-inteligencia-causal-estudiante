@@ -1,0 +1,51 @@
+{
+  "id": "preprocesamiento_fold",
+  "titulo": "Preprocesamiento dentro del fold",
+  "pregunta_operativa": "¿Dónde se ajusta el escalado, la imputación y la selección?",
+  "alcance": "Garantía de que el preprocesamiento no ve el fold de prueba.",
+  "condiciones": [
+    "Partición de folds definida",
+    "Preprocesamiento declarado"
+  ],
+  "principios": [
+    "Todo preprocesamiento se ajusta dentro del fold de entrenamiento",
+    "El preproceso global antes de partir es fuga"
+  ],
+  "pasos": [
+    "Declarar qué preprocesamiento se aplica",
+    "Verificar que se ajusta solo con datos del fold de entrenamiento",
+    "Aplicar la misma transformación al fold de prueba"
+  ],
+  "evidencia_requerida": [
+    "invariantes_crossfitting"
+  ],
+  "fallos": [
+    "Escalar antes de partir",
+    "Imputar con la media global"
+  ],
+  "alternativas": [
+    "Pipeline de sklearn que encapsula el preprocesamiento"
+  ],
+  "ejemplo": "Estandarización: media y desviación del fold k-1 aplicadas al fold k.",
+  "limitaciones": [
+    "Requiere disciplina en la implementación"
+  ],
+  "fuentes": [
+    {
+      "cita": "Chernozhukov et al 2018",
+      "url": "https://doi.org/10.1111/rssb.12261",
+      "tipo": "articulo"
+    }
+  ],
+  "fecha_revision": "2026-11-07",
+  "contratos_relacionados": [
+    "C-12"
+  ],
+  "criterios_relacionados": [
+    "Q-05"
+  ],
+  "etiquetas": [
+    "estimación",
+    "cross-fitting"
+  ]
+}

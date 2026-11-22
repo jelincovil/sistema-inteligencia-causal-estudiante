@@ -1,0 +1,9 @@
+[project]
+name = "mcp-causal"
+version = "0.1.0"
+description = "MCP causal — quality gates y contratos C-01..C-12"
+requires-python = ">=3.10"
+dependencies = ["mcp>=1.0", "jsonschema>=4.0", "numpy", "scipy"]
+
+[project.scripts]
+mcp-causal = "mcp_causal.server:main"

@@ -1,0 +1,53 @@
+{
+  "id": "placebo_control_negativo",
+  "titulo": "Placebo y control negativo",
+  "pregunta_operativa": "¿Puedo falsar mi resultado sin verdad?",
+  "alcance": "Tests de falsación que no requieren datos de verdad.",
+  "condiciones": [
+    "Efecto estimado",
+    "Outcome de control negativo disponible"
+  ],
+  "principios": [
+    "El placebo permuta el tratamiento: el efecto debe desaparecer",
+    "El control negativo comparte confusores pero no es afectado",
+    "Un p grande no prueba identificación, solo no la refuta"
+  ],
+  "pasos": [
+    "Permutar tratamiento 500+ veces, construir distribución nula",
+    "Verificar que el ATE observado es atípico en la nula",
+    "Estimar efecto sobre control negativo: debe ser cero"
+  ],
+  "evidencia_requerida": [
+    "p_placebo",
+    "ate_control_negativo"
+  ],
+  "fallos": [
+    "Placebo con 20 permutaciones",
+    "Control negativo post-hoc"
+  ],
+  "alternativas": [
+    "Sensibilidad Rosenbaum como complemento"
+  ],
+  "ejemplo": "Placebo: nula [-0.078, 0.071], ATE 0.77 (p < 0.001). Control: p=0.64.",
+  "limitaciones": [
+    "La ausencia de señal no certifica causalidad"
+  ],
+  "fuentes": [
+    {
+      "cita": "Lipsitch et al 2010",
+      "url": "https://doi.org/10.1093/aje/kwq239",
+      "tipo": "articulo"
+    }
+  ],
+  "fecha_revision": "2026-11-07",
+  "contratos_relacionados": [
+    "C-08"
+  ],
+  "criterios_relacionados": [
+    "Q-02"
+  ],
+  "etiquetas": [
+    "diagnóstico",
+    "falsación"
+  ]
+}

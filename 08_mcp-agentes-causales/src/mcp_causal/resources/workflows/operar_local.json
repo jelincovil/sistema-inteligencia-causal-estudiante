@@ -1,0 +1,29 @@
+{
+  "id": "operar_local",
+  "titulo": "Operar localmente (servicio + puerta)",
+  "descripcion": "Servicio local con health y elegibilidad por perfiles versionados.",
+  "precondiciones": [
+    "Bundle aprobado"
+  ],
+  "pasos": [
+    {
+      "accion": "servir",
+      "tool": "abstenerse_soporte",
+      "describe": "Respuesta o abstención según soporte"
+    },
+    {
+      "accion": "puerta",
+      "tool": "evaluar_puerta_causal",
+      "describe": "Pasa/alerta/falla con motivo"
+    }
+  ],
+  "decisiones": [
+    "Fuera de soporte → abstención, no error"
+  ],
+  "salida": "Servicio operativo con health check.",
+  "ruta_fallo": "Verificar soporte y puerta.",
+  "contratos": [
+    "C-04",
+    "C-06"
+  ]
+}

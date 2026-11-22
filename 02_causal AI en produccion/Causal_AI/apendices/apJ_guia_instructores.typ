@@ -45,7 +45,7 @@ Los materiales de este curso (monografía, Series A/B, laboratorios y diapositiv
 
 El trabajo práctico se organiza en el monorepo del curso (no en un repositorio externo opcional):
 
-- *Labs L01–L28* (#code[05_labs_sesion/]): práctica formativa por sesión (30–50 min).
+- *Labs L01–L28*: práctica formativa por sesión (30–50 min).
 - *Serie A* (#code[03_notebooks_caso_estudio/]): A1 identificación (Jobs) · A2 DML · A3 CATE · A4 policy.
 - *Serie B* (#code[04_produccion_causal/]): B1 FastAPI · B2 ficha causal/CI local · B3 policy local · B4 monitor local.
 - *Datos* (#code[data_benchmark_causal/.../datasets/]): CSV + #code[metadata.json] (benchmark documentado; ver callouts "monorepo" en los capítulos de ingeniería).

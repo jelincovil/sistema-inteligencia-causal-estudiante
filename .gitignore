@@ -15,3 +15,22 @@ __pycache__/
 # macOS
 .DS_Store
 **/.DS_Store
+
+# artefactos de trabajo de sesiones agentes
+.scratch/
+
+# artefactos del prototipo de docencia (regenerables con make demo)
+07_docencia/**/artifacts/
+08_mcp-agentes-causales/build/
+08_mcp-agentes-causales/dist/
+08_mcp-agentes-causales/*.egg-info/
+08_mcp-agentes-causales/.mcp_causal_workspace/
+
+# MCP subespacios de trabajo (dato local regenerable)
+.mcp_causal_workspace/
+
+# papelera del sistema de archivos (autocontenida, excluida)
+.trash/
+
+# artefactos de build Rust (regenerables con cargo build)
+**/target/

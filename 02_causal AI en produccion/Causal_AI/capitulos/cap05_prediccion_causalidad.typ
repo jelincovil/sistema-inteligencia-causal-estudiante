@@ -367,7 +367,7 @@ El primer listado ilustra con un efecto conocido lo que con datos reales no pued
   ) <tab-riesgos-cap05>
 ]
 
-*Límites del marco.* El marco de resultados potenciales supone no interferencia. En contextos con efectos cruzados (epidemias, redes sociales, externalidades) este supuesto se vulnera y se requieren métodos específicos, como la inferencia bajo interferencia o los diseños con aleatorización por conglomerados; quedan fuera del alcance de este volumen, y @aronow2017 es una referencia. El checklist completo de validación de métodos causales está en el apéndice #ref(<ap-checklists>, supplement: none).
+*Límites del marco.* El marco de resultados potenciales supone no interferencia. En contextos con efectos cruzados (epidemias, redes sociales, externalidades) este supuesto se vulnera y se requieren métodos específicos, como la inferencia bajo interferencia o los diseños con aleatorización por conglomerados; quedan fuera del alcance de este volumen, y #cite(<aronow2017>, form: "prose") es una referencia. El checklist completo de validación de métodos causales está en el apéndice #ref(<ap-checklists>, supplement: none).
 
 == Ejercicios y notas bibliográficas
 <sec-cap05_ejercicios>

@@ -1,0 +1,59 @@
+{
+  "id": "overlap_ess",
+  "titulo": "Soporte común y ESS de Kish",
+  "pregunta_operativa": "¿Hay con quién comparar en mi muestra?",
+  "alcance": "Diagnóstico de solapamiento mediante ESS y rango de propensión.",
+  "condiciones": [
+    "Propensidad estimada"
+  ],
+  "principios": [
+    "ESS/n bajo: pocas unidades dominan la estimación",
+    "El histograma de propensión puede verse bien con ESS pésimo",
+    "Sin soporte, la comparación es extrapolación"
+  ],
+  "pasos": [
+    "Estimar la propensidad",
+    "Calcular ESS = (sum w)^2 / sum w^2",
+    "Reportar ESS/n y el rango de la propensidad",
+    "Declarar la regla de alerta"
+  ],
+  "evidencia_requerida": [
+    "ess_reportado",
+    "rango_propensidad"
+  ],
+  "fallos": [
+    "Ignorar ESS bajo",
+    "Reportar solo el histograma"
+  ],
+  "alternativas": [
+    "Trimming de Crump con declaración de estimando"
+  ],
+  "ejemplo": "e = sigma(4x0): ESS 85 de 3000, ESS/n = 0.03.",
+  "limitaciones": [
+    "El ESS no distingue la causa del solapamiento insuficiente"
+  ],
+  "fuentes": [
+    {
+      "cita": "Kish 1965",
+      "url": "https://doi.org/10.4236/ojs.2014.45072",
+      "tipo": "articulo"
+    },
+    {
+      "cita": "Crump et al 2009",
+      "url": "https://doi.org/10.1111/j.1541-0420.2008.01143.x",
+      "tipo": "articulo"
+    }
+  ],
+  "fecha_revision": "2026-11-07",
+  "contratos_relacionados": [
+    "C-02",
+    "C-12"
+  ],
+  "criterios_relacionados": [
+    "Q-04"
+  ],
+  "etiquetas": [
+    "diagnóstico",
+    "soporte"
+  ]
+}

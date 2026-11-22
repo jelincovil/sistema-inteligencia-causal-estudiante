@@ -1,0 +1,146 @@
+| `neyman1923` | CORREGIR | alta | volume: 5 en refs.yml vs 10 (Tom X) en la publicación original polaca, según la nota de la traducción inglesa  | Obra original polaca: Roczniki Nauk Rolniczych Tom X (1923) 1-51, citada en inglés como 'Annals of A |
+| `rubin1974` | OK | alta | — | Crossref (doi-org) y S2 coinciden: J Educ Psychol 66(5):688-701, oct 1974. refs ya tenía volumen/iss |
+| `imbens2015causal` | OK_PARCIAL | alta | — | Libro confirmado: Cambridge UP, abril 2015 (ISBN 0521885884). Páginas/volumen no verificables, norma |
+| `pearl2009causality` | OK_PARCIAL | alta | — | 2ª ed.: Cambridge UP 2009 (ISBN 978-0-521-89560-6); 1ª ed. 2000. refs indica edition=2 y year=2009:  |
+| `hernan2020whatif` | OK_PARCIAL | alta | — | Hernán MA, Robins JM (2020), Causal Inference: What If, Boca Raton: Chapman & Hall/CRC; el PDF ofici |
+| `spirtes2000causation` | OK_PARCIAL | alta | — | 2ª ed.: MIT Press 2000 (1ª ed. 1993, Springer); MIT Press confirma 'Second Edition'. refs acierta añ |
+| `aronow2017` | VERIFICAR_MANUAL | media | year: 2017 en refs.yml vs 2019 en Cambridge Core (print publication year 2019) y Amazon.ca (31-ene-2019) | Las fuentes vistas (Cambridge Core, Amazon.ca, syllabus PLSC500) dan 2019 unánimemente, no 2017. Δañ |
+| `bickel1993efficient` | OK_PARCIAL | alta | — | Johns Hopkins UP 1993 (reimpr. Springer 1998, ISBN 0387984735). Confirmado en la página de Wellner ( |
+| `card1995` | OK | media | — | Capítulo en volumen homenaje a Vanderkamp (U. Toronto Press, 1995), pp. 201-222 (refs OK). El título |
+| `angrist1991` | OK | alta | — | Crossref (doi-org): QJE 106(4):979-1014, nov 1991. refs ya correcto (S2 mostraba '(1990)' = WP NBER  |
+| `lalonde1986` | OK | alta | — | AER 76(4):604-620, sep 1986 (RePEc/JSTOR). El campo issue (4) está vacío en refs.yml; no es incorrec |
+| `dehejia1999causal` | OK | alta | — | Taylor & Francis/JSTOR: JASA 94(448):1053-1062, dic 1999. refs correcto (issue 448 faltaba, no incor |
+| `abadie2003economic` | OK | alta | — | Página oficial AEA: vol 93, no. 1, mar 2003, pp. 113-132, DOI 10.1257/000282803321455188. refs corre |
+| `abadie2010synthetic` | OK | alta | — | Crossref (doi-org): JASA 105(490):493-505, jun 2010. refs ya correcto; solo falta el DOI. |
+| `athey2017beyond` | OK | alta | — | Crossref (doi-org): Science 355(6324):483-485, 3 feb 2017. refs correcto; se añade DOI. |
+| `athey2019econometric` | OK | alta | — | Crossref (doi-org): Annu. Rev. Econ. 11:685-725, ago 2019. refs correcto (issue 1 faltaba, no incorr |
+| `athey2016recursive` | OK | alta | — | Crossref (doi-org): PNAS 113(27):7353-7360, 5 jul 2016. refs correcto (S2 mostraba '(2015)' = arXiv  |
+| `athey2019generalized` | OK | alta | — | Crossref (doi-org): Ann. Statist. 47(2):1148-1178, abr 2019. refs correcto (S2 mostraba '(2016)' = a |
+| `wager2018estimation` | OK | alta | — | Crossref (doi-org): JASA 113(523):1228-1242, jun 2018. refs correcto (S2 mostraba '(2015)' = arXiv 1 |
+| `athey2021policy` | OK | alta | — | The Econometric Society/Wiley: Econometrica 89(1):133-161, ene 2021, DOI 10.3982/ECTA15732. refs cor |
+| `chernozhukov2018double` | OK | alta | — | Oxford Academic/Royal Economic Society/NBER/MIT DSpace: The Econometrics Journal 21(1):C1-C68, feb 2 |
+| `chernozhukov2018applied` | VERIFICAR_MANUAL | baja | título exacto no localizado en Semantic Scholar (match y búsqueda sin resultados) ni en la web (0 resultados p | No existe obra con ese título en las fuentes. Lo más cercano con los mismos 6 autores es 'Double/Deb |
+| `chernozhukov2016locally` | CORREGIR | alta | authors: 'Goldman, Matt' y 'Taddy, Matt' (refs.yml) no son autores de esta obra; los autores reales son Cherno | arXiv:1608.00033 (jul 2016) confirma título, id arXiv y año (coincide con la fuente citada en refs). |
+| `belloni2014inference` | OK | alta | — | OUP/JSTOR/MIT DSpace confirman ReStud 81(2):608-650 (abr 2014), DOI 10.1093/restud/rdt044. OJO: 10.1 |
+| `belloni2012sparse` | OK | alta | — | Crossref (doi-org): Econometrica 80(6):2369-2429, 2012. refs correcto; se añade DOI. |
+| `newey1994asymmetric` | OK | alta | — | Confirmado por S2, OpenAlex (via doi.org/Crossref): Econometrica 62(6):1349-1382, nov 1994. refs.yml |
+| `robins1994estimation` | OK | alta | issue 427 (sep 1994) no indicado en refs.yml | Crossref: JASA 89(427):846-866, sep 1994. Alias 10.2307/2290910. refs.yml correcto salvo DOI ausente |
+| `robins1995semiparametric` | CORREGIR | alta | title: refs.yml dice 'Semiparametric Efficiency in Double Robustness Regression', titulo inexistente; el real  | Misma obra (JASA 90(429):122-129, mar 1995, confirmada por Crossref); vol/issue/year/pages de refs.y |
+| `neyman1959` | OK | alta | — | Capitulo en volumen editado (Cramér), no articulo de revista; refs.yml 'Probability and Statistics'  |
+| `tibshirani1996lasso` | OK | alta | — | Crossref: JRSS-B 58(1):267-288, 1996. refs.yml correcto. |
+| `hoerl1970ridge` | OK | alta | issue 1 no indicado en refs.yml | Crossref/OpenAlex: Technometrics 12(1):55-67, feb 1970. El DOI que S2 enlaza (10.1080/00401706.2000. |
+| `zou2005elasticnet` | OK | alta | — | Crossref/OpenAlex: JRSS-B 67(2):301-320, 2005. Ojo: 10.1111/j.1467-9868.2005.00527.x es el Addendum  |
+| `leeb2006can` | CORREGIR | alta | source: refs.yml 'Econometric Theory' vs real 'The Annals of Statistics'; volume: 24 en refs.yml vs 34 real; i | Obra inequivoca (titulo+autores+2006). refs.yml parece confundir con el paper condicional de Econome |
+| `potscher2009confidence` | VERIFICAR_MANUAL | media | source: refs.yml dice 'Statistics and Decisions', no localizada en OpenAlex/S2/web; title: refs.yml 'On the Di | No existe (en OpenAlex/S2/web) un articulo 'On the Distribution of Penalized Estimators' en Statisti |
+| `bickel2009simultaneous` | OK | alta | S2 muestra year 2008 (era del DOI); Crossref/OpenAlex: publicado ago 2009, 37(4):1705-1732 | Crossref: Ann. Statist. 37(4):1705-1732, 2009-08. refs.yml correcto; el year 2009 de refs.yml es el  |
+| `kunzel2019metalearners` | OK | alta | S2 muestra year 2017 (arXiv 1706.03461); Crossref/OpenAlex y print PNAS: 2019 (116(10), mar 2019) | Crossref: PNAS 116(10):4156-4165, publicado en linea 2019-02-15. refs.yml correcto. |
+| `nie2021quasi` | OK | alta | Publicado online 2020-09-24; print Biometrika 108(2):299-319 (mayo 2021). refs.yml usa el ano de print, que es | Biometrika 108(2):299-319. Vol/issue/pages de refs.yml correctos; ano 2021 = print (online 2020). Cr |
+| `foster2019orthogonal` | OK | alta | — | arXiv:1901.09036 confirmado via doi-org/DataCite (2019, Foster & Syrgkanis). S2 ademas lista version |
+| `robinson1988` | OK | alta | — | Crossref: Econometrica 56(4):931, jul 1988; paginas 931-954 estandar. refs.yml correcto. |
+| `kennedy2023towards` | OK | alta | S2 muestra year 2020 (preprint arXiv 2004.14497); Crossref/OpenAlex y EJS print: 2023, 17(2):3008-3049 | Crossref: Electron. J. Statist. 17(2):3008-3049, 2023-01. refs.yml correcto. |
+| `shalit2017estimating` | OK | alta | — | ICML 2017 (S2 y OpenAlex/arXiv 1606.03976 coinciden; S2 muestra 2016 = ano de arXiv, pero ICML 2017  |
+| `hartford2017deep` | OK | alta | — | ICML 2017 confirmado por S2 (Venue: International Conference on Machine Learning, 2017). refs.yml co |
+| `louizos2017causal` | OK | alta | — | NeurIPS 2017 (NIPS 30) confirmado por S2 (909 citas, copia en UvA-DARE). refs.yml correcto. |
+| `shi2019adaptively` | OK | alta | — | NeurIPS 2019 (Dragonnet), confirmado por S2 con DOI arXiv 10.48550/arXiv.1906.02120. refs.yml correc |
+| `zheng2018dags` | OK | alta | — | NeurIPS 2018, arXiv 1803.01422. refs.yml correcto. |
+| `reisach2021beware` | OK | alta | — | NeurIPS 34 (2021), articulo 2127, paginas 27772-27784 confirmadas por ACM DL y proceedings.neurips.c |
+| `plecko2024causal` | OK | alta | — | Crossref: Found. Trends Mach. Learn. 17(3):304-589, 2024-01-31. refs.yml correcto. |
+| `athey2021matrix` | OK | alta | OpenAlex muestra publication_year 2018 (NBER WP/arXiv 1710.10251); print JASA 116(536):1716-1730, oct/dic 2021 | Crossref: JASA 116(536):1716-1730, publicado 2021; refs.yml corresponde al print. Correcto. |
+| `arkhangelsky2021synthetic` | OK | alta | Titulo con guiones: real 'Synthetic Difference-in-Differences'; refs.yml sin guiones, equivalente; S2/NBER WP  | Crossref: AER 111(12):4088-4118, 2021-12. refs.yml correcto. |
+| `callaway2021difference` | OK | alta | Online 2020-12-17; print Journal of Econometrics 225(2):200-230, dic 2021 | Crossref: J. Econometrics 225(2):200-230, dic 2021. refs.yml correcto. |
+| `freyaldenhoven2021local` | OK | alta | — | S2 y OpenAlex coinciden: AER 109(9):3307-3338, 2019, doi 10.1257/aer.20180609. La clave cita '2021'  |
+| `kitagawa2018should` | OK | alta | — | Versión publicada en Econometrica 2018 86(2):591-616 confirmada por OpenAlex, Crossref (doi-org) y S |
+| `kitagawa2021constrained` | OK | alta | — | Preprint arXiv:2106.12886 (submitido 24/06/2021, econ.EM) confirmado en S2, arXiv y OpenAlex (2021). |
+| `radcliffe2007using` | OK | alta | — | Existe y coincide: Direct Marketing Analytics Journal, 2007, pp. 14-21 (Edinburgh Research Explorer  |
+| `gutierrez2017causal` | CORREGIR | alta | source: 'CEUR Workshop Proceedings' incorrecto — el trabajo está en PMLR vol. 67 (PAPIs'16, publicado 04/07/20 | PMLR v67 (PAPIs'16, oct-2016): publicado 2017, pp. 1-13; coincide con S2 y con el sitio de PMLR. CEU |
+| `athey2019using` | OK | alta | volume/issue/pages ausentes en refs.yml (S2 y OpenAlex: vol. 5, nº 2, pp. 37-51) | Observational Studies 5(2):37-51, 2019, doi 10.1353/obs.2019.0001 (S2 y OpenAlex). refs.yml no lleva |
+| `schuler2018comparison` | CORREGIR | alta | authors: refs.yml lista Jung (Ken), Hastie (Trevor) y Subramanian (Nigam), que NO son autores de arXiv:1804.05 | arXiv:1804.05146 confirmado: autores Schuler, Baiocchi, Tibshirani, Shah (arXiv y S2). Título, año y |
+| `zhang2012estimating` | OK | alta | — | Stat 1(1):103-114, 2012, doi 10.1002/sta.411 (S2, OpenAlex y Crossref). refs.yml coincide en todo; f |
+| `chen2020causalml` | OK | alta | — | arXiv:2002.11631 (feb-2020), autores Chen, Harinen, Lee, Yung, Zhao (S2 y arXiv). refs.yml correcto; |
+| `bach2021doubleml` | OK | alta | — | JMLR 23(53):1-6, publicado 2022 (jmlr.org; también DBLP BachCKS22). S2 etiqueta 2021 por el arXiv (2 |
+| `battocchi2023econml` | OK_PARCIAL | alta | type 'article' para software/web; clave '2023' vs citación oficial del repo (2019) | Existe y los autores coinciden: repo microsoft/EconML (creado 2018-04-30; releases desde jun-2019; c |
+| `oprescu2023econml` | OK_PARCIAL | media | type 'article' para recurso web/software | La documentación de EconML existe (econml.azurewebsites.net, v0.16.0; migrada a www.pywhy.org/EconML |
+| `sharma2020dowhy` | OK_PARCIAL | alta | type 'article' para software/web; repo migrado de microsoft/dowhy a py-why/dowhy (2022) | Existe: Microsoft Research DoWhy (proyecto desde ene-2018; librería recomendada citar Sharma & Kicim |
+| `lundberg2017unified` | OK | alta | — | NeurIPS 2017 confirmado (S2); arXiv:1705.07874. No se añade el DOI 10.9728/dcs.2024.25.7.1847 que S2 |
+| `barocas2019fairness` | OK_PARCIAL | alta | la edición impresa es MIT Press 2023; el año 2019 corresponde a la edición web | Libro confirmado: edición web fairmlbook.org (disponible desde ~2019, actualizada nov-2023); impresi |
+| `spiegelhalter2019art` | OK_PARCIAL | alta | — | Libro confirmado: ed. RU Pelican Books (2019, 448 pp.) y ed. US Basic Books (3-sep-2019). refs.yml c |
+| `mullainathan2017machine` | OK | alta | — | JEP 31(2):87-106, 2017, doi 10.1257/jep.31.2.87 (S2 y OpenAlex). refs.yml coincide en todo; falta so |
+| `hastie2015statistical` | OK_PARCIAL | alta | — | Libro confirmado: 1ª ed., Chapman and Hall/CRC, may-2015, 367 pp., doi 10.1201/b18401. CRC Press ≈ C |
+| `recht2010guaranteed` | OK | alta | — | SIAM Review 52(3):471-501, 2010, doi 10.1137/070697835 (OpenAlex, DBLP RechtFP10, Crossref). S2 etiq |
+| `holland1986` | OK | alta | — | JASA 81(396):945-960, dic-1986, doi 10.1080/01621459.1986.10478354 (Crossref vía doi-org; OpenAlex d |
+| `pearlmackenzie2018` | OK_PARCIAL | alta | — | Libro confirmado: Basic Books, 15-may-2018, 432 pp. (edición original; subtítulo 'The New Science of |
+| `bareinboim2025causalai` | OK_PARCIAL | media | — | Existe: sitio oficial causalai-book.net; borrador v. Oct-11-2025; edición final anunciada como 'plan |
+| `simpson1951` | OK | alta | — | JRSS Series B 13(2):238-241, jul-1951, doi 10.1111/j.2517-6161.1951.tb00088.x (Crossref vía doi-org) |
+| `huyen2022dmls` | OK_PARCIAL | alta | — | Libro confirmado: Chip Huyen, O'Reilly Media, may-2022, 386 pp. (isbn 9781098107956). No pude verifi |
+| `kastner2024mlip` | CORREGIR | media | authors: refs.yml añade Kang (Eunsuk) y Hilton (Michael), que NO son autores del libro (son co-instructores de | El libro existe y la URL es correcta. Autor único: Kästner (MIT Press y mlip-cmu.github.io/book); Ka |
+| `mitchell2019modelcards` | OK | alta | — | FAT* 2019 (29 ene 2019), pp. 220-229, DOI confirmado por OpenAlex/Crossref. S2 lista 2018 por fecha  |
+| `arnold2019factsheets` | OK | alta | — | IBM JRD 63(4/5), 2019; OpenAlex da biblio 6:1-6:13 (refs.yml no trae páginas, opcional añadirlas). D |
+| `kusner2017counterfactual` | OK | alta | — | NeurIPS 30 (2017); autores y año coinciden. Solo consta DOI del arXiv (no hay DOI del proceedings);  |
+| `bareinboimpearl2013transportability` | OK | alta | — | J. Causal Inference 1(1):107-134 (2013); volumen, issue, páginas y año exactos. DOI confirmado por S |
+| `bareinboim2015bandits` | OK | alta | — | NeurIPS 28 (2015); S2 confirma título, autores y venue. Sin DOI registrado para el proceedings. |
+| `sculley2015hiddendebt` | OK | alta | — | NeurIPS 28 (2015); OpenAlex da pp. 2503-2511 (opcional añadirlas). Sin DOI del proceedings. |
+| `breck2017mltestscore` | OK | alta | — | IEEE Big Data 2017 (dic); título, autores y venue coinciden. DOI confirmado por S2/OpenAlex. |
+| `yule1903` | OK | alta | — | Biometrika 2(2):121-134 (1903); páginas, volumen, issue y año exactos según Crossref (doi-org). |
+| `bareinboim2022pch` | OK | alta | — | Capítulo 27 en Geffner/Dechter/Halpern (eds.), ACM Books 2022, pp. 507-556; confirmado por PhilPaper |
+| `elwert2014endogenous` | OK | alta | — | Annu. Rev. Sociol. 40:31-53 (2014); volumen, páginas y año exactos. Issue 1 según OpenAlex (refs.yml |
+| `kleinberg2015prediction` | OK | alta | — | AER 105(5, Papers & Proceedings):491-495 (2015); páginas e issue confirmados por doi-org (Crossref). |
+| `zhao2006model` | OK | alta | — | JMLR 7:2541-2563 (2006); confirmado por S2 (biblio vol 7, páginas 2541-2563). JMLR no asigna DOI. |
+| `lee2016exact` | OK | alta | — | Ann. Statist. 44(3):907-927 (2016); año, volumen, issue y páginas exactos según Crossref (doi-org).  |
+| `zhang2014confidence` | OK | alta | — | JRSS-B 76(1):217-242 (print 2014); Crossref confirma autores Cun-Hui Zhang y Stephanie S. Zhang (S2  |
+| `vandegeer2014asymptotically` | OK | alta | — | Ann. Statist. 42(3):1166-1202 (2014); año, volumen, issue y páginas exactos según Crossref (doi-org) |
+| `rubin1976inference` | OK | alta | — | Biometrika 63(3):581-592 (1976); páginas y año exactos según Crossref (doi-org). Sin match en S2; Op |
+| `rubin2001using` | OK | alta | — | HSORM 2(3-4):169-188 (dic 2001); Crossref confirma volumen, páginas y año. Issue 3-4 no presente en  |
+| `rosenbaum1983central` | OK | alta | — | Biometrika 70(1):41-55 (1983); año, volumen, issue y páginas exactos según Crossref (doi-org). |
+| `vanderweele2017evalue` | OK | alta | — | Ann. Intern. Med. 167(4):268-274 (2017); DOI presente en refs.yml correcto según Crossref (doi-org). |
+| `thornton2008demand` | OK | alta | — | AER 98(5):1829-1863 (2008); volumen, issue, páginas y año exactos según Crossref (doi-org). |
+| `goodmanbacon2021` | OK | alta | — | Journal of Econometrics 225(2):254-277 (dic 2021); volumen, issue, páginas y año exactos según Cross |
+| `dechaisemartin2020twoway` | OK | alta | — | AER 110(9):2964-2996 (sep 2020); volumen, issue, páginas y año exactos según Crossref (doi-org). |
+| `sun2021estimating` | OK | alta | — | Journal of Econometrics 225(2):175-199 (issue dic 2021; online dic 2020); volumen, issue, páginas y  |
+| `borusyak2024revisiting` | OK | alta | — | Review of Economic Studies 91(6):3253-3285 (nov 2024); volumen, issue, páginas, año y DOI confirmado |
+| `stock2005testing` | OK | alta | — | Capítulo 5 en Andrews & Stock (eds.), CUP 2005, pp. 80-108; editorial, año y páginas confirmados en  |
+| `gebru2021datasheets` | OK | alta | — | doi.org/Crossref confirma CACM 64(12):86-92, publicado dic-2021 (print). S2 lista año 2018 por el ar |
+| `paleyes2022challenges` | OK | alta | — | doi.org/Crossref: ACM Comput. Surv. 55(6):1-29, published 2022-12-07 (print jul-2023). S2 muestra 20 |
+| `rzepakowski2012decision` | OK | alta | — | doi.org/Crossref: KAIS 32(2):303-327, print ago-2012 (online jul-2011). Año 2012 del refs.yml correc |
+| `hardt2016equality` | OK | alta | — | Obra confirmada en S2 (NeurIPS 2016, = NIPS 29). No hay DOI oficial del proceedings; se añade el DOI |
+| `dwork2012fairness` | OK | alta | — | doi.org/Crossref: ITCS 2012 (ACM), páginas 214-226, publicado 2012-01-08. Todo cuadra con refs.yml. |
+| `kilbertus2017avoiding` | OK | alta | — | Confirmada en S2 (NeurIPS 2017, = NIPS 30). Sin DOI oficial del proceedings; se añade DOI DataCite d |
+| `manski2004statistical` | OK | alta | — | doi.org/Crossref: Econometrica 72(4):1221-1246, issued 2004-07 (S2 muestra 2003 por fecha de circula |
+| `berger1985statistical` | OK_PARCIAL | alta | — | Libro confirmado: 2ª ed., Springer-Verlag New York, 1985, Springer Series in Statistics (catálogo UC |
+| `pearl2011transportability` | OK | alta | — | Versión citada verificada en AAAI OJS: AAAI-11, 25(1):247-254, DOI 10.1609/aaai.v25i1.7861. Existe g |
+| `perdomo2020performative` | OK | alta | — | PMLR confirma ICML 2020 (37th), PMLR 119:7599-7609. Se añade DOI DataCite del preprint arXiv (lo tra |
+| `pearl2014external` | OK | alta | — | doi.org/Crossref: Statistical Science 29(4):579-595, issued 2014-11-01, Pearl & Bareinboim. Cuadra c |
+| `bareinboim2014selection` | OK | alta | — | doi.org/Crossref: AAAI 28(1), 2014-06-21, Bareinboim/Tian/Pearl. OpenAlex W4292824755 coincide. Sin  |
+| `correa2020general` | OK | alta | — | S2 y OpenAlex (W3098163125) confirman NeurIPS 2020, proceedings.neurips.cc (no DOI). Nº de edición ( |
+| `curth2021inductive` | OK | alta | — | S2 y OpenAlex (W3168410956) confirman NeurIPS 2021. Se añade DOI DataCite del preprint arXiv. Sin DO |
+| `farrell2021deep` | OK | alta | — | doi.org/Crossref y Econometric Society: Econometrica 89(1):181-213, ene-2021. S2 solo indexa la vers |
+| `chernozhukov2022riesznet` | OK | alta | year: refs.yml 2022 correcto (PMLR 162, jul-2022); S2 lista 2021 por el preprint arXiv:2110.03031 | PMLR confirma ICML 2022 (39th), PMLR 162:3901-3914. Se añade DOI DataCite del preprint arXiv (PMLR n |
+| `abadie2015comparative` | OK | alta | — | Wiley: AJPS 59(2):495-510, 2015, DOI 10.1111/ajps.12116 (S2 indexa el SSRN 10.2139/ssrn.1950298; el  |
+| `doudchenko2016balancing` | OK | alta | — | NBER confirma Working Paper 22791, oct-2016, DOI 10.3386/w22791 (autores y título exactos). |
+| `benmichael2021augmented` | OK | alta | — | doi.org/Crossref: JASA 116(536):1789-1803, 2021 (online jul-2021; print oct-2021). SSRN 3861414 es e |
+| `kalisch2007estimating` | OK | alta | — | JMLR v8:613-636 (2007) confirmado en jmlr.org y S2 (DBLP journals/jmlr/KalischB07). S2 muestra año 2 |
+| `chickering2002optimal` | OK | alta | — | JMLR v3(Nov):507-554, 2002 confirmado en jmlr.org y S2. JMLR no asigna DOI. |
+| `machlanski2024robustness` | OK | media | year: refs.yml 2024 vs S2 2023 (arXiv enviado oct-2023; CLEaR 2024). Dentro de ±1 año | El preprint citado en refs.yml existe (arXiv:2310.18212, mismos autores/título). S2 lista venue CLEa |
+| `zhang2019near` | OK | alta | — | Confirmada en S2 (NeurIPS 2019, = NIPS 32). Sin DOI oficial del proceedings. |
+| `lipton2018mythos` | OK | alta | — | doi.org/Crossref: CACM 61(10):36-43, 2018-09. S2 muestra 2016/Queue por el arXiv:1606.03490; el árbi |
+| `galesic2011` | OK | alta | — | OpenAlex W2007827489: Medical Decision Making 31(3):444-457, año print 2011 (online 2010-07-29). Cua |
+| `andrews2019robust` | NO_LOCALIZADA | alta | title: no existe 'Robust Methods in Nonparametric Conditional Moment Testing: The Case of Instrumental Variabl | Ninguna fuente localiza el título citado. El trabajo real de Andrews/Stock/Sun de 2019 es 'Weak Inst |
+| `chernozhukov2020generic` | VERIFICAR_MANUAL | media | authors: refs.yml lista 'Demir, Mert; Hansen, Christian; Kallus, Nathan' — el preprint arXiv:1712.04802 es de  | La obra está inequívocamente identificada por el arXiv ID, pero los autores de refs.yml son erróneos |
+| `cinellihazlett2020` | OK | alta | year: refs.yml 2020 (print issue feb 2020) vs first published online 2019-12-17 (Crossref/S2/OpenAlex); año de | DOI confirmado por doi.org: JRSS-B 82(1):39-67, print feb 2020; online dic 2019. refs.yml coincide c |
+| `crump2009dealing` | CORREGIR | alta | title: 'Dealing with Small Sample Sizes Complicating Causal Effect Estimation' no existe; obra real: 'Dealing  | Obra inequívocamente identificada (mismos 4 autores, Biometrika 2009 vol.96): título, issue y página |
+| `imbens2003sensitivity` | CORREGIR | alta | source: 'Unpublished manuscript, Harvard University' incorrecto — está publicado en American Economic Review 9 | doi.org (Crossref) arbitra: AER 93(2):126-132, 2003; no es un manuscrito inédito. |
+| `kish1965` | OK_PARCIAL | alta | — | Libro confirmado (WorldCat/Google Books/Wiley): New York: John Wiley & Sons, 1965, 643 p. Sin página |
+| `leicandes2021` | CORREGIR | alta | source: 'Annals of Statistics' incorrecto — publicado en JRSS-B 83(5):911-938 (print nov 2021; online 2021-10- | Obra inequívocamente identificada (arXiv:2006.06138; mismo título y autores); venue/volumen/issue/pá |
+| `lei2018distribution` | CORREGIR | alta | title: 'Distribution-Free Predictive Inference Using Regression' vs real 'Distribution-Free Predictive Inferen | Año 2018, JASA 113(523):1094-1111, issue y páginas verificados por doi.org (Crossref) y S2. Solo dif |
+| `manski1990nonparametric` | CORREGIR | alta | pages: 386-390 en refs.yml vs 319-323 (AER Papers and Proceedings, vol.80 issue 2, mayo 1990) | RePEc (via OpenAlex landing page) y S2 sitúan el artículo en AER 80(2):319-323. Ojo: S2/OpenAlex reg |
+| `romano2019conformalized` | OK | alta | — | S2 confirma título, autores, venue NeurIPS y año 2019 (arXiv:1905.03222). Sin páginas/DOI: los proce |
+| `stock2002survey` | CORREGIR | alta | source: 'Journal of the American Statistical Association' incorrecto — publicado en Journal of Business & Econ | doi.org (Crossref) arbitra: JBES 20(4):518-529, oct 2002. Las páginas coinciden por casualidad; el j |
+| `tibshirani2019conformal` | OK | alta | — | S2 confirma título, autores (orden distinto en refs.yml pero mismos 4), año 2019 y arXiv:1904.06019, |
+| `yadlowsky2021rate` | CORREGIR | alta | source: refs.yml cita 'arXiv:2111.00066', que es un paper de hep-ph de Chen & Freitas; el paper correcto es ar | Título y 5 autores coinciden exactamente con arXiv:2111.07966. Nota: existe versión JASA publicada ( |
+| `shpitser2006identification` | OK | alta | — | S2 (DBLP: conf/aaai/ShpitserP06) confirma AAAI 2006, pp.1219-1226; refs.yml coincide en título, auto |
+| `huang2006pearl` | OK | alta | — | ACM Digital Library y UAI 2006 accepted papers confirman UAI'06, pp.217-224, AUAI Press, 13 jul 2006 |
+| `pearl2010amplifying` | OK | alta | pages: proceedings AUAI original pp.417-424 (refs.yml) vs republicación PMLR R8:424-431 (2026) — paginación di | UAI 2010 confirmado por múltiples fuentes (UCLA tech report R-356, ML Anthology, Scopus/Technion): p |
+| `chouldechova2017fair` | OK | alta | — | doi.org (Crossref): Big Data 5(2):153-163, junio 2017. refs.yml coincide exactamente; se añade el DO |
+| `kleinberg2017inherent` | OK | alta | — | doi.org (DataCite): LIPIcs vol.67, artículo 43, ITCS 2017, Schloss Dagstuhl. refs.yml correcto; se a |
+| `lipsitch2010negative` | OK | alta | — | doi.org (Crossref): Epidemiology 21(3):383-388, mayo 2010; DOI de refs.yml coincide y todos los camp |
+| `chernozhukov2022long` | OK | alta | — | doi.org (Crossref): NBER WP 30302, julio 2022, mismos 5 autores; DOI de refs.yml coincide. |
+| `rambachan2023more` | OK | alta | — | doi.org (Crossref): Review of Economic Studies 90(5):2555-2591, print sep 2023. refs.yml coincide (S |

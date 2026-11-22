@@ -1,0 +1,54 @@
+{
+  "id": "particiones",
+  "titulo": "Particiones sembradas y la pared",
+  "pregunta_operativa": "¿Cómo separo entrenamiento de evaluación sin fuga?",
+  "alcance": "Diseño y verificación de particiones con semilla.",
+  "condiciones": [
+    "Tabla con hash versionado",
+    "Proporciones declaradas"
+  ],
+  "principios": [
+    "La semilla es parte del contrato",
+    "La prueba mide una vez",
+    "La verdad vive al otro lado de la pared"
+  ],
+  "pasos": [
+    "Elegir proporciones y método de estratificación",
+    "Fijar semilla antes de mirar resultados",
+    "Verificar disjunción y cobertura",
+    "Etiquetar lados de la pared"
+  ],
+  "evidencia_requerida": [
+    "particion_versionada",
+    "hash_verificado"
+  ],
+  "fallos": [
+    "Reusar semilla hasta que salga bien",
+    "Solape por join defectuoso"
+  ],
+  "alternativas": [
+    "Separación por tiempo cuando aplica"
+  ],
+  "ejemplo": "real/jobs: 60/20/20 estratificado por tratamiento, semilla 20240701.",
+  "limitaciones": [
+    "La partición no garantiza ausencia de fuga semántica"
+  ],
+  "fuentes": [
+    {
+      "cita": "Huyen 2022 Cap 4",
+      "url": "https://doi.org/10.1093/oso/9780199642611.001.0001",
+      "tipo": "libro"
+    }
+  ],
+  "fecha_revision": "2026-11-07",
+  "contratos_relacionados": [
+    "C-10"
+  ],
+  "criterios_relacionados": [
+    "Q-05"
+  ],
+  "etiquetas": [
+    "ingeniería",
+    "partición"
+  ]
+}

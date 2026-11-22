@@ -1,0 +1,12 @@
+{
+  "id": "C-04",
+  "titulo": "Servicio de estimación causal",
+  "capitulo": 13,
+  "operaciones": ["consultar", "salud", "resolver_version"],
+  "entrada": { "perfil": "covariables del esquema", "bundle": "C-09 champion + tarjeta C-05" },
+  "salida": { "dentro": "respuesta+efecto+IC+versión", "fuera": "abstención+motivo+versión sin número" },
+  "invariantes": ["no lee train, solo bundle", "respuesta con IC+cobertura+versión", "fuera=abstención sin número", "determinismo", "motivo nombra covariable y rango", "versión=champion"],
+  "fallos": ["número fuera de soporte", "leer tabla train", "sin versión", "abstención con número", "no determinista"],
+  "aceptacion": { "procedimiento": "dentro responde 1596.0 IC [1004.8,2187.3], age99 se abstiene con motivo, determinismo OK", "semilla": 20260713, "script": "Causal_AI/scripts/cap13_servicio.py" },
+  "criterios_calidad": ["Q-07"]
+}

@@ -1,0 +1,36 @@
+{
+  "id": "empaquetar",
+  "titulo": "Empaquetar resultados con trazabilidad",
+  "descripcion": "Bundle versionado con hashes y tarjeta que separa declarado/calculado/verificado.",
+  "precondiciones": [
+    "Estimación y diagnósticos completos"
+  ],
+  "pasos": [
+    {
+      "accion": "registrar_evidencia",
+      "tool": "registrar_artefacto_tool",
+      "describe": "Hash de cada artefacto"
+    },
+    {
+      "accion": "emitir_tarjeta",
+      "tool": "emitir_tarjeta",
+      "describe": "Distingue informativo de aprobado"
+    },
+    {
+      "accion": "elegibilidad",
+      "tool": "consultar_elegibilidad",
+      "describe": "Perfil que exige requisitos completos"
+    }
+  ],
+  "decisiones": [
+    "Tarjeta informativa vs aprobada"
+  ],
+  "salida": "Bundle con tarjeta, evidencias vigentes y estado de elegibilidad.",
+  "ruta_fallo": "Completar verificaciones faltantes.",
+  "contratos": [
+    "C-05",
+    "C-09",
+    "C-14",
+    "C-15"
+  ]
+}

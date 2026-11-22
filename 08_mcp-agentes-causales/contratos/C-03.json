@@ -1,0 +1,12 @@
+{
+  "id": "C-03",
+  "titulo": "Validez temporal y control de fuga",
+  "capitulo": 6,
+  "operaciones": ["auditar", "extraer_especificaciones"],
+  "entrada": { "features": "candidatas con rol y timestamp por unidad" },
+  "salida": { "X_base": "confusores verificables", "X_ampliada": "base+desconocidos" },
+  "invariantes": ["nada post-tratamiento entra", "sin timestamp → fuera", "doble especificación si rol ambiguo", "auditoría registra motivo"],
+  "fallos": ["feature derivada del resultado", "timestamp de ingesta ≠ medición", "rol inferido por lasso"],
+  "aceptacion": { "procedimiento": "fuga 1.00→0.00 R2 0.69→0.99, as-of join", "semilla": 13, "script": "Causal_AI/scripts/cap06_fuga.py" },
+  "criterios_calidad": ["Q-03"]
+}

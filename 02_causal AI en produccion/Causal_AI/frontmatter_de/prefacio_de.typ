@@ -1,0 +1,28 @@
+// Prefacio de la edición de ingeniería de datos — final (1.0-rc).
+#import "../template/template.typ": *
+#import "../template/template_de.typ": *
+
+#chapter[Prefacio]
+<de-prefacio>
+
+Este libro está pensado para quienes construyen pipelines: ingenieros de datos, _analytics engineers_, perfiles de plataforma de ML y _data engineers_ que ya saben mover datos con calidad, y sospechan —o les fue señalado en una revisión— que en su sistema hay algo más en juego que la calidad. También sirve a analistas y científicos de datos responsables de una estimación que termina en una decisión, y a quienes auditan sistemas de decisión.
+
+La tesis es una sola. *En un sistema de decisión, el trabajo del dato no es llegar con calidad al modelo: es preservar la identificación.* Un pipeline puede ser impecable en todo lo que la ingeniería de datos sabe medir — puntualidad, completitud, consistencia, frescura — y aun así destruir el enunciado causal que justifica la decisión que el sistema toma. La fuga temporal no lanza ningún error; la variable posterior al tratamiento entra por la puerta del "mejor ajuste"; la partición filtrada hace que la evaluación mienta; la tabla que cambia bajo los pies hace que el efecto publicado no se refiera a nada. Ninguna métrica de calidad de datos estándar ve esas fallas, porque ninguna de ellas es un problema de calidad del dato: es un problema de *qué comparación sostiene el dato*.
+
+De esa tesis salen las tres decisiones que organizan el libro.
+
+*Primera: el plano de datos y el plano de método son dos planos distintos, y este libro es el del dato.* La identificación y la estimación — modelos causales estructurales, doble machine learning, meta-learners, políticas — tienen su propio tratamiento completo en la edición de método de este mismo libro, con sus teoremas y sus demostraciones. Aquí no se repite esa teoría: se responde, para cada pieza del pipeline, *qué le exige el estimador al dato*: qué tasas, qué solapamiento, qué marcas de tiempo, qué partición, qué registro. El capítulo 9 del libro (Parte III) condensa esas exigencias; los capítulos 1 a 8 construyen el plano que las satisface.
+
+*Segunda: contratos, no convenciones.* Todo lo que este libro exige del plano de datos está escrito como un contrato numerado (C-01, C-02, …) con seis campos: qué operaciones ofrece, qué recibe, qué devuelve, qué debe cumplirse siempre, cómo falla y con qué prueba de aceptación se comprueba. Una convención se recuerda; un contrato se ejecuta. La prueba de aceptación es la unidad de rigor de esta edición: cada contrato tiene una, y el repositorio de referencia del libro la corre sobre datos reales. Lo que no está en un contrato con su prueba, en este libro, es una opinión.
+
+*Tercera: la pared y la abstención.* Un sistema de decisión honesto declara qué datos puede usar y cuáles no — la pared entre lo observado y lo reservado para evaluación — y sabe no responder: la abstención fuera del soporte es una respuesta de primera clase, no un fallo. La pared existe porque la alternativa es un sistema que consume su propia evaluación y reporta un mundo que no existe; la abstención existe porque un número sin sustento es peor que ningún número.
+
+== Cómo está organizado
+
+El libro tiene cuatro partes. La Parte I instala el vocabulario causal mínimo y sus dos primeros artefactos de ingeniería: el contrato de roles (C-01) y el registro de versiones con linaje. La Parte II recorre el pipeline: particiones, la pared observado/evaluación y la validez temporal de las variables. La Parte III condensa lo que los estimadores — DML, heterogeneidad, políticas — le exigen al dato, en la dosis exacta que un equipo de pipeline necesita para garantizarlo. La Parte IV lleva el plano de datos a operación: puerta causal, servicio con abstención, observabilidad de supuestos y la ficha que viaja con el artefacto.
+
+Cada capítulo abre con un cuadro sinóptico, desarrolla un contrato o un invariante, lo comprueba en un caso canónico con verdad conocida, y cierra respondiendo la misma pregunta, siempre la misma, que es el eje del libro: *¿qué debe ser verdad en los datos para que la afirmación de este capítulo valga, y cómo se comprueba?* Esa pregunta, y su respuesta en una caja verde al final de cada capítulo, es la firma editorial del libro.
+
+*Convenciones.* La notación sigue la edición de método: $Y(d)$ es el resultado potencial bajo el tratamiento $d$, $D$ la asignación observada, $X$ las covariables previas al tratamiento, $tau(x)$ el CATE y $theta$ el ATE. En el texto corrido los decimales se escriben con coma; dentro de las fórmulas, con punto. Cada cifra de un caso canónico cita su script y su semilla, y todos los scripts viven en el repositorio de referencia, junto al benchmark de datos y a #code[causalops], la implementación de los contratos. Los términos de ingeniería de datos que el libro usa en sentido técnico —contrato, linaje, inmutabilidad— se definen la primera vez que aparecen y están recogidos en el glosario de la edición de método.
+
+*Agradecimientos.* Este libro se apoya en dos tradiciones que rara vez se citan juntas: la ingeniería de datos de @kleppmann2017 y @reis2022fundamentals, y la inferencia causal de @neyman1923, @rubin1974 y @chernozhukov2018double. Los contratos numerados son deudores del aparato de la edición de método de este mismo libro, y el repositorio de referencia existe porque un curso anterior lo construyó antes de que este libro lo necesitara. El servidor MCP que acompaña esta edición — doce herramientas que hacen los contratos ejecutables por agentes — es la pieza que cierra el ciclo: lo que este libro enseña, un agente conectado ya no puede ignorarlo.
