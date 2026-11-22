@@ -28,7 +28,7 @@ La guía completa de dependencias está en [`docs/REQUISITOS_NOTEBOOKS.md`](docs
 
 ### Contenido técnico
 
-`05_contenido_tecnico/` contiene el material descargable del libro (`02_causal_AI_en_produccion_material.zip`, snapshot de noviembre 2026). La edición vigente y auditada del libro vive en `02_causal AI en produccion/Causal_AI/`.
+`05_contenido_tecnico/` contiene los documentos del snapshot de noviembre 2026 del libro (fuentes Typst, PDF, bibliografía auditada y reportes de `verificacion/`), sin la herramienta Rust ni sus artefactos. La edición vigente y auditada vive en `02_causal AI en produccion/Causal_AI/`.
 
 ## Orden recomendado
 
