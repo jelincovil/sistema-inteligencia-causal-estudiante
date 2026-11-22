@@ -28,7 +28,7 @@ La guía completa de dependencias está en [`docs/REQUISITOS_NOTEBOOKS.md`](docs
 
 ### Contenido técnico
 
-`05_contenido_tecnico/` está reservado para el contenido técnico del curso y por ahora está vacío.
+`05_contenido_tecnico/` contiene el material descargable del libro (`02_causal_AI_en_produccion_material.zip`, snapshot de noviembre 2026). La edición vigente y auditada del libro vive en `02_causal AI en produccion/Causal_AI/`.
 
 ## Orden recomendado
 
