@@ -4,4 +4,4 @@ La entrega final es un paquete causal local, reproducible y auditable. Sigue [`g
 
 Tu paquete debe declarar pregunta, estimando, población, datos observados, identificación, incertidumbre, puerta de decisión, abstención y límites. Puedes reutilizar los componentes de [`04_produccion_causal/`](../04_produccion_causal/), pero debes entregar una sola historia trazable de extremo a extremo.
 
-La ponderación vigente es 70% del curso. Los labs y notebooks A1–A4 preparan el trabajo; no son entregas adicionales.
+La ponderación vigente es 70% del curso. Los notebooks Serie A–A4 preparan el trabajo; no son entregas adicionales.

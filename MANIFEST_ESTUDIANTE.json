@@ -1,6 +1,6 @@
 {
   "schema": "sic.student-manifest.v1",
-  "generated_at": "2026-11-09",
+  "generated_at": "2026-11-22",
   "scope": "public student repository; excludes teacher sources, solutions, truth files and generated artifacts",
   "notebooks": 4,
   "scenarios": [
@@ -13,8 +13,8 @@
   "files": [
     {
       "path": ".gitignore",
-      "bytes": 222,
-      "sha256": "24b37a845b19f5115b2473ed46044f1246d64877baa6ea2c203d6b225cb4dbed"
+      "bytes": 696,
+      "sha256": "106539fefe13dc33da7bfc9be7d8efc69d528e4e743b5834e678fa6c72dd5e31"
     },
     {
       "path": "01_silabo/README.md",
@@ -28,23 +28,13 @@
     },
     {
       "path": "01_silabo/lectura_por_sesion.md",
-      "bytes": 982,
-      "sha256": "c31e78100812b18a6af48653535bfbc7904f3ebefc60c5ea1b23356d4f132c1d"
+      "bytes": 992,
+      "sha256": "71e59c5bb15ca64a36a13b7ba7c7f07332511fc2fc9d075341f2bb7a0f91a592"
     },
     {
       "path": "01_silabo/silabo.pdf",
       "bytes": 705981,
       "sha256": "a33acfcbc755143c8b4482fb359c235f91ff073081c4904fc14b67e19c0921f5"
-    },
-    {
-      "path": "02_monografia/README.md",
-      "bytes": 483,
-      "sha256": "102a5f4e03acb9ca80a5136431c476fb3b463d6190745a90f400131aa2cd16f7"
-    },
-    {
-      "path": "02_monografia/monografia_curso.pdf",
-      "bytes": 7834890,
-      "sha256": "9966a8175cf2a61a74764f55d42065f3142ca82ae3987a035f999c6322ab47f9"
     },
     {
       "path": "03_notebooks_caso_estudio/artifacts/.gitkeep",
@@ -373,13 +363,13 @@
     },
     {
       "path": "06_proyecto_final/ADENDA_CONTRATOS_EVALUACION.md",
-      "bytes": 3504,
-      "sha256": "69cf3776c2293880392b23d49d06a0bf7fe3ecf63ec3c4465a5d39968e7a9173"
+      "bytes": 3526,
+      "sha256": "1ecbe7c10c23dfe5cda89f176e6ba81e4e481134e4060b92d777dccd99f58e13"
     },
     {
       "path": "06_proyecto_final/README.md",
-      "bytes": 720,
-      "sha256": "9466977d8133fbde35f174d56ea1af9026e321dab3bc037d3fc7677469ab2c42"
+      "bytes": 718,
+      "sha256": "444675b4ee0f1d4a5a42aff655e45b8e4476a397133ec0e7cf6ac91d99589e7a"
     },
     {
       "path": "06_proyecto_final/guia_proyecto.md",
@@ -393,8 +383,8 @@
     },
     {
       "path": "CALENDARIO.md",
-      "bytes": 947,
-      "sha256": "98b2e6dd50e3c13a890e2ed4de4b07a7c304bff304ade534b23d0355c3a73a88"
+      "bytes": 1064,
+      "sha256": "cc869fdcebe8af98258f090cf9b498f0912e9baafdd847b3a2e8609e3d3f5c4d"
     },
     {
       "path": "LICENSE",
@@ -403,13 +393,13 @@
     },
     {
       "path": "README.md",
-      "bytes": 3180,
-      "sha256": "7e9e146b060710f100123074175409f38953bb0dee6a74b6f87e876c25c951bb"
+      "bytes": 2272,
+      "sha256": "a40170fe4b238f10c88364bb754d9bed3261ed3264b97e34eaed82b97e931938"
     },
     {
       "path": "data_benchmark_causal/README.md",
-      "bytes": 347,
-      "sha256": "8adcbaaaba5fe914782bafcf2e8c013060c5fa503a984a5ef0315b1b2c2c77c1"
+      "bytes": 340,
+      "sha256": "bb82639d12898081c956350fb09c1e358db08dd19bc737d64265904e02141f3b"
     },
     {
       "path": "data_benchmark_causal/causal_benchmark_synthetic/README.md",
@@ -628,8 +618,8 @@
     },
     {
       "path": "docs/REQUISITOS_NOTEBOOKS.md",
-      "bytes": 1389,
-      "sha256": "de67dcc41942e9787239f684db0a4360e02263016dfbdb31cb1465b8832de48e"
+      "bytes": 1543,
+      "sha256": "b51f70f45b448916818da994d93f400e631508e6c565d6bc73f7aeb6f01539e9"
     },
     {
       "path": "requirements.txt",
@@ -643,8 +633,8 @@
     },
     {
       "path": "scripts/validate_student_repo.py",
-      "bytes": 1627,
-      "sha256": "83803b0ac1be599a1bd1b9042525062447916f4c3b107c82ddcae090b5cd7880"
+      "bytes": 1845,
+      "sha256": "a1fdfd10e1f0c3944158f2c1a54e1279eeb49b20c12b41d71b622f5acef17d97"
     }
   ]
 }

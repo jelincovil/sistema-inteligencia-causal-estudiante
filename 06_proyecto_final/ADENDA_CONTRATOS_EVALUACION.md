@@ -1,12 +1,12 @@
 # Adenda de contratos y evaluación — cohorte 2026-II
 
 **Versión:** `contratos-2026.10`  
-**Alcance:** sílabo, guía del profesor, labs canónicos, Serie B y trabajo final.
+**Alcance:** sílabo, guía del profesor, notebooks Serie A canónicos, Serie B y trabajo final.
 
 Esta adenda resuelve las equivalencias que pueden afectar la admisibilidad o la
 calificación. La autoridad para la evaluación es, en este orden, el **sílabo
 vigente**, esta adenda y la guía del proyecto con su rúbrica. La guía del
-profesor explica cómo enseñarlo; la monografía y los labs explican el método y
+profesor explica cómo enseñarlo; la monografía y los casos Serie A explican el método y
 proporcionan práctica. Una explicación del libro no crea por sí sola un
 requisito adicional.
 

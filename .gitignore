@@ -28,3 +28,6 @@ __pycache__/
 
 # MCP subespacios de trabajo (dato local regenerable)
 .mcp_causal_workspace/
+
+# papelera del sistema de archivos (autocontenida, excluida)
+.trash/

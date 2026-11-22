@@ -41,4 +41,4 @@ Los notebooks A1–A4 que señalan una sección de evaluación reservada termina
 
 ## Qué no contiene este repositorio
 
-No contiene soluciones, autograders, datos `truth`, claves de evaluación, guía del profesor, fuentes Typst, artefactos docentes ni credenciales.
+No contiene soluciones, autograders, datos `truth`, claves de evaluación ni credenciales (lo comprueba `scripts/validate_student_repo.py`). Alcance: la distribución pública del estudiante es la definida por [`MANIFEST_ESTUDIANTE.json`](MANIFEST_ESTUDIANTE.json); este repositorio además trackea las fuentes Typst del libro (`02_causal AI en produccion/`), el material de docencia (`07_docencia/`) y el servidor MCP (`08_mcp-agentes-causales/`).
