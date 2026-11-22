@@ -83,7 +83,7 @@ El score ortogonal correspondiente, derivado por @chernozhukov2018double, es:
 $
 psi_(t "IRM")(W, theta, eta) = mu(1, X) - mu(0, X) + (D(Y - mu(1, X)))/e(X) - ((1 - D)(Y - mu(0, X)))/(1 - e(X)) - theta,
 $ <eq-irm-score>
-donde $eta = (mu, e)$. Este score es la combinación clásica _doubly robust_ de @robins1994estimation ajustada para satisfacer ortogonalidad de Neyman. El score @eq-irm-score es la instancia IRM de la forma canónica de la Nota técnica #ref(<sec-cap10_teorema_dml>, supplement: none); la instancia sin promediar reaparece como $Gamma_i$ del DR-learner (@sec-cap12_drlearner) y como EIF del _policy value_ (@sec-cap21-estimacion).
+donde $eta = (mu, e)$. Este score es la combinación clásica _doubly robust_ de #cite(<robins1994estimation>, form: "prose") (y el _efficient influence function_ del ATE en este diseño es el de #cite(<hahn1998role>, form: "prose")), ajustada para satisfacer ortogonalidad de Neyman. El score @eq-irm-score es la instancia IRM de la forma canónica de la Nota técnica #ref(<sec-cap10_teorema_dml>, supplement: none); la instancia sin promediar reaparece como $Gamma_i$ del DR-learner (@sec-cap12_drlearner) y como EIF del _policy value_ (@sec-cap21-estimacion).
 
 #theorem(
   name: [Doble robustez + ortogonalidad]
@@ -154,7 +154,7 @@ La alerta "$hat(e)$ cerca de 0 o 1" (@tab-riesgos_dml) se vuelve operativa con d
 $
 "ESS" = ((sum_i w_i)^2) / (sum_i w_i^2), quad w_i = D_i / hat(e)(X_i).
 $
-$"ESS"/n << 1$ señala que pocas unidades con $hat(e)$ extremo dominan la estimación: el soporte común es formalmente escaso aunque el histograma de $hat(e)$ "se vea bien" (@kish1965).
+$"ESS"/n << 1$ señala que pocas unidades con $hat(e)$ extremo dominan la estimación: el soporte común es formalmente escaso aunque el histograma de $hat(e)$ "se vea bien" (#cite(<kish1965>, form: "prose")).
 
 *Trimming óptimo.* #cite(<crump2009dealing>, form: "prose") derivan la regla de recorte simétrico $hat(e)(X) ∉ [alpha, 1 - alpha]$ que minimiza la varianza asintótica del ATE; el $alpha^*$ óptimo resuelve una condición de punto fijo sobre la varianza condicional y, en general, no tiene forma cerrada simple. Como regla práctica, que en su artículo funciona bien en un amplio rango de distribuciones del propensity score, proponen $alpha approx 0.1$, es decir, descartar $hat(e)(X) ∉ [0.1, 0.9]$. *Atención al estimando:* tras el _trimming_, el efecto identificado es el ATE sobre la población con _overlap_, no el ATE poblacional, y declararlo en la _model card_ (@cap-model-card-causal) es obligatorio.
 
@@ -325,7 +325,7 @@ Si $D$ es binario, puede usarse un clasificador con #code[predict_proba] para el
 == Caso empírico y validación
 <sec-cap11_caso>
 
-El diseño de referencia para esta parte del capítulo es el de @card1995, que instrumenta los años de educación con la proximidad geográfica a una universidad de cuatro años, bajo el argumento de que vivir cerca de una universidad reduce el costo de asistir sin afectar directamente el salario. (Conviene no confundirlo con el otro diseño IV clásico de la literatura de retornos a la educación, el de @angrist1991, que usa el trimestre de nacimiento interactuado con las leyes de escolaridad obligatoria.) #cite(<chernozhukov2018double>, form: "prose") desarrollan la extensión de DML a este tipo de diseño. El modelo es _partial linear IV_:
+El diseño de referencia para esta parte del capítulo es el de @card1995, que instrumenta los años de educación con la proximidad geográfica a una universidad de cuatro años, bajo el argumento de que vivir cerca de una universidad reduce el costo de asistir sin afectar directamente el salario. (Conviene no confundirlo con el otro diseño IV clásico de la literatura de retornos a la educación, el de #cite(<angrist1991>, form: "prose"), que usa el trimestre de nacimiento interactuado con las leyes de escolaridad obligatoria.) #cite(<chernozhukov2018double>, form: "prose") desarrollan la extensión de DML a este tipo de diseño. El modelo es _partial linear IV_:
 $
 Y = D theta_0 + g_0(X) + epsilon, quad Z = r_0(X) + zeta, quad D = m_0(Z, X) + v,
 $

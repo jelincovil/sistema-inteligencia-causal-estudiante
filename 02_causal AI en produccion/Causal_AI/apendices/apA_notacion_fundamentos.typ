@@ -103,7 +103,7 @@ Sea $cal(P)$ una familia de distribuciones parametrizada por $(theta, eta)$, don
 <sec-apA_estimacion_semiparam>
 
 #theorem(name: [Cota de Cramér-Rao semiparamétrica])[
-  La varianza asintótica mínima de un estimador regular de $theta$ es $tilde(I)_theta^(-1)$, donde $tilde(I)_theta$ es la _información eficiente_: la varianza del EIF.
+  La varianza asintótica mínima de un estimador regular de $theta$ es $E[tilde(psi) tilde(psi)^top] = tilde(I)_theta^(-1)$, donde $tilde(I)_theta = E[tilde(S) tilde(S)^top]$ es la _información eficiente_ (la precisión del score eficiente); la cota es la varianza del EIF.
 ] <thm-semiparam-cr>
 
 #theorem(name: [Bickel, Klaassen, Ritov & Wellner, 1993])[
@@ -139,8 +139,8 @@ La _honesty_ (capítulo #ref(<cap-causal-forests>, supplement: none)) es el aná
 
 La _norma nuclear_ de una matriz $L$ es $norm(L)_* = sum_i sigma_(i)(L)$, donde $sigma_i$ son los valores singulares. Es la envolvente convexa del _rank_, lo que permite formular el problema de _matrix completion_ (capítulo #ref(<cap-scm-mc>, supplement: none)) como optimización convexa.
 
-#theorem(name: [Recht, Fazel & Parrilo, 2010])[
-  Bajo _incoherence_ y muestreo aleatorio suficientemente denso, la minimización de norma nuclear recupera exactamente la matriz de bajo rango subyacente.
+#theorem(name: [Candès y Recht, 2009])[
+  Bajo _incoherence_ y muestreo aleatorio suficientemente denso, la minimización de norma nuclear recupera exactamente la matriz de bajo rango subyacente. El resultado es de #cite(<candes2009exact>, form: "prose").
 ]
 
 == Modelos causales estructurales

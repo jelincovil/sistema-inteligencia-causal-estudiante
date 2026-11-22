@@ -1,0 +1,34 @@
+apendices/apA_notacion_fundamentos.typ:75:#theorem(name: [Ley débil de los grandes números])[
+apendices/apA_notacion_fundamentos.typ:79:#theorem(name: [Teorema central del límite])[
+apendices/apA_notacion_fundamentos.typ:83:#theorem(name: [Slutsky])[
+apendices/apA_notacion_fundamentos.typ:105:#theorem(name: [Cota de Cramér-Rao semiparamétrica])[
+apendices/apA_notacion_fundamentos.typ:109:#theorem(name: [Bickel, Klaassen, Ritov & Wellner, 1993])[
+apendices/apA_notacion_fundamentos.typ:142:#theorem(name: [Recht, Fazel & Parrilo, 2010])[
+capitulos/cap21_policy_learning.typ:74:#proposition(name: [Inferencia sobre el valor de una política fija])[
+capitulos/cap21_policy_learning.typ:97:#theorem(name: [Kitagawa y Tetenov, 2018: maximización del bienestar empírico])[
+capitulos/cap21_policy_learning.typ:113:#theorem(name: [Athey y Wager, 2021: policy learning con nuisance estimados])[
+capitulos/cap26_generalizacion.typ:56:#proposition(name: [Fórmula de transporte con una covariable])[
+capitulos/cap08_intervencion_contrafactual.typ:41:#theorem(name: [Fórmula de ajuste de puerta trasera])[
+capitulos/cap08_intervencion_contrafactual.typ:104:#theorem(name: [Cálculo-$"do"$])[
+capitulos/cap24_etica_interpretabilidad.typ:64:#theorem(name: [Incompatibilidad de los criterios])[
+capitulos/cap03_scm_pch.typ:159:#theorem(name: [Teorema de la Jerarquía Causal])[
+capitulos/cap13_arboles_bosques.typ:174:#theorem(name: [Normalidad asintótica puntual del bosque causal])[
+capitulos/cap25_decisiones_estructurales.typ:49:#proposition(name: [Utilidad lineal e incertidumbre])[
+capitulos/cap25_decisiones_estructurales.typ:89:#proposition(name: [Cota del valor de un estudio])[
+capitulos/cap10_ortogonalidad_crossfitting.typ:98:#theorem(name: [Ortogonalidad del score PLR])[
+capitulos/cap10_ortogonalidad_crossfitting.typ:142:#theorem(name: [DML, versión simplificada])[
+capitulos/cap23_explicacion_equidad.typ:52:#proposition(name: [Identificación de la descomposición])[
+capitulos/cap16_pds.typ:63:#theorem(name: [Belloni, Chernozhukov y Hansen, 2014])[
+capitulos/cap12_metalearners.typ:93:#theorem(name: [Nie y Wager, 2021])[
+capitulos/cap12_metalearners.typ:115:#theorem(name: [Kennedy, 2023: tasa oracle del DR-learner])[
+capitulos/cap14_validacion.typ:44:#proposition(name: [Imposibilidad de validación directa])[
+capitulos/cap14_validacion.typ:201:#proposition(name: [Cobertura conforme])[
+capitulos/cap06_regularizacion_postseleccion.typ:85:#theorem(name: [Tasa de convergencia del LASSO])[
+capitulos/cap06_regularizacion_postseleccion.typ:107:#theorem(name: [Consistencia de selección del LASSO])[
+capitulos/cap06_regularizacion_postseleccion.typ:118:#theorem(name: [Leeb y Pötscher: no uniformidad (esquema)])[
+capitulos/cap06_regularizacion_postseleccion.typ:131:#proposition(name: [Sesgo por omisión de controles])[
+capitulos/cap06_regularizacion_postseleccion.typ:158:#theorem(name: [Doble selección con LASSO (esquema)])[
+capitulos/cap11_dml.typ:94:#theorem(name: [Eficiencia semiparamétrica del estimador DML-IRM])[
+capitulos/cap05_prediccion_causalidad.typ:102:#proposition(name: [Identificación del CATE])[
+capitulos/cap05_prediccion_causalidad.typ:121:#proposition(name: [Sesgo de primer orden del estimador por sustitución])[
+capitulos/cap17_panel_dmliv.typ:127:#theorem(name: [DML-PLIV])[

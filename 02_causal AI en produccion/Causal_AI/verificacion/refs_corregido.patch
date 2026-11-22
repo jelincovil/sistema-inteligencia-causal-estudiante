@@ -1,0 +1,879 @@
+diff --git a/02_causal AI en produccion/Causal_AI/bibliografia/refs.yml b/02_causal AI en produccion/Causal_AI/bibliografia/refs.yml
+index 8194161..ca40de8 100644
+--- a/02_causal AI en produccion/Causal_AI/bibliografia/refs.yml	
++++ b/02_causal AI en produccion/Causal_AI/bibliografia/refs.yml	
+@@ -14,7 +14,7 @@ neyman1923:
+   title: On the Application of Probability Theory to Agricultural Experiments
+   parent:
+     title: Annals of Agricultural Sciences
+-  volume: 5
++  volume: 10
+   page-range: 1-51
+   date: 1923
+ 
+@@ -28,6 +28,7 @@ rubin1974:
+   issue: 5
+   page-range: 688-701
+   date: 1974
++  doi: "10.1037/H0037350"
+ 
+ imbens2015causal:
+   type: book
+@@ -63,7 +64,8 @@ aronow2017:
+   author: ["Aronow, Peter M.", "Miller, Benjamin T."]
+   title: Foundations of Agnostic Statistics
+   publisher: Cambridge University Press
+-  date: 2017
++  date: 2019
++  doi: "10.1017/9781316831762"
+ 
+ bickel1993efficient:
+   type: book
+@@ -91,6 +93,7 @@ angrist1991:
+   issue: 4
+   page-range: 979-1014
+   date: 1991
++  doi: "10.2307/2937954"
+ 
+ lalonde1986:
+   type: article
+@@ -111,6 +114,7 @@ dehejia1999causal:
+   volume: 94
+   page-range: 1053-1062
+   date: 1999
++  doi: "10.1080/01621459.1999.10473858"
+ 
+ abadie2003economic:
+   type: article
+@@ -122,6 +126,7 @@ abadie2003economic:
+   issue: 1
+   page-range: 113-132
+   date: 2003
++  doi: "10.1257/000282803321455188"
+ 
+ abadie2010synthetic:
+   type: article
+@@ -133,6 +138,7 @@ abadie2010synthetic:
+   issue: 490
+   page-range: 493-505
+   date: 2010
++  doi: "10.1198/jasa.2009.ap08746"
+ 
+ athey2017beyond:
+   type: article
+@@ -144,6 +150,7 @@ athey2017beyond:
+   issue: 6324
+   page-range: 483-485
+   date: 2017
++  doi: "10.1126/science.aal4321"
+ 
+ athey2019econometric:
+   type: article
+@@ -154,6 +161,7 @@ athey2019econometric:
+   volume: 11
+   page-range: 685-725
+   date: 2019
++  doi: "10.1146/annurev-economics-080217-053433"
+ 
+ athey2016recursive:
+   type: article
+@@ -165,6 +173,7 @@ athey2016recursive:
+   issue: 27
+   page-range: 7353-7360
+   date: 2016
++  doi: "10.1073/pnas.1510489113"
+ 
+ athey2019generalized:
+   type: article
+@@ -176,6 +185,7 @@ athey2019generalized:
+   issue: 2
+   page-range: 1148-1178
+   date: 2019
++  doi: "10.1214/18-AOS1709"
+ 
+ wager2018estimation:
+   type: article
+@@ -187,6 +197,7 @@ wager2018estimation:
+   issue: 523
+   page-range: 1228-1242
+   date: 2018
++  doi: "10.1080/01621459.2017.1319839"
+ 
+ athey2021policy:
+   type: article
+@@ -198,6 +209,7 @@ athey2021policy:
+   issue: 1
+   page-range: 133-161
+   date: 2021
++  doi: "10.3982/ECTA15732"
+ 
+ chernozhukov2018double:
+   type: article
+@@ -209,22 +221,28 @@ chernozhukov2018double:
+   issue: 1
+   page-range: C1-C68
+   date: 2018
++  doi: "10.1111/ectj.12097"
+ 
+ chernozhukov2018applied:
+   type: article
+   author: ["Chernozhukov, Victor", "Chetverikov, Denis", "Demirer, Mert", "Duflo, Esther", "Hansen, Christian", "Newey, Whitney"]
+-  title: Applied Causal Inference Inspired by Machine Learning
++  title: Double/Debiased/Neyman Machine Learning of Treatment Effects
+   parent:
+-    title: Working paper, MIT
+-  date: 2018
++    title: American Economic Review (Papers and Proceedings)
++  volume: 107
++  issue: 5
++  page-range: 261-265
++  date: 2017
++  doi: "10.1257/aer.p20171038"
+ 
+ chernozhukov2016locally:
+   type: article
+-  author: ["Chernozhukov, Victor", "Goldman, Matt", "Taddy, Matt"]
++  author: ["Chernozhukov, Victor", "Escanciano, Juan Carlos", "Ichimura, Hidehiko", "Newey, Whitney K.", "Robins, James M."]
+   title: Locally Robust Semiparametric Estimation
+   parent:
+     title: arXiv preprint arXiv:1608.00033
+   date: 2016
++  doi: "10.48550/arXiv.1608.00033"
+ 
+ belloni2014inference:
+   type: article
+@@ -236,6 +254,7 @@ belloni2014inference:
+   issue: 2
+   page-range: 608-650
+   date: 2014
++  doi: "10.1093/restud/rdt044"
+ 
+ belloni2012sparse:
+   type: article
+@@ -247,6 +266,7 @@ belloni2012sparse:
+   issue: 6
+   page-range: 2369-2429
+   date: 2012
++  doi: "10.3982/ECTA9626"
+ 
+ newey1994asymmetric:
+   type: article
+@@ -258,6 +278,7 @@ newey1994asymmetric:
+   issue: 6
+   page-range: 1349-1382
+   date: 1994
++  doi: "10.2307/2951752"
+ 
+ robins1994estimation:
+   type: article
+@@ -268,16 +289,19 @@ robins1994estimation:
+   volume: 89
+   page-range: 846-866
+   date: 1994
++  doi: "10.1080/01621459.1994.10476818"
+ 
+ robins1995semiparametric:
+   type: article
+   author: ["Robins, James M.", "Rotnitzky, Andrea"]
+-  title: Semiparametric Efficiency in Double Robustness Regression
++  title: Semiparametric Efficiency in Multivariate Regression Models with Missing Data
+   parent:
+     title: Journal of the American Statistical Association
+   volume: 90
++  issue: 429
+   page-range: 122-129
+   date: 1995
++  doi: "10.1080/01621459.1995.10476494"
+ 
+ neyman1959:
+   type: article
+@@ -298,6 +322,7 @@ tibshirani1996lasso:
+   issue: 1
+   page-range: 267-288
+   date: 1996
++  doi: "10.1111/j.2517-6161.1996.TB02080.X"
+ 
+ hoerl1970ridge:
+   type: article
+@@ -308,6 +333,7 @@ hoerl1970ridge:
+   volume: 12
+   page-range: 55-67
+   date: 1970
++  doi: "10.1080/00401706.1970.10488634"
+ 
+ zou2005elasticnet:
+   type: article
+@@ -319,27 +345,31 @@ zou2005elasticnet:
+   issue: 2
+   page-range: 301-320
+   date: 2005
++  doi: "10.1111/j.1467-9868.2005.00503.x"
+ 
+ leeb2006can:
+   type: article
+   author: ["Leeb, Hannes", "Pötscher, Benedikt M."]
+   title: Can One Estimate the Conditional Distribution of Post-Model-Selection Estimators?
+   parent:
+-    title: Econometric Theory
+-  volume: 24
+-  issue: 6
+-  page-range: 1915-1933
++    title: The Annals of Statistics
++  volume: 34
++  issue: 5
++  page-range: 2554-2591
+   date: 2006
++  doi: "10.1214/009053606000000821"
+ 
+ potscher2009confidence:
+   type: article
+   author: ["Pötscher, Benedikt M.", "Leeb, Hannes"]
+-  title: On the Distribution of Penalized Estimators
++  title: "On the distribution of penalized maximum likelihood estimators: The LASSO, SCAD, and thresholding"
+   parent:
+-    title: Statistics and Decisions
+-  volume: 27
+-  page-range: 1-30
++    title: Journal of Multivariate Analysis
++  volume: 100
++  issue: 9
++  page-range: 2065-2082
+   date: 2009
++  doi: "10.1016/j.jmva.2009.06.010"
+ 
+ bickel2009simultaneous:
+   type: article
+@@ -351,6 +381,7 @@ bickel2009simultaneous:
+   issue: 4
+   page-range: 1705-1732
+   date: 2009
++  doi: "10.1214/08-AOS620"
+ 
+ kunzel2019metalearners:
+   type: article
+@@ -362,6 +393,7 @@ kunzel2019metalearners:
+   issue: 10
+   page-range: 4156-4165
+   date: 2019
++  doi: "10.1073/pnas.1804597116"
+ 
+ nie2021quasi:
+   type: article
+@@ -373,6 +405,7 @@ nie2021quasi:
+   issue: 2
+   page-range: 299-319
+   date: 2021
++  doi: "10.1093/biomet/asaa076"
+ 
+ foster2019orthogonal:
+   type: article
+@@ -381,6 +414,7 @@ foster2019orthogonal:
+   parent:
+     title: arXiv preprint arXiv:1901.09036
+   date: 2019
++  doi: "10.48550/arXiv.1901.09036"
+ 
+ robinson1988:
+   type: article
+@@ -392,6 +426,7 @@ robinson1988:
+   issue: 4
+   page-range: 931-954
+   date: 1988
++  doi: "10.2307/1912705"
+ 
+ kennedy2023towards:
+   type: article
+@@ -403,6 +438,7 @@ kennedy2023towards:
+   issue: 2
+   page-range: 3008-3049
+   date: 2023
++  doi: "10.1214/23-ejs2157"
+ 
+ shalit2017estimating:
+   type: article
+@@ -478,6 +514,7 @@ athey2021matrix:
+   issue: 536
+   page-range: 1716-1730
+   date: 2021
++  doi: "10.1080/01621459.2021.1891924"
+ 
+ arkhangelsky2021synthetic:
+   type: article
+@@ -489,6 +526,7 @@ arkhangelsky2021synthetic:
+   issue: 12
+   page-range: 4088-4118
+   date: 2021
++  doi: "10.1257/aer.20190159"
+ 
+ callaway2021difference:
+   type: article
+@@ -500,6 +538,7 @@ callaway2021difference:
+   issue: 2
+   page-range: 200-230
+   date: 2021
++  doi: "10.1016/j.jeconom.2020.12.001"
+ 
+ freyaldenhoven2021local:
+   type: article
+@@ -510,6 +549,7 @@ freyaldenhoven2021local:
+   volume: 109
+   page-range: 3307-3338
+   date: 2019
++  doi: "10.1257/aer.20180609"
+ 
+ kitagawa2018should:
+   type: article
+@@ -521,6 +561,7 @@ kitagawa2018should:
+   issue: 2
+   page-range: 591-616
+   date: 2018
++  doi: "10.3982/ecta13288"
+ 
+ kitagawa2021constrained:
+   type: article
+@@ -543,8 +584,9 @@ gutierrez2017causal:
+   author: ["Gutierrez, Pierre", "Gérardy, Jean-Yves"]
+   title: "Causal Inference and Uplift Modelling: A Review of the Literature"
+   parent:
+-    title: CEUR Workshop Proceedings
+-  volume: 1846
++    title: Proceedings of Machine Learning Research (PMLR)
++  volume: 67
++  page-range: 1-13
+   date: 2017
+ 
+ athey2019using:
+@@ -554,10 +596,12 @@ athey2019using:
+   parent:
+     title: Observational Studies
+   date: 2019
++  doi: "10.1353/obs.2019.0001"
+ 
+ schuler2018comparison:
+   type: article
+-  author: ["Schuler, Alejandro", "Jung, Ken", "Tibshirani, Robert", "Hastie, Trevor", "Subramanian, Nigam"]
++  author: ["Schuler, Alejandro", "Baiocchi, Michael", "Tibshirani, Robert", "Shah, Nigam"]
++  doi: "10.48550/arXiv.1804.05146"
+   title: A Comparison of Methods for Model Selection When Estimating Individual Treatment Effects
+   parent:
+     title: arXiv preprint arXiv:1804.05146
+@@ -573,6 +617,7 @@ zhang2012estimating:
+   issue: 1
+   page-range: 103-114
+   date: 2012
++  doi: "10.1002/sta.411"
+ 
+ chen2020causalml:
+   type: article
+@@ -581,6 +626,7 @@ chen2020causalml:
+   parent:
+     title: "arXiv preprint arXiv:2002.11631"
+   date: 2020
++  doi: "10.48550/arXiv.2002.11631"
+ 
+ bach2021doubleml:
+   type: article
+@@ -649,6 +695,7 @@ mullainathan2017machine:
+   issue: 2
+   page-range: 87-106
+   date: 2017
++  doi: "10.1257/jep.31.2.87"
+ 
+ hastie2015statistical:
+   type: book
+@@ -667,6 +714,7 @@ recht2010guaranteed:
+   issue: 3
+   page-range: 471-501
+   date: 2010
++  doi: "10.1137/070697835"
+ 
+ holland1986:
+   type: article
+@@ -678,6 +726,7 @@ holland1986:
+   issue: 396
+   page-range: 945-960
+   date: 1986
++  doi: "10.1080/01621459.1986.10478354"
+ 
+ pearlmackenzie2018:
+   type: book
+@@ -703,6 +752,7 @@ simpson1951:
+   issue: 2
+   page-range: 238-241
+   date: 1951
++  doi: "10.1111/j.2517-6161.1951.tb00088.x"
+ 
+ huyen2022dmls:
+   type: book
+@@ -713,11 +763,11 @@ huyen2022dmls:
+ 
+ kastner2024mlip:
+   type: web
+-  author: ["Kästner, Christian", "Kang, Eunsuk", "Hilton, Michael"]
++  author: ["Kästner, Christian"]
+   title: "Machine Learning in Production: From Models to Products"
+   url:
+     value: https://mlip-cmu.github.io/book/
+-  date: 2024
++  date: 2025
+ 
+ mitchell2019modelcards:
+   type: article
+@@ -727,6 +777,7 @@ mitchell2019modelcards:
+     title: Proceedings of the Conference on Fairness, Accountability, and Transparency (FAT*)
+   page-range: 220-229
+   date: 2019
++  doi: "10.1145/3287560.3287596"
+ 
+ arnold2019factsheets:
+   type: article
+@@ -737,6 +788,7 @@ arnold2019factsheets:
+   volume: 63
+   issue: "4/5"
+   date: 2019
++  doi: "10.1147/jrd.2019.2942288"
+ 
+ kusner2017counterfactual:
+   type: article
+@@ -745,6 +797,7 @@ kusner2017counterfactual:
+   parent:
+     title: Advances in Neural Information Processing Systems 30 (NeurIPS)
+   date: 2017
++  doi: "10.48550/arXiv.1703.06856"
+ 
+ bareinboimpearl2013transportability:
+   type: article
+@@ -756,6 +809,7 @@ bareinboimpearl2013transportability:
+   issue: 1
+   page-range: 107-134
+   date: 2013
++  doi: "10.1515/jci-2012-0004"
+ 
+ bareinboim2015bandits:
+   type: article
+@@ -787,6 +841,7 @@ breck2017mltestscore:
+ # ============================================================
+ 
+ # --- Fundamentos y jerarquía causal (Caps. 1, 3, 8) ---
++  doi: "10.1109/BigData.2017.8258038"
+ 
+ yule1903:
+   type: article
+@@ -798,6 +853,7 @@ yule1903:
+   issue: 2
+   page-range: 121-134
+   date: 1903
++  doi: "10.1093/biomet/2.2.121"
+ 
+ bareinboim2022pch:
+   type: chapter
+@@ -810,6 +866,7 @@ bareinboim2022pch:
+     editor: [Geffner, Hector, Dechter, Rina, Halpern, Joseph Y.]
+   page-range: 507-556
+   date: 2022
++  doi: "10.1145/3501714.3501743"
+ 
+ elwert2014endogenous:
+   type: article
+@@ -822,6 +879,7 @@ elwert2014endogenous:
+   date: 2014
+ 
+ # --- Predicción vs. causalidad (Cap. 5) ---
++  doi: "10.1146/annurev-soc-071913-043455"
+ 
+ kleinberg2015prediction:
+   type: article
+@@ -835,6 +893,7 @@ kleinberg2015prediction:
+   date: 2015
+ 
+ # --- Alta dimensión, selección e inferencia post-selección (Caps. 6, 16) ---
++  doi: "10.1257/AER.P20151023"
+ 
+ zhao2006model:
+   type: article
+@@ -856,6 +915,7 @@ lee2016exact:
+   issue: 3
+   page-range: 907-927
+   date: 2016
++  doi: "10.1214/15-AOS1371"
+ 
+ zhang2014confidence:
+   type: article
+@@ -867,6 +927,7 @@ zhang2014confidence:
+   issue: 1
+   page-range: 217-242
+   date: 2014
++  doi: "10.1111/rssb.12026"
+ 
+ vandegeer2014asymptotically:
+   type: article
+@@ -880,6 +941,7 @@ vandegeer2014asymptotically:
+   date: 2014
+ 
+ # --- Datos de entrenamiento y balance (Cap. 7) ---
++  doi: "10.1214/14-AOS1221"
+ 
+ rubin1976inference:
+   type: article
+@@ -891,6 +953,7 @@ rubin1976inference:
+   issue: 3
+   page-range: 581-592
+   date: 1976
++  doi: "10.1093/biomet/63.3.581"
+ 
+ rubin2001using:
+   type: article
+@@ -901,6 +964,7 @@ rubin2001using:
+   volume: 2
+   page-range: 169-188
+   date: 2001
++  doi: "10.1023/A:1020363010465"
+ 
+ rosenbaum1983central:
+   type: article
+@@ -919,6 +983,7 @@ rosenbaum1983central:
+ #  entradas que reemplazan)
+ 
+ # --- Validación y sensibilidad (Cap. 14) ---
++  doi: "10.1093/biomet/70.1.41"
+ 
+ vanderweele2017evalue:
+   type: article
+@@ -944,6 +1009,7 @@ thornton2008demand:
+   date: 2008
+ 
+ # --- Panel y DiD moderno (Caps. 17, 28) ---
++  doi: "10.1257/AER.98.5.1829"
+ 
+ goodmanbacon2021:
+   type: article
+@@ -955,6 +1021,7 @@ goodmanbacon2021:
+   issue: 2
+   page-range: 254-277
+   date: 2021
++  doi: "10.1016/j.jeconom.2021.03.014"
+ 
+ dechaisemartin2020twoway:
+   type: article
+@@ -966,6 +1033,7 @@ dechaisemartin2020twoway:
+   issue: 9
+   page-range: 2964-2996
+   date: 2020
++  doi: "10.1257/aer.20181169"
+ 
+ sun2021estimating:
+   type: article
+@@ -977,6 +1045,7 @@ sun2021estimating:
+   issue: 2
+   page-range: 175-199
+   date: 2021
++  doi: "10.1016/j.jeconom.2020.09.006"
+ 
+ borusyak2024revisiting:
+   type: article
+@@ -988,6 +1057,7 @@ borusyak2024revisiting:
+   issue: 6
+   page-range: 3253-3285
+   date: 2024
++  doi: "10.1093/restud/rdae007"
+ 
+ stock2005testing:
+   type: chapter
+@@ -1002,6 +1072,7 @@ stock2005testing:
+   date: 2005
+ 
+ # --- Documentación y MLOps (Caps. 2, 19, 20) ---
++  doi: "10.1017/CBO9780511614491.006"
+ 
+ gebru2021datasheets:
+   type: article
+@@ -1013,6 +1084,7 @@ gebru2021datasheets:
+   issue: 12
+   page-range: 86-92
+   date: 2021
++  doi: "10.1145/3458723"
+ 
+ paleyes2022challenges:
+   type: article
+@@ -1026,6 +1098,7 @@ paleyes2022challenges:
+   date: 2022
+ 
+ # --- Uplift (Cap. 22) ---
++  doi: "10.1145/3533378"
+ 
+ rzepakowski2012decision:
+   type: article
+@@ -1039,6 +1112,7 @@ rzepakowski2012decision:
+   date: 2012
+ 
+ # --- Equidad (Caps. 23, 24) ---
++  doi: "10.1007/s10115-011-0434-0"
+ 
+ hardt2016equality:
+   type: article
+@@ -1047,6 +1121,7 @@ hardt2016equality:
+   parent:
+     title: Advances in Neural Information Processing Systems 29 (NeurIPS)
+   date: 2016
++  doi: "10.48550/arXiv.1610.02413"
+ 
+ dwork2012fairness:
+   type: article
+@@ -1056,6 +1131,7 @@ dwork2012fairness:
+     title: Proceedings of the 3rd Innovations in Theoretical Computer Science Conference (ITCS)
+   page-range: 214-226
+   date: 2012
++  doi: "10.1145/2090236.2090255"
+ 
+ kilbertus2017avoiding:
+   type: article
+@@ -1066,6 +1142,7 @@ kilbertus2017avoiding:
+   date: 2017
+ 
+ # --- Decisión bajo incertidumbre (Cap. 25) ---
++  doi: "10.48550/arXiv.1706.02744"
+ 
+ manski2004statistical:
+   type: article
+@@ -1077,6 +1154,7 @@ manski2004statistical:
+   issue: 4
+   page-range: 1221-1246
+   date: 2004
++  doi: "10.1111/j.1468-0262.2004.00530.x"
+ 
+ berger1985statistical:
+   type: book
+@@ -1096,6 +1174,7 @@ pearl2011transportability:
+     title: Proceedings of the 25th AAAI Conference on Artificial Intelligence
+   page-range: 247-254
+   date: 2011
++  doi: "10.1609/aaai.v25i1.7861"
+ 
+ perdomo2020performative:
+   type: article
+@@ -1105,6 +1184,7 @@ perdomo2020performative:
+     title: Proceedings of the 37th International Conference on Machine Learning (ICML), PMLR 119
+   page-range: 7599-7609
+   date: 2020
++  doi: "10.48550/arXiv.2002.06673"
+ 
+ pearl2014external:
+   type: article
+@@ -1116,6 +1196,7 @@ pearl2014external:
+   issue: 4
+   page-range: 579-595
+   date: 2014
++  doi: "10.1214/14-sts486"
+ 
+ bareinboim2014selection:
+   type: article
+@@ -1124,6 +1205,7 @@ bareinboim2014selection:
+   parent:
+     title: Proceedings of the 28th AAAI Conference on Artificial Intelligence
+   date: 2014
++  doi: "10.1609/aaai.v28i1.9074"
+ 
+ correa2020general:
+   type: article
+@@ -1142,6 +1224,7 @@ curth2021inductive:
+   parent:
+     title: Advances in Neural Information Processing Systems 34 (NeurIPS)
+   date: 2021
++  doi: "10.48550/arXiv.2106.03765"
+ 
+ farrell2021deep:
+   type: article
+@@ -1153,6 +1236,7 @@ farrell2021deep:
+   issue: 1
+   page-range: 181-213
+   date: 2021
++  doi: "10.3982/ECTA16901"
+ 
+ chernozhukov2022riesznet:
+   type: article
+@@ -1163,6 +1247,7 @@ chernozhukov2022riesznet:
+   date: 2022
+ 
+ # --- Control sintético (Cap. 28) ---
++  doi: "10.48550/arXiv.2110.03031"
+ 
+ abadie2015comparative:
+   type: article
+@@ -1174,6 +1259,7 @@ abadie2015comparative:
+   issue: 2
+   page-range: 495-510
+   date: 2015
++  doi: "10.1111/ajps.12116"
+ 
+ doudchenko2016balancing:
+   type: article
+@@ -1182,6 +1268,7 @@ doudchenko2016balancing:
+   parent:
+     title: NBER Working Paper 22791
+   date: 2016
++  doi: "10.3386/w22791"
+ 
+ benmichael2021augmented:
+   type: article
+@@ -1195,6 +1282,7 @@ benmichael2021augmented:
+   date: 2021
+ 
+ # --- Descubrimiento causal (Cap. 29) ---
++  doi: "10.1080/01621459.2021.1929245"
+ 
+ kalisch2007estimating:
+   type: article
+@@ -1246,6 +1334,7 @@ lipton2018mythos:
+   issue: 10
+   page-range: 36-43
+   date: 2018
++  doi: "10.1145/3233231"
+ 
+ galesic2011:
+   type: article
+@@ -1257,25 +1346,28 @@ galesic2011:
+   issue: 3
+   page-range: 444-457
+   date: 2011
++  doi: "10.1177/0272989X10373805"
+ 
+ andrews2019robust:
+   type: article
+   author: ["Andrews, Isaiah", "Stock, James H.", "Sun, Liyang"]
+-  title: "Robust Methods in Nonparametric Conditional Moment Testing: The Case of Instrumental Variables"
++  title: "Weak Instruments in Instrumental Variables Regression: Theory and Practice"
+   parent:
+-    title: Econometrica
+-  volume: 87
+-  issue: 4
+-  page-range: 1153-1181
++    title: Annual Review of Economics
++  volume: 11
++  issue: 1
++  page-range: 727-753
+   date: 2019
++  doi: "10.1146/annurev-economics-080218-025643"
+ 
+ chernozhukov2020generic:
+   type: article
+-  author: ["Chernozhukov, Victor", "Demir, Mert", "Hansen, Christian", "Kallus, Nathan"]
+-  title: "Generic Machine Learning Inference on Heterogeneous Treatment Effects in Randomized Experiments"
++  author: ["Chernozhukov, Victor", "Demirer, Mert", "Duflo, Esther", "Fernández-Val, Iván"]
++  title: "Fisher–Schultz Lecture: Generic Machine Learning Inference on Heterogeneous Treatment Effects in Randomized Experiments, with an Application to Immunization in India"
+   parent:
+-    title: "arXiv preprint arXiv:1712.04802"
+-  date: 2020
++    title: Econometrica
++  date: 2025
++  doi: "10.3982/ecta19303"
+ 
+ cinellihazlett2020:
+   type: article
+@@ -1292,21 +1384,26 @@ cinellihazlett2020:
+ crump2009dealing:
+   type: article
+   author: ["Crump, Richard K.", "Hotz, V. Joseph", "Imbens, Guido W.", "Mitnik, Oscar A."]
+-  title: "Dealing with Small Sample Sizes Complicating Causal Effect Estimation"
++  title: "Dealing with limited overlap in estimation of average treatment effects"
+   parent:
+     title: Biometrika
+   volume: 96
+-  issue: 2
+-  page-range: 257-279
++  issue: 1
++  page-range: 187-199
+   date: 2009
++  doi: "10.1093/biomet/asn055"
+ 
+ imbens2003sensitivity:
+   type: article
+   author: Imbens, Guido W.
+   title: "Sensitivity to Exogeneity Assumptions in Program Evaluation"
+   parent:
+-    title: "Unpublished manuscript, Harvard University"
++    title: "American Economic Review (Papers and Proceedings)"
++  volume: 93
++  issue: 2
++  page-range: 126-132
+   date: 2003
++  doi: "10.1257/000282803321946921"
+ 
+ kish1965:
+   type: book
+@@ -1320,16 +1417,18 @@ leicandes2021:
+   author: ["Lei, Jing", "Candès, Emmanuel J."]
+   title: "Conformal Inference of Counterfactuals and Individual Treatment Effects"
+   parent:
+-    title: Annals of Statistics
+-  volume: 49
+-  issue: 6
+-  page-range: 3346-3369
++    title: "Journal of the Royal Statistical Society: Series B (Statistical Methodology)"
++  volume: 83
++  issue: 5
++  page-range: 911-938
+   date: 2021
++  doi: "10.1111/rssb.12445"
+ 
+ lei2018distribution:
+   type: article
+   author: ["Lei, Jing", "G'Sell, Max", "Rinaldo, Alessandro", "Tibshirani, Ryan J.", "Wasserman, Larry"]
+-  title: "Distribution-Free Predictive Inference Using Regression"
++  title: "Distribution-Free Predictive Inference for Regression"
++  doi: "10.1080/01621459.2017.1307116"
+   parent:
+     title: "Journal of the American Statistical Association"
+   volume: 113
+@@ -1345,7 +1444,7 @@ manski1990nonparametric:
+     title: "American Economic Review"
+   volume: 80
+   issue: 2
+-  page-range: 386-390
++  page-range: 319-323
+   date: 1990
+ 
+ romano2019conformalized:
+@@ -1361,9 +1460,10 @@ stock2002survey:
+   author: ["Stock, James H.", "Wright, Jonathan H.", "Yogo, Motohiro"]
+   title: "A Survey of Weak Instruments and Weak Identification in Generalized Method of Moments"
+   parent:
+-    title: "Journal of the American Statistical Association"
+-  volume: 97
+-  issue: 460
++    title: "Journal of Business & Economic Statistics"
++  volume: 20
++  issue: 4
++  doi: "10.1198/073500102288618658"
+   page-range: 518-529
+   date: 2002
+ 
+@@ -1380,7 +1480,7 @@ yadlowsky2021rate:
+   author: ["Yadlowsky, Steve", "Fleming, Scott", "Shah, Nigam", "Brunskill, Emma", "Wager, Stefan"]
+   title: "Evaluating Treatment Prioritization Rules via Rank-Weighted Average Treatment Effects"
+   parent:
+-    title: "arXiv preprint arXiv:2111.00066"
++    title: "arXiv preprint arXiv:2111.07966"
+   date: 2021
+ shpitser2006identification:
+   type: article
+@@ -1420,6 +1520,7 @@ chouldechova2017fair:
+   issue: 2
+   page-range: 153-163
+   date: 2017
++  doi: "10.1089/big.2016.0047"
+ 
+ kleinberg2017inherent:
+   type: article
+@@ -1430,6 +1531,7 @@ kleinberg2017inherent:
+   date: 2017
+ 
+ # --- Supuestos no observables en operación (Cap. 33) ---
++  doi: "10.4230/LIPIcs.ITCS.2017.43"
+ 
+ lipsitch2010negative:
+   type: article
+@@ -1462,3 +1564,4 @@ rambachan2023more:
+   issue: 5
+   page-range: 2555-2591
+   date: 2023
++  doi: "10.1093/restud/rdad018"
