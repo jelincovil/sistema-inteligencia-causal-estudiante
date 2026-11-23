@@ -8,7 +8,6 @@ Uso: python3 examples/e2e_reference.py
 """
 from __future__ import annotations
 
-import json
 import sys
 from pathlib import Path
 
@@ -33,7 +32,7 @@ def main() -> int:
     workspace = Path(".scratch/e2e_workspace")
     store = ProjectStore(workspace)
     store.crear_proyecto("e2e_demo", "Demostración E2E")
-    print(f"\n[1] Proyecto creado: e2e_demo")
+    print("\n[1] Proyecto creado: e2e_demo")
 
     # 2. Declarar estimando
     decl = DeclaracionCausal(
@@ -93,7 +92,6 @@ def main() -> int:
         e_w = 1 / (1 + __import__("numpy").exp(-(Xw @ dgp.beta)))
         solape = float(((e_w > 0.05) & (e_w < 0.95)).mean())
         # PSI simplificado
-        e_ref = 1 / (1 + __import__("numpy").exp(-(X @ dgp.beta)))
         psi = abs(float(Xw[:, 2].mean() - X[:, 2].mean())) * 2  # proxy
         senales = {"solape": solape, "psi": psi, "smd_max": 0.15}
         r_puerta = evaluar_puerta(senales, umbrales)
@@ -103,7 +101,7 @@ def main() -> int:
             print(f"                     {r_puerta.mensaje_humano}")
 
     # 6. Servicio: consulta dentro y fuera del soporte
-    print(f"\n[6] Servicio:")
+    print("\n[6] Servicio:")
     soporte = {"x0": (float(X[:, 0].min()), float(X[:, 0].max()))}
     dentro = {"x0": float(X[:, 0].mean())}
     fuera = {"x0": 99.0}
@@ -119,7 +117,7 @@ def main() -> int:
 
     # 8. Resumen
     proyecto = store.consultar_proyecto("e2e_demo")
-    print(f"\n[8] Resumen del proyecto:")
+    print("\n[8] Resumen del proyecto:")
     print(f"    Verificaciones: {len(proyecto['verificaciones'])}")
     for v in proyecto["verificaciones"]:
         print(f"      {v['check_id']}: {v['status']} ({v['checked_at'][:19]})")

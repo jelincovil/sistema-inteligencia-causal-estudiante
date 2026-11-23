@@ -27,7 +27,6 @@ from __future__ import annotations
 
 import hashlib
 import json
-import os
 import platform
 import shlex
 import subprocess
@@ -626,7 +625,6 @@ def test_declaration_change_invalidates(workspace: Path) -> dict:
             store.guardar_verificacion("v1_test_11",
                 ResultadoVerificacion(check_id="C-01_roles", status=Status.PASS, claim_level=ClaimLevel.COMPUTED, recommended_action=Accion.CONTINUAR))
             rev1 = store.obtener_revision_declaracion("v1_test_11")
-            estado_antes = store.estado_promocion("v1_test_11")
             # Cambiar declaración (misma población distinta -> nueva revisión)
             decl2 = DeclaracionCausal(
                 estimando=TipoEstimando.ATE, tratamiento="D", resultado="Y", poblacion="pob_b",
@@ -728,7 +726,6 @@ def test_consistency_after_invalidation(workspace: Path) -> dict:
                 artifact_ids=[reg.artifact_id])
             estado_ok = store.estado_promocion("v1_test_13")
             tarjeta_ok = store.emitir_tarjeta_dict("v1_test_13")
-            proyecto_ok = store.consultar_proyecto("v1_test_13")
             # Invalidar por artefacto
             csv_path.write_text("x,d,y\n1,0,99\n")
             store.verificar_vigencia("v1_test_13")

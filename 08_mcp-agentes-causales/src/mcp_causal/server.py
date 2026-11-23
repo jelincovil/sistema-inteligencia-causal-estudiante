@@ -4,7 +4,6 @@ import os
 
 from mcp.server.fastmcp import FastMCP
 
-from . import __version__
 from .estimators import DGPSintetico, estimar_aipw
 from .knowledge import buscar_conocimiento, contar_fichas, obtener_ficha, listar_fichas
 from .models import (

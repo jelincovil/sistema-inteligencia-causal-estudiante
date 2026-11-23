@@ -163,7 +163,7 @@ esquema valida contra observed_train: OK (n = 1033, tratados = 262)
 
 - **Qué:** OLS con SE clásico (`sigma2 * (M'M)⁻¹[1,1]`); logística por BFGS para el
   propensity; ESS de Kish con `e` recortada a `[1e-6, 1-1e-6]`; SMD con desviación
-  común; trampa `score_post` (0,6·Y + 0,4·D + ruido N(0,500)); **AIPW con cross-fitting**
+  común; trampa `score_post` (0,6·Y + 0,4·D + ruido N(0,5)); **AIPW con cross-fitting**
   K=5 (outcome por brazo y propensity ajustados fuera del fold que predicen, trimming
   `[0,05, 0,95]`, score = influence function del ATE); estratos `nodegree` con su IC.
 - **Por qué:** dos piernas estimadas fuera de muestra son la exigencia del Cap. 9:
@@ -321,7 +321,7 @@ la refactorización, `make demo` sobre `jobs` devuelve exactamente los mismos n�
 
 ### 8.2 Corte de heterogeneidad (declarado antes de mirar efectos)
 
-- **Corte:** `bw` (nombre inspirado en peso al nacer, pero covariable sintética) dicotomizado en la **mediana de train** (`−0,0133`).
+- **Corte:** `bw` (nombre inspirado en peso al nacer, pero covariable sintética) dicotomizado en la **mediana de train** (`−0,01`).
 - **Regla histórica:** `bw` se interpretó por su nombre inspirado en peso al nacer,
   aunque aquí es una covariable simulada y no una medida clínica; la mediana preserva
   tamaño en ambas hojas y **no** se eligió por ganancia de varianza. Queda escrito en
@@ -332,7 +332,7 @@ la refactorización, `make demo` sobre `jobs` devuelve exactamente los mismos n�
 | Umbral | jobs | ihdp | Justificación |
 |---|---|---|---|
 | `solape_min` | 0,50 | **0,30** | Con 25 covariables y P(D=1)=0,43 puede estrecharse el soporte; en esta corrida histórica se consideró demasiado exigente 0,50 y se fijó 0,30 como convención inicial. Medido: sana 100 %, positividad 0 % → discrimina en esas ventanas. |
-| `smd_max` | 0,25 | **0,50** | El máximo sobre 25 SMD tiene más ruido: EE(SMD) ≈ √(1/191 + 1/257) ≈ 0,096; el máximo esperado de 25 ≈ 3–4 EE ≈ 0,3–0,4. Medido: train 0,43 (por debajo), positividad 5,16 (muy por encima). |
+| `smd_max` | 0,25 | **0,50** | El máximo sobre 25 SMD tiene más ruido: EE(SMD) ≈ √(1/191 + 1/257) ≈ 0,1; el máximo esperado de 25 ≈ 3–4 EE ≈ 0,3–0,4. Medido: train 0,43 (por debajo), positividad 5,16 (muy por encima). |
 | `psi_alerta` | 0,25 | **0,25** | Umbral estándar de industria (0,10 moderado, 0,25 significativo) y la deriva sintética cae muy por encima. |
 
 Estas decisiones son convenciones iniciales del ejercicio, no calibración universal.
@@ -367,7 +367,7 @@ de cobertura Monte Carlo; esos hechos validados se consignan aparte en §17.
 | Diferencia cruda (train) | 10,3 puntos |
 | ATE OLS + IC95 | 4,8 [3,8; 5,8] (SE 0,5) |
 | **ATE AIPW (cross-fitting) + IC95** | **5,2 [3,9; 6,4]** (SE 0,6) |
-| ESS / n y rango de ê | 388 (0,87) · [0,071; 0,887] · solape 100 % |
+| ESS / n y rango de ê | 388 (0,87) · [0,07; 0,89] · solape 100 % |
 | Estrato `bw` alto (> mediana) | 7,2 [5,5; 8,8] (n = 224) |
 | Estrato `bw` bajo (≤ mediana) | 3,2 [1,4; 4,9] (n = 224) |
 | ¿Se solapan los intervalos? | **No** (7,2 vs 3,2; IC disjuntos) |
@@ -517,7 +517,7 @@ en el bundle. Un modelo de 27 coeficientes es auditable y no expone pseudo-resul
 unidad.
 
 **Límite declarado y evidencia histórica:** no es un CATE validado. En la corrida histórica,
-la proyección apenas discriminó (`r2 = 0,095` en `ihdp` y `0,012` en `jobs`), por lo que se
+la proyección apenas discriminó (`r2 = 0,1` en `ihdp` y `0,01` en `jobs`), por lo que se
 añadieron advertencias y `que_cubre_el_ic`. Estas cifras no constituyen una nueva validación.
 
 **Evidencia histórica del endpoint original:**
@@ -599,7 +599,7 @@ API y por formulario, con los mismos números que declara la documentación.
 | Documentación | `BITACORA.md`, `GUIA_CONSTRUCCION.md` (guía) + `.rtf` derivado, `pregunta_ihdp.md`, ficha Typst + PDF |
 
 **Límites conocidos de esta versión** (no son defectos ocultos, están declarados):
-proyección individual con `R² = 0,095`; sin verificación de hash al cargar el bundle; sin
+proyección individual con `R² = 0,1`; sin verificación de hash al cargar el bundle; sin
 autenticación ni TLS; un escenario por artefacto; piernas lineales.
 
 **Cómo verificar la versión desde cero:**
@@ -682,15 +682,15 @@ SIC_ESCENARIO=synthetic/ihdp make PYTHON=.venv_ci/bin/python evidencia
   `evidencia/09_pruebas.txt`.
 - **Estimación:** diferencia cruda 10,3 con IC 95 % aproximado [7,60; 13,05]; OLS
   4,8 [3,8; 5,8]; AIPW 5,2 [3,9; 6,4] (`evidencia/02_estimacion.txt`).
-- **Positividad OOF antes del trimming:** rango [0,043; 0,916]; solape 0,99777
-  (≈99,8 %, aunque la CLI puede redondear 100 %); ESS 332,2076/448 = 0,7415
-  (≈332/448 y 0,74). El trimming recortó 1 unidad en total (0,2232 %),
-  íntegramente de control (0,3891 % de los controles), y 0 tratadas. SMD ponderado
+- **Positividad OOF antes del trimming:** rango [0,04; 0,92]; solape ≈99,8 %
+  (aunque la CLI puede redondear 100 %); ESS 332,21/448 ≈ 0,74
+  (≈332/448 y 0,74). El trimming recortó 1 unidad en total (0,22 %),
+  íntegramente de control (0,39 % de los controles), y 0 tratadas. SMD ponderado
   OOF 0,11; sin ponderar 0,43. No confundir estos diagnósticos OOF con los valores
   históricos de §5/§8.6.
 - **Cobertura Monte Carlo ya ejecutada:** DGP ilustrativo propio, `n = 500`,
-  `R = 100`, semilla `20261111`; AIPW 0,97 (error MC 0,01706), OLS 0,96
-  (error MC 0,01960), ingenuo 0,00 (error MC 0). La diferencia de AIPW respecto
+  `R = 100`, semilla `20261111`; AIPW 0,97 (error MC 0,02), OLS 0,96
+  (error MC 0,02), ingenuo 0,00 (error MC 0). La diferencia de AIPW respecto
   del nominal 0,95 es 0,02 y **no está dentro de ±1 error MC**; no se afirma
   calibración exacta ni se atribuye esta cobertura a IHDP/jobs. Evidencia:
   `evidencia/10_cobertura.txt` y `evidencia/10_cobertura.json`.
@@ -701,10 +701,10 @@ SIC_ESCENARIO=synthetic/ihdp make PYTHON=.venv_ci/bin/python evidencia
 
 - **Validación adicional de `synthetic/jobs`:** se ejecutaron `datos.py` y la función
   de aplicación `estimacion.estimar()` sin invocar el CLI de escritura. Hashes, esquema,
-  pared, identificación backdoor y placebos pasaron. Diferencia ingenua 1600,7723
-  [996,4466; 2205,0980]; OLS 1596,0422 [1004,8127; 2187,2718]; AIPW 1638,6029
-  [1001,5516; 2275,6542]. Propensiones OOF [0,0681763; 0,5595719], solape 1,0,
-  ESS 702,6543 y cero recortes. No se creó ninguna versión ni se escribieron artefactos.
+  pared, identificación backdoor y placebos pasaron. Diferencia ingenua 1600,77
+  [996,45; 2205,10]; OLS 1596,04 [1004,81; 2187,27]; AIPW 1638,60
+  [1001,55; 2275,65]. Propensiones OOF [0,07; 0,56], solape 1,0,
+  ESS 702,65 y cero recortes. No se creó ninguna versión ni se escribieron artefactos.
 
 - **Diagramas y PDF actualizados:** `make dag && make cierre` regeneró los cuatro SVG y
   compiló `dataset_y_metodo.pdf` (14 páginas). Se actualizaron `evidencia/08_dag.txt` y

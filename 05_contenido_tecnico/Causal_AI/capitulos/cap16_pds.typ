@@ -118,14 +118,14 @@ Esto precisa dos matices que el lenguaje habitual de "las confusoras son las que
     table.hline(stroke: 0.6pt),
     table.header([*Método*], [*Sesgo*], [*Desv. est.*], [*Cobertura IC 95 %*]),
     table.hline(stroke: 0.3pt),
-    [Sin controles], [+0,145], [0,020], [0,00],
-    [Selección simple], [+0,145], [0,020], [0,00],
-    [Doble selección (PDS)], [+0,032], [0,094], [0,92],
-    [Oráculo ($X_1$ a $X_5$)], [+0,016], [0,099], [0,94],
+    [Sin controles], [+0,15], [0,02], [0,00],
+    [Selección simple], [+0,15], [0,02], [0,00],
+    [Doble selección (PDS)], [+0,03], [0,09], [0,92],
+    [Oráculo ($X_1$ a $X_5$)], [+0,02], [0,10], [0,94],
     table.hline(stroke: 0.6pt),
   )
 
-  La selección simple no selecciona nada (en promedio 0,002 variables) y coincide exactamente con la estimación sin controles: el sesgo de 0,145 es el de omitir a $X_1$, y como la desviación estándar es de apenas 0,02, el intervalo es estrecho y falla en todas las repeticiones. La doble selección elige en promedio 2,9 variables, entre ellas casi siempre $X_1$, que entra por la ecuación de $D$, y recupera una cobertura de 0,92 con un sesgo cercano al del oráculo. El precio es la varianza: la desviación estándar pasa de 0,02 a 0,09, porque con $n = 100$ el control $X_1$ y sus vecinas correlacionadas absorben variación del tratamiento. Un intervalo estrecho y equivocado no es mejor que uno ancho y correcto, y la selección simple solo parece más precisa.
+  La selección simple no selecciona nada (en promedio 2e-3 variables) y coincide exactamente con la estimación sin controles: el sesgo de 0,15 es el de omitir a $X_1$, y como la desviación estándar es de apenas 0,02, el intervalo es estrecho y falla en todas las repeticiones. La doble selección elige en promedio 2,9 variables, entre ellas casi siempre $X_1$, que entra por la ecuación de $D$, y recupera una cobertura de 0,92 con un sesgo cercano al del oráculo. El precio es la varianza: la desviación estándar pasa de 0,02 a 0,09, porque con $n = 100$ el control $X_1$ y sus vecinas correlacionadas absorben variación del tratamiento. Un intervalo estrecho y equivocado no es mejor que uno ancho y correcto, y la selección simple solo parece más precisa.
 ]
 
 === Comparación con DML
@@ -182,15 +182,15 @@ La esparsidad es un supuesto sobre la estructura del problema, y la selección c
     table.hline(stroke: 0.6pt),
     table.header([*Método*], [*Sesgo*], [*Desv. est.*], [*Cobertura IC 95 %*]),
     table.hline(stroke: 0.3pt),
-    [Sin controles], [+0,499], [0,030], [0,00],
-    [PDS con penalización teórica], [+0,457], [0,030], [0,00],
-    [PDS con $lambda$ por validación cruzada], [0,000], [0,033], [0,94],
-    [DML con LASSO (validación cruzada)], [+0,001], [0,036], [0,89],
-    [DML con ridge (validación cruzada)], [+0,008], [0,035], [0,89],
+    [Sin controles], [+0,50], [0,03], [0,00],
+    [PDS con penalización teórica], [+0,46], [0,03], [0,00],
+    [PDS con $lambda$ por validación cruzada], [0,00], [0,03], [0,94],
+    [DML con LASSO (validación cruzada)], [+1e-3], [0,04], [0,89],
+    [DML con ridge (validación cruzada)], [+8e-3], [0,04], [0,89],
     table.hline(stroke: 0.6pt),
   )
 
-  La penalización teórica selecciona en promedio 6 de las 100 covariables, las que por azar muestral superan el umbral, y deja casi todo el sesgo (+0,457): el estimador es preciso (desviación estándar de 0,03) y su intervalo falla en todas las repeticiones. Lo que falla es la combinación de una penalización conservadora con confusión densa, no el LASSO en sí. Con $lambda$ por validación cruzada, el procedimiento selecciona las 100 covariables, es decir, se reduce a un OLS con todos los controles, y la cobertura es 0,94. Eso funciona aquí porque $p = 100$ es pequeño frente a $n = 1000$; con $p > n$ no existe el OLS completo, y en ese terreno la confusión densa no tiene salida dentro de PDS. DML con aprendices de _nuisance_ elegidos por validación cruzada (LASSO o ridge) también recupera el efecto, con una cobertura de 0,89 algo baja que con 150 repeticiones no se distingue del error de simulación, porque su validez no depende de que la selección sea esparsa. El diagnóstico práctico es este: si PDS con penalización teórica selecciona pocas variables y PDS con $lambda_"CV"$ selecciona muchas y además mueve la estimación, hay señales de confusión densa, y la discrepancia entre $lambda_"BCH"$ y $lambda_"CV"$ que la @sec-cap16_lambda pide reportar es la alarma.
+  La penalización teórica selecciona en promedio 6 de las 100 covariables, las que por azar muestral superan el umbral, y deja casi todo el sesgo (+0,46): el estimador es preciso (desviación estándar de 0,03) y su intervalo falla en todas las repeticiones. Lo que falla es la combinación de una penalización conservadora con confusión densa, no el LASSO en sí. Con $lambda$ por validación cruzada, el procedimiento selecciona las 100 covariables, es decir, se reduce a un OLS con todos los controles, y la cobertura es 0,94. Eso funciona aquí porque $p = 100$ es pequeño frente a $n = 1000$; con $p > n$ no existe el OLS completo, y en ese terreno la confusión densa no tiene salida dentro de PDS. DML con aprendices de _nuisance_ elegidos por validación cruzada (LASSO o ridge) también recupera el efecto, con una cobertura de 0,89 algo baja que con 150 repeticiones no se distingue del error de simulación, porque su validez no depende de que la selección sea esparsa. El diagnóstico práctico es este: si PDS con penalización teórica selecciona pocas variables y PDS con $lambda_"CV"$ selecciona muchas y además mueve la estimación, hay señales de confusión densa, y la discrepancia entre $lambda_"BCH"$ y $lambda_"CV"$ que la @sec-cap16_lambda pide reportar es la alarma.
 ]
 
 == Sensibilidad y validación

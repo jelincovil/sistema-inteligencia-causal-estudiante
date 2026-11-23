@@ -68,7 +68,7 @@ def main():
     print(f"  réplica honesta (ventana = otra parte del mismo train): PSI {psi(ref, ventana):.3f}, KS {stats.ks_2samp(ref, ventana).statistic:.3f}")
     print(f"  ventana envejecida +5 años: PSI {psi(ref, ventana + 5):.3f}, KS {stats.ks_2samp(ref, ventana + 5).statistic:.3f}")
     print(f"  ventana envejecida +10 años: PSI {psi(ref, ventana + 10):.3f}, KS {stats.ks_2samp(ref, ventana + 10).statistic:.3f}")
-    print(f"  (referencia usual: PSI < 0,1 estable; 0,1–0,25 revisar; > 0,25 alertar — umbrales a calibrar por calibración propia)")
+    print("  (referencia usual: PSI < 0,1 estable; 0,1–0,25 revisar; > 0,25 alertar — umbrales a calibrar por calibración propia)")
 
     # C. Faltantes diferenciales
     print("\n== C. Lo que la SMD no ve: faltantes por selección ==")

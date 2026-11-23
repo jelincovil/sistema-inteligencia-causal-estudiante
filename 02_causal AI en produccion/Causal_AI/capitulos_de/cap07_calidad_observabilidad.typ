@@ -69,9 +69,9 @@ El balance compara tratados contra controles dentro de un mismo corte; la *deriv
     table.hline(stroke: 0.6pt),
     table.header([*Ventana*], [*PSI*], [*KS*], [*Lectura*]),
     table.hline(stroke: 0.3pt),
-    [Réplica honesta], [0,008], [0,032], [estable, como debe],
-    [+5 años], [0,585], [0,159], [deriva, y fuerte],
-    [+10 años], [1,413], [0,297], [población otra],
+    [Réplica honesta], [8e-3], [0,03], [estable, como debe],
+    [+5 años], [0,59], [0,16], [deriva, y fuerte],
+    [+10 años], [1,41], [0,30], [población otra],
     table.hline(stroke: 0.6pt),
   )
   ]
@@ -106,7 +106,7 @@ El balance compara tratados contra controles dentro de un mismo corte; la *deriv
 Toda comparación de covariables se hace entre quienes figuran. Si la ausencia depende de la decisión — los tratados registran menos su ingreso anterior porque los incentivó a ocultarlo, digamos — la comparación se hace entre dos subconjuntos seleccionados por el propio proceso, y ni la SMD ni el PSI lo detectan si las distribuciones de los completos se parecen: el $p$-valor que nadie mira ya no es el problema, es la estructura de quién falta. El contrato separa este diagnóstico — *la tasa de faltantes se mide aparte, por brazo* — precisamente porque no cabe dentro de la comparación de covariables (invariante 5 del C-02).
 
 #caso-canonico("Faltantes 9,6 veces más frecuentes en un brazo")[
-  Sobre `observed_train.csv` (`real/jobs`), inyecte el mecanismo de pérdida siguiente: 30 % de probabilidad de perder `re75` a los tratados, 3 % a los controles — una ausencia que el propio tratamiento induce (semilla 7). Entre los completos, la SMD de `re75` es *0,016*: impecable en apariencia. La tasa de faltantes es *0,27* en tratados contra *0,03* en controles, una razón de *9,6*: la mismísima relación que el primer invariante protegía. Si el faltante depende además del resultado — típicamente: los que habrían vendido mal no reportan —, la ausencia no es aleatoria en el sentido de @rubin1976inference y ningún ajuste sobre los completos la corrige; solo el diseño — medir por qué falta, y eso sale de los datos.
+  Sobre `observed_train.csv` (`real/jobs`), inyecte el mecanismo de pérdida siguiente: 30 % de probabilidad de perder `re75` a los tratados, 3 % a los controles — una ausencia que el propio tratamiento induce (semilla 7). Entre los completos, la SMD de `re75` es *0,02*: impecable en apariencia. La tasa de faltantes es *0,27* en tratados contra *0,03* en controles, una razón de *9,6*: la mismísima relación que el primer invariante protegía. Si el faltante depende además del resultado — típicamente: los que habrían vendido mal no reportan —, la ausencia no es aleatoria en el sentido de @rubin1976inference y ningún ajuste sobre los completos la corrige; solo el diseño — medir por qué falta, y eso sale de los datos.
 ]
 
 == El contrato C-02, leído del plano de datos
@@ -161,7 +161,7 @@ Una métrica de observabilidad sin acción es una reflexión que nadie pide, y u
 
 + Un equipo lee el caso B y propone "reportar PSI y KS solo cuando un gráfico óptico parezca feo". ¿Por qué el contrato lo prohíbe con el invariante (4)? _Pista:_ el umbral visual es un umbral posterior a mirar; la calibración ocurre antes o no ocurre.
 
-+ La tasa de faltantes difiere 9,6 veces por brazo pero la SMD de los completos es 0,016. El equipo concluye "los completos están balanceados: imputamos y seguimos". ¿Qué más preguntaría antes de aceptar la imputación? _Pista:_ si la ausencia depende del resultado, ningún método de imputación sobre los completos lo corrige (MNAR).
++ La tasa de faltantes difiere 9,6 veces por brazo pero la SMD de los completos es 0,02. El equipo concluye "los completos están balanceados: imputamos y seguimos". ¿Qué más preguntaría antes de aceptar la imputación? _Pista:_ si la ausencia depende del resultado, ningún método de imputación sobre los completos lo corrige (MNAR).
 
 + Una ventana de producción cambió en la edad pero la ficha de procedencia del tratamiento del Cap. #ref(<de-cap-versionado>, supplement: none) no describe el mecanismo de asignación más nuevo. ¿Cuál es el estado de la ficha y qué acción corresponde? _Pista:_ la procedencia vieja no sigue inaugurando al estimador nuevo; es exactamente la condición de revisión del registro.
 

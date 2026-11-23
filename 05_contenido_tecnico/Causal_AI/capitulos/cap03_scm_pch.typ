@@ -299,7 +299,7 @@ Hay dos precauciones, y la segunda es la que más se olvida. La primera es que e
 #caso-canonico("Una cadena con y sin confusión no observada")[
   Tres variables continuas: $Z$ (por ejemplo, la cercanía a una universidad), $D$ (educación) e $Y$ (salario). En el primer mundo, $D = 0.8 Z + epsilon_D$ e $Y = 0.5 D + epsilon_Y$. La cadena $Z arrow.r D arrow.r Y$, sin confusión entre $D$ e $Y$, implica $Z perp perp Y | D$. En el segundo mundo se añade una variable $U$ no observada que entra con coeficiente 1 en $D$ y en $Y$, el tipo de confusión que justifica usar $Z$ como instrumento.
 
-  Con 2 000 unidades y 300 repeticiones, la correlación parcial de $Z$ e $Y$ dado $D$ vale en promedio −0,001 en el primer mundo, y el contraste de Fisher rechaza al 5 % en el 4,7 % de las repeticiones, el nivel nominal. En el segundo, la correlación parcial vale en promedio −0,27 y el contraste rechaza en el 100 % de las repeticiones.
+  Con 2 000 unidades y 300 repeticiones, la correlación parcial de $Z$ e $Y$ dado $D$ vale en promedio −1e-3 en el primer mundo, y el contraste de Fisher rechaza al 5 % en el 4,7 % de las repeticiones, el nivel nominal. En el segundo, la correlación parcial vale en promedio −0,27 y el contraste rechaza en el 100 % de las repeticiones.
 
   El grafo del segundo mundo es el correcto, y el contraste lo rechaza igual. Condicionar en $D$, que es un collider en el camino $Z arrow.r D arrow.l U arrow.r Y$, abre ese camino y crea una asociación que el grafo nunca declaró como independencia. De hecho, el modelo de variable instrumental con confusión no observada no implica ninguna independencia condicional entre las tres variables observadas: no hay nada que contrastar.
 ]

@@ -104,7 +104,7 @@ La prueba reajusta el estimador sobre $R$ réplicas independientes de estos dato
 $
 0.95 - 3 sqrt(0.95 dot 0.05 / R),
 $
-que con $R = 200$ es 0,904. Se usan tres errores estándar porque una prueba que falla por azar una de cada veinte ejecuciones acaba ignorándose. Con $R = 200$, un servicio cuyo intervalo cubre de verdad el 95 % falla esta prueba en el 0,3 % de las ejecuciones (una de cada 370), y uno que cubre solo el 85 % la falla en el 98,5 %. Un intervalo que cubre el 90 % es más difícil de detectar: la prueba lo rechaza el 53 % de las veces, de modo que para detectar desviaciones pequeñas hay que aumentar $R$. En la simulación de verificación ($R = 200$, $n = 1 thin 000$, semilla fija) el estimador ortogonalizado cubrió el 96 % de las veces y pasó la prueba. La comparación ingenua de medias, que ignora el confusor, cubrió el 4,5 % y fue rechazada, que es lo que la prueba existe para lograr.
+que con $R = 200$ es 0,90. Se usan tres errores estándar porque una prueba que falla por azar una de cada veinte ejecuciones acaba ignorándose. Con $R = 200$, un servicio cuyo intervalo cubre de verdad el 95 % falla esta prueba en el 0,3 % de las ejecuciones (una de cada 370), y uno que cubre solo el 85 % la falla en el 98,5 %. Un intervalo que cubre el 90 % es más difícil de detectar: la prueba lo rechaza el 53 % de las veces, de modo que para detectar desviaciones pequeñas hay que aumentar $R$. En la simulación de verificación ($R = 200$, $n = 1 thin 000$, semilla fija) el estimador ortogonalizado cubrió el 96 % de las veces y pasó la prueba. La comparación ingenua de medias, que ignora el confusor, cubrió el 4,5 % y fue rechazada, que es lo que la prueba existe para lograr.
 
 == #t-aplicacion
 <sec-despliegue-aplicacion>

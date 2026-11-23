@@ -111,7 +111,7 @@ Hombres, 24-34 anios, encuesta NLS 1976 (Card, 1995). n=3,003.
 **No valido fuera de este rango etario ni fuera de EE.UU.**
 
 ## Metricas
-ATE estimado: 0.071 (IC 95%: [0.058, 0.084])
+ATE estimado: 0.07 (IC 95%: [0.06, 0.08])
 Cross-fitting: K=5. Learner: GradientBoostingRegressor.
 
 ## No usar este modelo para

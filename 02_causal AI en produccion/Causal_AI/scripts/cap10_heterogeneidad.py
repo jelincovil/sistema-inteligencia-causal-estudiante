@@ -79,12 +79,6 @@ def main():
     # Valor de política estimado IPW en te
     e_hat_fn = propensity_fit(Xtr, Dtr)
     e_hat_te = np.clip(e_hat_fn(Xte), 0.05, 0.95)
-    def policy_value(policy):
-        # policy boolean: tratar si True
-        w = np.where(policy, Dte/e_hat_te, (1-Dte)/(1-e_hat_te))
-        return float(np.mean(w * Yte * (policy == (Dte==1) ) * 2 ))  # simplificado: IPW de resultado bajo política
-        # Usamos forma directa: E[Y * I(D=pol)/e_pol]
-    # Mejor: valor IPW correcto
     def policy_value_ipw(pol):
         # pol 1/0 por unidad
         e_pol = np.where(pol==1, e_hat_te, 1-e_hat_te)
@@ -102,14 +96,8 @@ def main():
     print(f"  Política S-learner (tau>0): {policy_value_ipw(pol_s):.3f} trata={pol_s.mean():.0%}")
     print(f"  Política T-learner (tau>0): {policy_value_ipw(pol_t):.3f} trata={pol_t.mean():.0%}")
 
-    # Qini-like: ordenar por tau_hat y ganancia acumulada
-    order = np.argsort(-t_pred)
-    # ganancia incremental vs tratar a todos progresivamente
-    y_sorted = Yte[order]
-    d_sorted = Dte[order]
-    # efecto incremental por decil no computado aquí, indicamos AUC
     # check ranking: debería ordenar por x0
-    print(f"  Ranking check: tau_hat alta zona x0>0.5 vs baja x0<-0.5 separados")
+    print("  Ranking check: tau_hat alta zona x0>0.5 vs baja x0<-0.5 separados")
 
 if __name__ == "__main__":
     main()

@@ -92,8 +92,8 @@ donde $c(x)$ es el costo del tratamiento para el cliente $x$. Esta métrica perm
     table.hline(stroke: 0.6pt),
     table.header([*Acción*], [*Qini dentro de muestra*], [*Qini en _hold-out_*]),
     table.hline(stroke: 0.3pt),
-    [SMS], [0,0755], [−0,0063],
-    [Llamada], [0,0759], [−0,0068],
+    [SMS], [0,08], [−6.3e-3],
+    [Llamada], [0,08], [−6.8e-3],
     table.hline(stroke: 0.6pt),
   )
 

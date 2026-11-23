@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "phase": "kernel_hardened_documentary_validated_scientific_review_pending",
-  "updated_at": "2026-11-22T14:49:47Z",
+  "updated_at": "2026-11-23T13:51:57Z",
   "scope": "argumentos copy/ plus declared read-only parent documentary sources",
   "base_commit": null,
   "implementation_commit": null,
@@ -48,8 +48,9 @@
       "chapters": 9,
       "bibliography_entries": 20,
       "pages": 33,
-      "bytes": 616719,
-      "sha256": "c1f5e48f34351e3392116189b229726bf39a9b4ed948693c8f44e8c5dbb4a895"
+      "bytes": 616673,
+      "sha256": "c33905ff4f2d2ec1d9cea7490f43852776e20b50cdd2687f31019226815037d8",
+      "recompiled": "2026-11-23 after narrative-number cleanup regenerated book/generated/lalonde.typ; Typst PDF output embeds nondeterministic metadata, so digests are not byte-stable across runs"
     },
     "localized_review_fixes": {
       "status": "pass",
@@ -137,9 +138,9 @@
         "cinellihazlett2020"
       ],
       "citation_metadata_normalized": true,
-      "book_pdf_bytes": 616719,
+      "book_pdf_bytes": 616673,
       "book_pdf_pages": 33,
-      "book_pdf_sha256": "c1f5e48f34351e3392116189b229726bf39a9b4ed948693c8f44e8c5dbb4a895",
+      "book_pdf_sha256": "c33905ff4f2d2ec1d9cea7490f43852776e20b50cdd2687f31019226815037d8",
       "literature_verified_identification": false,
       "literature_replays_evidence": false,
       "literature_validates_holdout": false,
@@ -157,17 +158,17 @@
         "08_mcp-agentes-causales/"
       ],
       "artifacts": 10,
-      "verified_bytes": 19558019,
+      "verified_bytes": 19560586,
       "build_status": "pass",
       "verify_status": "pass_byte_identical_regeneration",
       "query_status": "pass_five_mcp_contract_candidates_returned",
       "coverage": {
-        "discovered_regular_files": 388,
+        "discovered_regular_files": 387,
         "included_files": 370,
-        "excluded_files": 18,
+        "excluded_files": 17,
         "parsed_files": 290,
         "metadata_only_files": 80,
-        "source_units": 10130,
+        "source_units": 10133,
         "unique_unreviewed_candidates": 2252,
         "candidate_occurrences": 4189,
         "pruned_directories": 14,
@@ -175,12 +176,12 @@
         "required_groups_total": 15,
         "collections": {
           "02_production_monograph": {
-            "discovered_regular_files": 167,
+            "discovered_regular_files": 166,
             "included_files": 157,
-            "excluded_files": 10,
+            "excluded_files": 9,
             "parsed_files": 126,
             "metadata_only_files": 31,
-            "source_units": 5322,
+            "source_units": 5325,
             "candidates_present": 2144,
             "candidate_occurrences": 2273,
             "pruned_directories": 1
@@ -214,16 +215,16 @@
         "content_variant": 5
       },
       "artifact_sha256": {
-        "source_inventory.jsonl": "1545ee520bcedecfbd7e9767753ef20eaae6196cf3bea83b76b9a24d4f1dec7a",
-        "sources.jsonl": "69cfef24555ea23a7fe2e108fb6b658d2cdd7fbcd1e0bb75fea1f2a3be3baef7",
-        "source_units.jsonl": "c526b8924d84a1d70fe5435ea5b1471a48006ef29d603dcffea3e859cd447c7d",
-        "argument_candidates.jsonl": "540a64d4b72253fe0b189627d14c59bd9fb0906878fc62437a1d0bf2d39e1c96",
-        "relations.jsonl": "209d7c669c7c5bd3b3cb41e0f4ed2fc627ab1f152d9fa0564547c314002500cd",
-        "exclusions.jsonl": "b890bd5d6ae38d3fed4ca648490a38739bdec84fb15220f42f0cb6b955d2f804",
-        "coverage.json": "c1336704eb8c482363b269a890a1026ad9028895893adde51ed671fdebe450ff",
-        "REPORT.md": "f14f6ed0b8a6d3df3f9cc62b010845e3a2516c9788af4420da31f32f0fe1b82c",
+        "source_inventory.jsonl": "e9e0fdd8c74ded3a73349d040503f661009fe71e4ee5569c1ad1e9bb51df434e",
+        "sources.jsonl": "7dfc97d78db7231eba4b000cd8aa2484d92e7410d27f6437351749aeed6b87c7",
+        "source_units.jsonl": "fd22a8f2c68d129ce529f3f4ce79f6306b239a63359cc62878042ea02df8cae2",
+        "argument_candidates.jsonl": "441a83cc850bca5477c87dfd2a236b025dffbef067b519c12f905f884b3f3700",
+        "relations.jsonl": "91dd7dd04306474e59db9ea28a5c0f13c898a24277d870c7cd0791293499bfc2",
+        "exclusions.jsonl": "fd295d5cd0f0d17c07d38b6d07f6cf40992d6e77434a0a1b5c2e17ee11760fff",
+        "coverage.json": "3c3caab087aa36fa3010eba9173b487190b944420fa19ed685dc0ba4d768368b",
+        "REPORT.md": "b5cb179a13fc8e79a56cd5a7fb5951cc8b0a9ba13a7a93000a384b7420dd0e22",
         "manifest.json": "78f92be4af1503737cf64f5ac7566064b7b95b2c04e412522f5af31d36375036",
-        "checksums.json": "3e8ad4106f3b82c275bdb9adb76813e125e0923634b0ff2d9d557ed61e715ed4"
+        "checksums.json": "a8d739bc6a0ae05330098a16164f1f32337150832c7f46ccb0e1f9809a7722ce"
       },
       "typed_kernel_claims": 52,
       "typed_kernel_claims_added": 20,

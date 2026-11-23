@@ -66,7 +66,7 @@ def _estado(valor: float, u: Umbral) -> str:
 def evaluar(diagnosticos: dict, umbrales=UMBRALES_POR_DEFECTO) -> dict:
     """Evalúa todos los diagnósticos requeridos; la evidencia inválida produce ``falla``."""
     chequeos = []
-    entrada = diagnosticos if isinstance(diagnosticos, Mapping) else {}
+    entrada = diagnosticos if isinstance(diagnosticos, Mapping) else None
     for u in umbrales:
         base = {
             "nombre": u.nombre,
@@ -75,7 +75,7 @@ def evaluar(diagnosticos: dict, umbrales=UMBRALES_POR_DEFECTO) -> dict:
             "umbral_falla": u.falla,
             "origen_umbral": u.origen,
         }
-        if not isinstance(diagnosticos, Mapping):
+        if entrada is None:
             chequeos.append({**base, "valor": None, "estado": "falla", "motivo": "los diagnósticos no forman un objeto"})
             continue
         if u.clave not in entrada:

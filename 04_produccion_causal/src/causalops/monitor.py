@@ -22,7 +22,6 @@ import math
 from collections.abc import Mapping
 from dataclasses import dataclass
 
-import numpy as np
 import pandas as pd
 
 from . import diagnosticos as dg

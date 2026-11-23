@@ -1,7 +1,7 @@
 """Registro local mínimo y portátil: versiones inmutables, manifiesto con hashes y alias atómico.
 
 No sustituye a MLflow: es el camino sin dependencias, útil para el CI y para entender qué hace un
-registro. Con MLflow (infra/mlflow_adapter.py) la idea es la misma: versión + alias (`champion`),
+registro. Con MLflow la idea es la misma: versión + alias (`champion`),
 no etapas.
 """
 
@@ -41,7 +41,7 @@ def commit_limpio(raiz_repo: Path | None = None) -> str | None:
         estado = subprocess.run(["git", "status", "--porcelain"], capture_output=True, text=True, timeout=10, cwd=cwd)
         if cabeza.returncode == 0 and estado.returncode == 0 and not estado.stdout.strip():
             return cabeza.stdout.strip()
-    except Exception:
+    except (OSError, subprocess.SubprocessError):
         pass
     return None
 

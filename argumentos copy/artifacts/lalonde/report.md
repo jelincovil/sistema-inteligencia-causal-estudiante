@@ -5,7 +5,7 @@
 ## Frozen protocol and provenance
 
 - Dataset ID: `rdatasets-matchit-lalonde-pinned-v1`.
-- Data: Rdatasets MatchIt LaLonde NSW treated and PSID comparison sample; observational cross-source comparison, not the NSW randomized benchmark..
+- Data: Rdatasets MatchIt LaLonde NSW treated and PSID comparison sample; observational cross-source comparison, not the NSW randomized benchmark.
 - Raw URL: <https://raw.githubusercontent.com/vincentarelbundock/Rdatasets/1dcc2bf5f955cc1224a3e1307256e1fe86b68dae/csv/MatchIt/lalonde.csv>.
 - Documentation URL: <https://raw.githubusercontent.com/vincentarelbundock/Rdatasets/1dcc2bf5f955cc1224a3e1307256e1fe86b68dae/doc/MatchIt/lalonde.html>.
 - Exact input: 27509 bytes; SHA-256 `a49703ca0233ba0a27fa9cda959a38a07f6825def0f7743cf2380ce4e57dd3ef`; byte match `true`; digest match `true`.
@@ -76,7 +76,7 @@ The implemented score is `mu1(X)-mu0(X) + T(Y-mu1(X))/e(X) - (1-T)(Y-mu0(X))/(1-
 
 - n = 366; treated = 104; control = 262.
 - Adjusted mean difference: **-269.3**; IF standard error: **1023.1**; normal 95% interval: **[-2274.4, 1735.9]**.
-- Raw propensity min/p05/median/p95/max: 0.003982 / 0.010534 / 0.122134 / 0.841023 / 0.915724.
+- Raw propensity min/p05/median/p95/max: 3.98e-3 / 0.01 / 0.12 / 0.84 / 0.92.
 - Outside [0.05, 0.95]: 138 (37.70%); <= 0.01: 14; >= 0.99: 0.
 - Interpretation: Adjusted sample contrast, causal only under the stated untestable identification assumptions; interval omits confounding and transport uncertainty.
 
@@ -84,15 +84,15 @@ The implemented score is `mu1(X)-mu0(X) + T(Y-mu1(X))/e(X) - (1-T)(Y-mu0(X))/(1-
 
 - n = 134; treated = 44; control = 90.
 - Adjusted mean difference: **426.3**; IF standard error: **1821.9**; normal 95% interval: **[-3144.6, 3997.3]**.
-- Raw propensity min/p05/median/p95/max: 0.007054 / 0.012561 / 0.154671 / 0.848377 / 0.883931.
+- Raw propensity min/p05/median/p95/max: 7.05e-3 / 0.01 / 0.15 / 0.85 / 0.88.
 - Outside [0.05, 0.95]: 41 (30.60%); <= 0.01: 4; >= 0.99: 0.
 - Interpretation: Adjusted sample contrast, causal only under the stated untestable identification assumptions; interval omits confounding and transport uncertainty.
 
 - Final holdout ledger event: `H001-final-only`; access sequence 1; reused for tuning: `false`.
-- Calibration: n = 114; log loss = 0.394993; Brier = 0.124629; gate passed = `true`; outcomes used in gate = `false`; descriptive calibration outcomes reported = `true`.
+- Calibration: n = 114; log loss = 0.39; Brier = 0.12; gate passed = `true`; outcomes used in gate = `false`; descriptive calibration outcomes reported = `true`.
 - Calibration outcome-use semantics: The legacy outcome_used field mirrors outcome_used_in_gate. Descriptive calibration outcome means are computed after the gate and reported as associations only; neither the gate nor descriptive reporting selects or revises models.
 - **Weak-overlap warning:** 44/114 calibration raw propensities (38.60%) fall outside [0.05, 0.95]. `true` gate_passed is a computational X/T-only result, not scientific approval, positivity verification, or causal identification.
-- Calibration overlap: min = 0.003562; p05 = 0.012052; median = 0.118933; p95 = 0.844957; max = 0.875259.
+- Calibration overlap: min = 3.56e-3; p05 = 0.01; median = 0.12; p95 = 0.84; max = 0.88.
 - Deployed logistic fit: converged = `true`; separation suspected = `false`; iterations = 7.
 
 ### Predeclared propensity-clipping sensitivity
@@ -110,11 +110,11 @@ These are fixed sensitivity calculations, not candidates for choosing a preferre
 
 | Fold | Fit n | Evaluation n | Logistic converged | Separation suspected | Fit propensity min | Fit propensity max |
 |---:|---:|---:|---:|---:|---:|---:|
-| 0 | 292 | 74 | true | false | 0.005376 | 0.902336 |
-| 1 | 275 | 91 | true | false | 0.009351 | 0.905193 |
-| 2 | 302 | 64 | true | false | 0.009478 | 0.898417 |
-| 3 | 298 | 68 | true | false | 0.004697 | 0.898921 |
-| 4 | 297 | 69 | true | false | 0.004910 | 0.911679 |
+| 0 | 292 | 74 | true | false | 5.38e-3 | 0.90 |
+| 1 | 275 | 91 | true | false | 9.35e-3 | 0.91 |
+| 2 | 302 | 64 | true | false | 9.48e-3 | 0.90 |
+| 3 | 298 | 68 | true | false | 4.70e-3 | 0.90 |
+| 4 | 297 | 69 | true | false | 4.91e-3 | 0.91 |
 
 ## Warnings and scientific limitations
 

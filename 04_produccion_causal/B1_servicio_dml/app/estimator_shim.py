@@ -65,7 +65,6 @@ class SerializablePLREstimator:
 
 def load_plr_joblib(path) -> Any:
     """Load joblib remapping ``SerializablePLREstimator`` to this shim."""
-    import io
     import pickle
     from pathlib import Path
 

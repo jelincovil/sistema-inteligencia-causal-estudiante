@@ -1,7 +1,7 @@
 # Bibliografía — Monografía "Sistema de Inteligencia Causal"
 # Formato Hayagriva YAML (Typst).
 # Convención: una clave por obra, en minúsculas, autor+año+palabra distintiva.
-# Estado: 151 entradas, todas citadas en el texto (0 huérfanas). Auditada 2026-11 contra
+# Estado: 154 entradas, todas citadas en el texto (0 huérfanas). Auditada 2026-11 contra
 #   Semantic Scholar/OpenAlex/Crossref: metadatos corregidos (19 entradas) y 80 DOIs
 #   añadidos; 5 entradas nuevas (candes2009exact, curth2021nonparametric, vandegeer2008high,
 #   hahn1998role, kleibergen2002pivotal). Informe: verificacion/reporte_referencias.md.
@@ -1625,3 +1625,31 @@ kleibergen2002pivotal:
   page-range: 1781-1803
   date: 2002
   doi: "10.1111/1468-0262.00353"
+
+kleppmann2017:
+  type: book
+  author: Kleppmann, Martin
+  title: "Designing Data-Intensive Applications: The Big Ideas Behind Reliable, Scalable, and Maintainable Systems"
+  publisher: O'Reilly Media
+  date: 2017
+  url: "https://martin.kleppmann.com/2017/03/27/designing-data-intensive-applications.html"
+
+reis2022fundamentals:
+  type: book
+  author: ["Reis, Joe", "Housley, Matt"]
+  title: "Fundamentals of Data Engineering: Plan and Build Robust Data Systems"
+  publisher: O'Reilly Media
+  date: 2022
+  url: "https://www.oreilly.com/library/view/fundamentals-of-data/9781098108298"
+
+hill2011bayesian:
+  type: article
+  author: ["Hill, Jennifer L."]
+  title: "Bayesian Nonparametric Modeling for Causal Inference"
+  parent:
+    title: Journal of Computational and Graphical Statistics
+  volume: 20
+  issue: 1
+  page-range: 217-240
+  date: 2011
+  doi: "10.1198/jcgs.2010.08162"

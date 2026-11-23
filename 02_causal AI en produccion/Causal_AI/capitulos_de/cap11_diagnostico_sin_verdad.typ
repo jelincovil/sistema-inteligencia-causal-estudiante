@@ -18,7 +18,7 @@
     [*Respuesta:*], [Tres pruebas que no necesitan verdad: placebo por permutación, control negativo y sensibilidad a confusor oculto],
     [*Criterio:*], [Falsación OOS: si el placebo da señal o el control negativo se mueve, la identificación falla],
     [*Pieza contratada:*], [Contrato C-08 (sensibilidad) + Q-02 (supuestos clasificados); umbral Gamma-star],
-    [*Casos canónicos:*], [Placebo 500 perms: nula [-0,078,0,071] vs ATE 0,77; control neg. p=0,64; Gamma 0,8 cruza, 1,2 invierte (semilla 20260711)],
+    [*Casos canónicos:*], [Placebo 500 perms: nula [-0,08, 0,07] vs ATE 0,77; control neg. p=0,64; Gamma 0,8 cruza, 1,2 invierte (semilla 20260711)],
   )
 ]
 
@@ -41,7 +41,7 @@ Las tres son OOS por construcción y no necesitan verdad: necesitan un DGP compa
 *La exigencia al dato:* toda estimación entrega junto a su IC un p-placebo (posición del ATE en la nula permutada, 500 perms) y un ATE de control negativo con p; ambos OOS y con semilla.
 
 #caso-canonico("El placebo que no da señal y el control que no se mueve")[
-  DGP base ATE=0,8, $n=2 000$, semilla 20260711. ATE observado 0,767 IC [0,696,0,838] $p<10^(-9)$.
+  DGP base ATE=0,8, $n=2 000$, semilla 20260711. ATE observado 0,77 IC [0,70,0,84] $p<10^(-9)$.
 
   #entero[
   #table(
@@ -51,14 +51,14 @@ Las tres son OOS por construcción y no necesitan verdad: necesitan un DGP compa
     table.hline(stroke: 0.6pt),
     table.header([*Prueba*], [*ATE*], [*IC placebo / p*]),
     table.hline(stroke: 0.3pt),
-    [Placebo 1 perm], [-0,009], [nula sd 0,037],
-    [Placebo 500 perms], [-0,002], [[-0,078, 0,071]],
-    [Control negativo], [-0,017], [p=0,64],
+    [Placebo 1 perm], [-9e-3], [nula sd 0,04],
+    [Placebo 500 perms], [-2e-3], [[-0,08, 0,07]],
+    [Control negativo], [-0,02], [p=0,64],
     table.hline(stroke: 0.6pt),
   )
   ]
 
-  El placebo vive centrado en 0 con sd 0,037; el control negativo no se mueve ($p=0,64$). El ATE real (0,77) es atípico en esa nula ($p≈0$). Falsación pasada no certifica causalidad — pero su fallo (placebo con señal) habría abortado el deploy.
+  El placebo vive centrado en 0 con sd 0,04; el control negativo no se mueve ($p=0,64$). El ATE real (0,77) es atípico en esa nula ($p≈0$). Falsación pasada no certifica causalidad — pero su fallo (placebo con señal) habría abortado el deploy.
 ]
 
 #repo-ref[
@@ -83,10 +83,10 @@ Las tres son OOS por construcción y no necesitan verdad: necesitan un DGP compa
     table.hline(stroke: 0.6pt),
     table.header([*$gamma_u$*], [*ATE*], [*IC 95 %*], [*Lectura*]),
     table.hline(stroke: 0.3pt),
-    [0,0], [0,767], [[0,696,0,838]], [robusto],
-    [0,5], [0,586], [[0,502,0,670]], [robusto],
-    [0,8], [0,115], [[0,017,0,213]], [roza 0],
-    [1,2], [-0,214], [[-0,335,-0,092]], [invierte],
+    [0,0], [0,77], [[0,70,0,84]], [robusto],
+    [0,5], [0,59], [[0,50,0,67]], [robusto],
+    [0,8], [0,12], [[0,02,0,21]], [roza 0],
+    [1,2], [-0,21], [[-0,34,-0,09]], [invierte],
     table.hline(stroke: 0.6pt),
   )
   ]
@@ -135,7 +135,7 @@ Las tres son OOS por construcción y no necesitan verdad: necesitan un DGP compa
     p-placebo con 20 perms y declarar p. Elegir Y_nc post-hoc que "pasa". Reportar Gamma-star sin IC.
   ],
   aceptacion: [
-    (a) Placebo nula [-0,078,0,071] contiene 0 y excluye ATE 0,77. (b) Control negativo p=0,64. (c) Gamma-star 0,8 toca, 1,2 invierte.
+    (a) Placebo nula [-0,08, 0,07] contiene 0 y excluye ATE 0,77. (b) Control negativo p=0,64. (c) Gamma-star 0,8 toca, 1,2 invierte.
   ],
 )
 

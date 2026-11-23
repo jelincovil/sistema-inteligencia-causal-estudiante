@@ -6,7 +6,6 @@ No reemplaza econml/DoubleML: es la referencia mínima del MCP.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any
 
 import numpy as np
 from scipy.optimize import minimize

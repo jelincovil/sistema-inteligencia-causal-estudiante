@@ -103,12 +103,12 @@ API, debe leerse con este alcance algebraico.
 | Supuesto | Enunciado formal | Por qué es plausible en este DGP | Chequeo empírico | Qué **no** prueba | Clase |
 |---|---|---|---|---|---|
 | Ignorabilidad condicional | $\{Y_i(0), Y_i(1)\} \perp D_i \mid X_i$ | El tratamiento se simula con un modelo logístico en `X`; el resultado, con fórmulas lineales en `X`, `D` y ruido; no hay confusor latente simulado | Balance (SMD), placebo de tratamiento y placebo de resultado | Es una propiedad del DGP sintético; no se verifica con los datos observados ni se generaliza a IHDP real | `no_observable` |
-| Soporte común / positividad | $0 < P(D_i=1 \mid X_i=x) < 1$ | En la validación local de `v0008`, las propensiones **OOF antes del trimming** quedaron en $[0{,}043; 0{,}916]$, con solape 0,99777 (≈99,8 %; la CLI puede redondearlo a 100 %) y ESS = 332,2076/448 = 0,7415 (≈332/448 y 0,74) | Rango OOF de $\hat e$, fracción en solape antes del trimming, ESS y unidades recortadas; el servicio se abstiene fuera del rango de entrenamiento | El solapamiento muestral no garantiza positividad poblacional; los rangos marginales no garantizan soporte multivariable; $\hat e$ es estimada | `observable` |
+| Soporte común / positividad | $0 < P(D_i=1 \mid X_i=x) < 1$ | En la validación local de `v0008`, las propensiones **OOF antes del trimming** quedaron en $[0{,}04; 0{,}92]$, con solape ≈99,8 % (la CLI puede redondearlo a 100 %) y ESS = 332,21/448 ≈ 0,74 (≈332/448 y 0,74) | Rango OOF de $\hat e$, fracción en solape antes del trimming, ESS y unidades recortadas; el servicio se abstiene fuera del rango de entrenamiento | El solapamiento muestral no garantiza positividad poblacional; los rangos marginales no garantizan soporte multivariable; $\hat e$ es estimada | `observable` |
 | Consistencia / SUTVA | $Y_i = Y_i(D_i)$; $Y_i(d)$ no depende de $D_j$ para $j \ne i$; una sola versión del tratamiento | El DGP es unitario, con ruido independiente; cada unidad depende solo de su propio tratamiento | No hay chequeo directo; se declara la limitación | En un programa real puede haber spillovers, equilibrio general o versiones distintas de implementación | `no_observable` |
 | Covariables pre-tratamiento | Las 25 covariables se miden antes de `D` | `metadata.json` y `identification.json` lo declaran | La trampa `score_post` muestra qué pasa si se usa una columna derivada de `Y` | `score_post` es una fuga artificial, no una covariable real ni un placebo | `observable` |
 | Nuisance models | Al menos el modelo de resultado o el de propensión está bien especificado, además de los supuestos causales | El DGP usa formas lineales; eso no valida automáticamente ambos ajustes muestrales | Cross-fitting, ajuste, balance y comparación de estimadores | Si ambas piernas fallan, AIPW puede sesgarse; coincidir con OLS o con la diferencia ingenua no prueba identificación | `supuesto_de_estimacion` |
 
-En esa corrida, el trimming $[0{,}05; 0{,}95]$ recortó **1 unidad de 448 en total (0,2232 %)**, íntegramente del grupo control (0,3891 % de los controles) y **0 tratadas**. El SMD máximo ponderado OOF fue **0,11**, frente a **0,43** sin ponderar. El rango, el solape y el ESS de la tabla son OOF **antes** del trimming: el 100 % que puede mostrar la CLI es redondeo de 0,99777, no solape perfecto.
+En esa corrida, el trimming $[0{,}05; 0{,}95]$ recortó **1 unidad de 448 en total (0,22 %)**, íntegramente del grupo control (0,39 % de los controles) y **0 tratadas**. El SMD máximo ponderado OOF fue **0,11**, frente a **0,43** sin ponderar. El rango, el solape y el ESS de la tabla son OOF **antes** del trimming: el 100 % que puede mostrar la CLI es redondeo de ≈99,8 %, no solape perfecto.
 
 **Nota importante:** `score_post` no es un placebo. Es una prueba de fuga de
 información: una columna construida con `Y` que vacía el coeficiente del
@@ -177,18 +177,18 @@ permanecen intactas.
 | Diferencia cruda | 10,3 puntos, IC 95 % aproximado [7,60; 13,05] |
 | ATE OLS (comparador) | 4,8 puntos, IC 95 % [3,8; 5,8] |
 | **ATE AIPW** | **5,2 puntos, IC 95 % [3,9; 6,4]** |
-| Rango de $\hat e$ OOF antes del trimming | [0,043; 0,916] |
-| Solape OOF antes del trimming en $[0{,}05; 0{,}95]$ | 0,99777 (≈99,8 %; la CLI puede redondear 100 %) |
-| ESS de Kish OOF antes del trimming / n | 332,2076 / 448 = 0,7415 (≈332/448 y 0,74) |
-| Unidades recortadas | 1/448 (0,2232 %); todas controles: 0,3891 % de los controles; 0 tratadas |
+| Rango de $\hat e$ OOF antes del trimming | [0,04; 0,92] |
+| Solape OOF antes del trimming en $[0{,}05; 0{,}95]$ | ≈99,8 % (la CLI puede redondear 100 %) |
+| ESS de Kish OOF antes del trimming / n | 332,21 / 448 ≈ 0,74 (≈332/448 y 0,74) |
+| Unidades recortadas | 1/448 (0,22 %); todas controles: 0,39 % de los controles; 0 tratadas |
 | SMD máximo sin ponderar | 0,43 |
 | SMD máximo ponderado OOF | 0,11 |
 
 Los diagnósticos de rango, solape y ESS de esta tabla son **OOF anteriores al
-trimming**. El porcentaje de solape no es exactamente 100 %: se trata de 0,99777
+trimming**. El porcentaje de solape no es exactamente 100 %: se trata de ≈99,8 %
 redondeado por la presentación de la CLI.
 
-La trampa `score_post` (−0,1) y el $R^2$ de 0,095 de la proyección de
+La trampa `score_post` (−0,1) y el $R^2$ de 0,1 de la proyección de
 heterogeneidad se conservan como antecedentes históricos en `BITACORA.md`
 §5/§8.6, no como cifras nuevas atribuidas aquí a `v0008`.
 
@@ -265,7 +265,7 @@ Monte Carlo.
 
 - 200 réplicas, semilla 4242, pliegues fijos.
 - ATE observado: 5,16. Placebo: media −0,04, DE 0,62, IC 95 % [−1,42; 1,06].
-- Percentil del ATE observado: 100. **p Monte Carlo = 0,005.**
+- Percentil del ATE observado: 100. **p Monte Carlo = 5e-3.**
 - Lectura: bajo efecto cero, los placebo se centran en 0; el ATE observado es
   extremo. Esto evalúa calibración e implementación.
 - **No prueba ignorabilidad**: un estimador confundido también puede rechazar
@@ -343,7 +343,7 @@ Es una demostración metodológica local sobre datos sintéticos, no un sistema 
 ## 10. Qué no afirma esta entrega
 
 - No estima un CATE ni un efecto individual identificado. `POST /heterogeneidad`
-  devuelve `proyeccion`, IC **condicional al ajuste** y advertencias. El $R^2 = 0,095$
+  devuelve `proyeccion`, IC **condicional al ajuste** y advertencias. El $R^2 = 0,1$
   citado es un valor histórico de discriminación baja, no una validación causal.
   `POST /efecto_individual` queda como **alias deprecado** con el mismo núcleo.
 - No estima políticas ni efectos de intervenciones distintas de la observada.
@@ -375,12 +375,12 @@ propio**. Los resultados son:
 
 | Intervalo | Cobertura | Error Monte Carlo |
 |---|---:|---:|
-| AIPW | 0,97 | 0,01706 |
-| OLS | 0,96 | 0,01960 |
+| AIPW | 0,97 | 0,02 |
+| OLS | 0,96 | 0,02 |
 | Ingenuo | 0,00 | 0 |
 
 La cobertura AIPW difiere del nominal 0,95 en **0,02**, desviación que **no está
-dentro de ±1 error MC** (0,01706). Por tanto, no se afirma calibración exacta.
+dentro de ±1 error MC** (0,02). Por tanto, no se afirma calibración exacta.
 Estas coberturas pertenecen únicamente al DGP ilustrativo propio: no son coberturas
 de IHDP/jobs ni demuestran identificación.
 
@@ -403,9 +403,9 @@ Artefactos principales:
 | Resultado o evidencia | Archivo |
 |---|---|
 | Cruda 10,3 [7,60; 13,05] aprox.; OLS 4,8 [3,8; 5,8]; AIPW 5,2 [3,9; 6,4] | `evidencia/02_estimacion.txt` |
-| OOF antes del trimming: rango [0,043; 0,916], solape 0,99777, ESS 332,2076/448; 1 unidad recortada; SMD ponderado 0,11 | `evidencia/02_estimacion.txt` |
+| OOF antes del trimming: rango [0,04; 0,92], solape ≈99,8 %, ESS 332,21/448; 1 unidad recortada; SMD ponderado 0,11 | `evidencia/02_estimacion.txt` |
 | E-value 2,07 / RV 37,4 % / Manski [−37,66; 48,48] | `evidencia/03_sensibilidad.txt` |
-| Placebo D p=0,005; placebo Y 0,04 [−0,23; 0,32] | `evidencia/04_placebo.txt` |
+| Placebo D p=5e-3; placebo Y 0,04 [−0,23; 0,32] | `evidencia/04_placebo.txt` |
 | Puerta, ventanas y sensibilidad ±20 %: 0 cambios de acción fuera de la clasificación base | `evidencia/05_puerta.txt` |
 | `v0008`, manifiesto y alias champion | `evidencia/06_registro.txt` |
 | Servicio, abstención y humo | `evidencia/07_servicio.txt` |
@@ -415,8 +415,8 @@ Artefactos principales:
 
 Los 0 cambios de acción al variar los umbrales ±20 % describen solo esta corrida;
 no constituyen una calibración universal. Además, `synthetic/jobs` pasó validación de
-datos y estimación sin escribir artefactos: AIPW 1638,6029 [1001,5516; 2275,6542],
-propensiones OOF [0,0681763; 0,5595719], solape 1,0, ESS 702,6543 y cero recortes.
+datos y estimación sin escribir artefactos: AIPW 1638,60 [1001,55; 2275,65],
+propensiones OOF [0,07; 0,56], solape 1,0, ESS 702,65 y cero recortes.
 Docker alcanzó `healthy` como usuario no-root; los endpoints y la abstención fueron
 verificados, y sus recursos temporales se eliminaron. `make dag && make cierre`
 regeneró los cuatro SVG y el PDF de 14 páginas. Los detalles están en
@@ -448,7 +448,7 @@ artefacto que se mostraría:
    fuera de la clasificación base en esta corrida, sin demostrar calibración universal.
 
 Para defender cobertura, mostrar `evidencia/10_cobertura.txt` y limitar la afirmación
-al DGP ilustrativo propio: AIPW 0,97 con error MC 0,01706 está a 0,02 del nominal
+al DGP ilustrativo propio: AIPW 0,97 con error MC 0,02 está a 0,02 del nominal
 0,95 y no dentro de ±1 error MC; no corresponde a IHDP/jobs.
 
 Si no se puede mostrar el artefacto o reproducir la cifra, ese resultado no

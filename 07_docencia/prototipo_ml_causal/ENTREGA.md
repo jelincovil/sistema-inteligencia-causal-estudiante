@@ -40,8 +40,8 @@ conservadas en `evidencia/`; no sustituyen una nueva ejecución de las comprobac
   calibración universal.
 - `make cobertura` generó `artifacts/cobertura.json` para el DGP ilustrativo
   propio (`n = 500`, `R = 100`, semilla `20261111`). Coberturas IC95: **0,97
-  AIPW**, **0,96 OLS** y **0,00 ingenuo**, con errores Monte Carlo 0,01706,
-  0,01960 y 0. AIPW difiere 0,02 del nominal y no está dentro de ±1 error Monte
+  AIPW**, **0,96 OLS** y **0,00 ingenuo**, con errores Monte Carlo 0,02,
+  0,02 y 0. AIPW difiere 0,02 del nominal y no está dentro de ±1 error Monte
   Carlo. No evalúa IHDP/jobs ni demuestra calibración general.
 - La validación del champion **`v0009`** dio `PRUEBAS: OK` y `HUMO: OK`;
   `v0001`–`v0008` permanecen intactas. Esta versión incorpora Rosenbaum Γ,

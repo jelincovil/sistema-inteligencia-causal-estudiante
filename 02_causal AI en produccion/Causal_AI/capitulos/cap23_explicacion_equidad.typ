@@ -100,7 +100,7 @@ El paso de etiquetado es el único que no tiene forma estadística: una ruta ace
 Las cifras de los tres casos provienen de simulaciones con muestras de 200~000 observaciones, promediadas sobre 20 repeticiones en los dos primeros.#capa-impl[ El script es #code[herramientas/verificaciones/verif_cap23.py].]
 
 #caso-canonico("Mediación lineal: efecto directo e indirecto")[
-  $A$ binaria con probabilidad 1/2, $M = 0.5 A + epsilon_M$ e $Y = 0.15 A + 0.6 M + epsilon_Y$, sin confusión. El efecto total verdadero es $0.15 + 0.6 times 0.5 = 0.45$, el directo es 0,15 y el indirecto es $0.6 times 0.5 = 0.30$. Estimados: efecto total 0,449 (diferencia de medias), efecto directo controlado 0,150 (coeficiente de $A$ en la regresión de $Y$ sobre $A$ y $M$) y efecto indirecto 0,299 (la diferencia). La descomposición recupera lo que se sembró. Si $M$ es una ocupación aceptada, dos tercios del efecto total son legítimos y un tercio (0,15) es discriminación directa.
+  $A$ binaria con probabilidad 1/2, $M = 0.5 A + epsilon_M$ e $Y = 0.15 A + 0.6 M + epsilon_Y$, sin confusión. El efecto total verdadero es $0.15 + 0.6 times 0.5 = 0.45$, el directo es 0,15 y el indirecto es $0.6 times 0.5 = 0.30$. Estimados: efecto total 0,45 (diferencia de medias), efecto directo controlado 0,15 (coeficiente de $A$ en la regresión de $Y$ sobre $A$ y $M$) y efecto indirecto 0,30 (la diferencia). La descomposición recupera lo que se sembró. Si $M$ es una ocupación aceptada, dos tercios del efecto total son legítimos y un tercio (0,15) es discriminación directa.
 ]
 
 #caso-canonico("Un confusor mediador-resultado deforma el efecto directo")[
@@ -108,7 +108,7 @@ Las cifras de los tres casos provienen de simulaciones con muestras de 200~000 o
 ]
 
 #caso-canonico("Quitar el atributo no quita la brecha")[
-  El mérito $S$ es independiente del atributo $A$. Un proxy $P = A + epsilon_P$ (por ejemplo, el código postal) y una etiqueta histórica $Y = S + 0.5 P + epsilon$ que arrastra el proxy. Un modelo de decisión ajustado con $A$, $S$ y $P$ produce una brecha de 0,505 entre los grupos. Ajustado *sin $A$* (con $S$ y $P$) la brecha es 0,504: eliminar la variable sensible no cambia nada, porque el proxy hace el mismo trabajo (coeficientes de $S$ y $P$ de 0,996 y 0,501). Neutralizar el proxy en la decisión, evaluando el modelo con $P$ fijo en su media, reduce la brecha a 0,001.
+  El mérito $S$ es independiente del atributo $A$. Un proxy $P = A + epsilon_P$ (por ejemplo, el código postal) y una etiqueta histórica $Y = S + 0.5 P + epsilon$ que arrastra el proxy. Un modelo de decisión ajustado con $A$, $S$ y $P$ produce una brecha de 0,51 entre los grupos. Ajustado *sin $A$* (con $S$ y $P$) la brecha es 0,50: eliminar la variable sensible no cambia nada, porque el proxy hace el mismo trabajo (coeficientes de $S$ y $P$ de 1,00 y 0,50). Neutralizar el proxy en la decisión, evaluando el modelo con $P$ fijo en su media, reduce la brecha a 1e-3.
 ]
 
 El caso salarial de género es el ejemplo clásico de la literatura: el efecto total observado se descompone en una parte explicada por ocupación, experiencia y sector (efecto indirecto, cuya legitimidad es en sí misma objeto de debate normativo y no solo estadístico) y un residuo no explicado por esas variables (una aproximación al efecto directo). La descomposición de Oaxaca y Blinder, de la economía laboral, es un antecesor estadístico de la misma idea; el lenguaje de rutas añade la posibilidad de declarar, antes de estimar, qué mediadores se consideran legítimos.

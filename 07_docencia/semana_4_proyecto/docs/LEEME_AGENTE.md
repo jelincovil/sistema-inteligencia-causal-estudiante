@@ -80,7 +80,7 @@ SIC_ESCENARIO=synthetic/ihdp .venv_ci/bin/python cobertura.py
 ```
 
 La corrida usó `n = 500`, `R = 100` y semilla `20261111` para un DGP ilustrativo
-propio. AIPW obtuvo cobertura 0,97 (error MC 0,01706), OLS 0,96 (error MC 0,01960)
+propio. AIPW obtuvo cobertura 0,97 (error MC 0,02), OLS 0,96 (error MC 0,02)
 e ingenuo 0,00 (error MC 0). AIPW queda a 0,02 del nominal 0,95 y no dentro de
 ±1 error MC, de modo que no se afirma calibración exacta. No mide cobertura en
 IHDP/jobs ni demuestra identificación. Evidencia: `artifacts/cobertura.json` y
@@ -106,9 +106,9 @@ el manifest inmutable pendiente. Alias y champion no cambian como una sola trans
 
 La estimación validada reporta diferencia cruda 10,3 (IC aproximado
 [7,60; 13,05]), OLS 4,8 [3,8; 5,8] y AIPW 5,2 [3,9; 6,4]. Antes del trimming,
-los diagnósticos OOF son rango [0,043; 0,916], solape 0,99777 (≈99,8 %, aunque la
-CLI puede redondear 100 %) y ESS 332,2076/448 = 0,7415. Se recortó 1 unidad
-(0,2232 %), de control (0,3891 % de los controles), y 0 tratadas; el SMD ponderado
+los diagnósticos OOF son rango [0,04; 0,92], solape ≈99,8 % (aunque la
+CLI puede redondear 100 %) y ESS 332,21/448 ≈ 0,74. Se recortó 1 unidad
+(0,22 %), de control (0,39 % de los controles), y 0 tratadas; el SMD ponderado
 OOF es 0,11 frente a 0,43 sin ponderar. Consulta `evidencia/02_estimacion.txt`.
 
 ---

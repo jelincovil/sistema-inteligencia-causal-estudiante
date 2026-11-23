@@ -23,7 +23,7 @@ Cada contrato tiene: `operaciones`, `entrada`, `salida`, `invariantes`, `modos d
 
 ## Esquema JSON de un contrato (para el MCP)
 
-`contratos/schemas/contrato.schema.json` define:
+`contratos/contrato.schema.json` define:
 
 ```json
 {
@@ -45,7 +45,7 @@ El MCP no sólo valida; guía. Ejemplo `C-03`:
 
 > Antes de añadir una feature, responde: ¿cuándo se midió? ¿Cuál es su rol causal? Si no puedes probarlo pre-tratamiento → no entra. Registra ambas especificaciones.
 
-Ver `contratos/prompts/` para los 12 prompts.
+Ver `../src/mcp_causal/resources/workflows/` para los procedimientos que guían al agente.
 
 ## DoD de un contrato (para la planificación por capítulo)
 

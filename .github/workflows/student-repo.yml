@@ -1,0 +1,38 @@
+name: Distribución pública (manifiesto)
+
+# Contrato de distribución del repositorio público del estudiante:
+# los 125 archivos declarados en MANIFEST_ESTUDIANTE.json deben existir,
+# coincidir en tamaño y SHA-256, y no puede haber material prohibido
+# (solutions, truth, autograder...) entre los archivos trackeados.
+# No sustituye a la revisión de contenido (no es un escáner de secretos).
+on:
+  push:
+    branches: [main, "semana4/**"]
+    paths:
+      - "MANIFEST_ESTUDIANTE.json"
+      - "scripts/validate_student_repo.py"
+      - "scripts/doctor_minimo.py"
+      - ".gitignore"
+      - "requirements.txt"
+      - ".github/workflows/student-repo.yml"
+  pull_request:
+    paths:
+      - "MANIFEST_ESTUDIANTE.json"
+      - "scripts/validate_student_repo.py"
+      - "scripts/doctor_minimo.py"
+      - ".gitignore"
+      - "requirements.txt"
+      - ".github/workflows/student-repo.yml"
+
+jobs:
+  distribucion:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Validar distribución pública (solo stdlib)
+        run: python scripts/validate_student_repo.py

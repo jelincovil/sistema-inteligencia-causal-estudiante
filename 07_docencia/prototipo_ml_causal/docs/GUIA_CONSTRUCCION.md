@@ -608,12 +608,12 @@ Un IC completamente positivo indica compatibilidad con efectos positivos **bajo 
 
 **Ejemplo con `v0009`, no resultado garantizado para otra versión:**
 
-- El ATE AIPW es **5,157 puntos**, SE **0,626** e IC 95 % **[3,930; 6,384]**. Describe un promedio, no un cambio de 5,157 en cada individuo.
-- El contraste crudo es **10,327** y OLS ajustado **4,799**: el ajuste importa descriptivamente, pero esas diferencias no miden cuánto sesgo se eliminó ni validan la especificación.
-- El rango OOF es **[0,043; 0,916]**; hubo **1 propensión acotada**, no una fila eliminada. `ESS/n = 0,742` señala pérdida de eficiencia por ponderación. El SMD ponderado máximo baja de **0,429** sin ponderar a **0,113**, una mejora descriptiva que no certifica soporte ni balance conjunto.
-- Reentrenando por particiones, `validation` da **1,933 [-2,448; 6,314]** y `test` **1,630 [-3,915; 7,176]**. Son puntos menores e intervalos anchos: estabilidad limitada e imprecisa, no una diferencia demostrada sin estimar el contraste correspondiente.
-- Los estratos de `bw` alto y bajo dan **7,155** y **3,159**: sugieren heterogeneidad agregada, pero falta estimar su contraste con incertidumbre. La proyección tiene `R² = 0,095`, bajo, y ese ajuste a pseudo-scores no mide heterogeneidad causal.
-- El E-value aproximado es **2,073** para el punto y **1,852** para el límite; el RV **37,4 %** pertenece a OLS, no a AIPW. En `v0009`, Rosenbaum da **Γ≈2,21 con 179 pares** para su contraste de Wilcoxon, no para AIPW. Manski da **[-37,656; 48,477]**, contiene cero y expresa identificación parcial: no es un IC y, sin ignorabilidad, bajo ese soporte no identifica el signo.
+- El ATE AIPW es **5,16 puntos**, SE **0,63** e IC 95 % **[3,93; 6,38]**. Describe un promedio, no un cambio de 5,16 en cada individuo.
+- El contraste crudo es **10,33** y OLS ajustado **4,80**: el ajuste importa descriptivamente, pero esas diferencias no miden cuánto sesgo se eliminó ni validan la especificación.
+- El rango OOF es **[0,04; 0,92]**; hubo **1 propensión acotada**, no una fila eliminada. `ESS/n = 0,74` señala pérdida de eficiencia por ponderación. El SMD ponderado máximo baja de **0,43** sin ponderar a **0,11**, una mejora descriptiva que no certifica soporte ni balance conjunto.
+- Reentrenando por particiones, `validation` da **1,93 [-2,45; 6,31]** y `test` **1,63 [-3,92; 7,18]**. Son puntos menores e intervalos anchos: estabilidad limitada e imprecisa, no una diferencia demostrada sin estimar el contraste correspondiente.
+- Los estratos de `bw` alto y bajo dan **7,16** y **3,16**: sugieren heterogeneidad agregada, pero falta estimar su contraste con incertidumbre. La proyección tiene `R² = 0,1`, bajo, y ese ajuste a pseudo-scores no mide heterogeneidad causal.
+- El E-value aproximado es **2,07** para el punto y **1,85** para el límite; el RV **37,4 %** pertenece a OLS, no a AIPW. En `v0009`, Rosenbaum da **Γ≈2,21 con 179 pares** para su contraste de Wilcoxon, no para AIPW. Manski da **[-37,66; 48,48]**, contiene cero y expresa identificación parcial: no es un IC y, sin ignorabilidad, bajo ese soporte no identifica el signo.
 
 En conjunto, `v0009` es compatible con un efecto ajustado positivo en el DGP sintético bajo los supuestos declarados, con precisión razonable en `train` y sin un fallo inmediato en los controles conservados. La estabilidad entre particiones es limitada e imprecisa; identificación depende de supuestos y los placebos no demuestran ausencia de confusión. Esto no produce una recomendación ni una conclusión sobre niños reales. Que la puerta pase solo indica cumplimiento de umbrales en la ventana operativa seleccionada: no mide calidad científica ni anula los resultados de estrés.
 
@@ -923,7 +923,7 @@ La cobertura Monte Carlo no evalúa IHDP ni jobs. Sirve para examinar el comport
 
 #### Lectura conjunta de cobertura
 
-Cobertura, sesgo, RMSE y longitud deben leerse juntos: una cobertura cercana al nominal no implica estimador eficiente ni IC corto, y un IC corto puede tener sesgo o mala cobertura. En la corrida conservada propia (`n = 500`, `R = 100`), AIPW cubre **0,97**, OLS ajustado **0,96** y el ingenuo **0,00**. Pero OLS tiene RMSE **0,098**, menor que **0,114** de AIPW, y longitud media **0,389**, menor que **0,442**: AIPW no resulta superior en todas las dimensiones.
+Cobertura, sesgo, RMSE y longitud deben leerse juntos: una cobertura cercana al nominal no implica estimador eficiente ni IC corto, y un IC corto puede tener sesgo o mala cobertura. En la corrida conservada propia (`n = 500`, `R = 100`), AIPW cubre **0,97**, OLS ajustado **0,96** y el ingenuo **0,00**. Pero OLS tiene RMSE **0,1**, menor que **0,11** de AIPW, y longitud media **0,39**, menor que **0,44**: AIPW no resulta superior en todas las dimensiones.
 
 El DGP favorable a los modelos usados —resultado lineal y asignación logística, con confusores observados y solape moderado— no prueba comportamiento ante no linealidad, confusión oculta o positividad extrema. Con `R = 100` la precisión es limitada; desviarse ±1 error Monte Carlo es una descripción, no un test formal. El error Monte Carlo 0 de cobertura 0 es degenerado y no aporta certeza. Una sola corrida sobre IHDP tampoco estima cobertura real. Las cifras proceden de `artifacts/cobertura.json`/`evidencia/10_cobertura.json`, no de una validación ejecutada para esta guía.
 

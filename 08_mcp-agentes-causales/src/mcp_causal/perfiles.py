@@ -1,8 +1,6 @@
 """perfiles.py — Perfiles de requisitos versionados por operación."""
 from __future__ import annotations
 
-from dataclasses import dataclass
-
 # Cada perfil define qué verificaciones son obligatorias para una operación.
 # Consultar conocimiento no exige declaración; aprobar un bundle sí.
 PERFILES: dict[str, dict] = {

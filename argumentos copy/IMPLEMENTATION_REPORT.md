@@ -1,7 +1,7 @@
 # Implementation report
 
 **Project:** Causal ML/AI: identification, implementation, and evidence  
-**Final validation date:** 2026-11-22 UTC  
+**Final validation date:** 2026-11-23 UTC (scoped re-validation; see addendum)
 **Scope:** `argumentos copy/`, plus declared read-only documentary ingestion from `02_causal AI en produccion/`, `05_contenido_tecnico/`, and `08_mcp-agentes-causales/` in the parent repository
 
 ## 1. Delivered system and evidence boundary
@@ -63,9 +63,9 @@ pdfinfo build/book/causal-ml-book.pdf
 shasum -a 256 build/book/causal-ml-book.pdf
 ```
 
-- Typst: **0.15.1**; compilation **succeeded**.
-- PDF: **33 pages**, A4, tagged, PDF 1.7; 616,719 bytes at this final bibliographically normalized compilation.
-- PDF SHA-256 at this compilation: `c1f5e48f34351e3392116189b229726bf39a9b4ed948693c8f44e8c5dbb4a895`.
+- Typst: **0.15.1**; compilation **succeeded** (re-compiled 2026-11-23 after the narrative-number cleanup regenerated `book/generated/lalonde.typ`).
+- PDF: **33 pages**, A4, tagged, PDF 1.7; 616,673 bytes at this re-compilation.
+- PDF SHA-256 at this compilation: `c33905ff4f2d2ec1d9cea7490f43852776e20b50cdd2687f31019226815037d8`. A same-day `/tmp/argumentos-verify.pdf` validation compile produced the same page/byte count but a different SHA-256, because Typst output embeds nondeterministic metadata; pages and bytes are comparable across runs, digests are not.
 - Output location: `build/book/causal-ml-book.pdf` (ignored, not a checked-in evidentiary artifact).
 
 PDF metadata and hashes are observations about this local compilation, not claims of byte-stable output across different Typst versions or build timestamps.
@@ -223,8 +223,8 @@ cmp artifacts/lalonde/holdout_ledger.json build/review-fixes-20261122/lalonde/ho
 | `audit.json` | `6756aa706657f74b16abeae26b54df28281555bfac2de13470e3e4d1da19520c` |
 | `splits.csv` | `d50097fadd29eca6e39dbd9aee8410a65e6f34233e6a057b975ba7f54b70c17f` |
 | `causal_report.json` | `9193ea4574ab202e0b771cc0b5db7f4f74c6ddd6f24c676dd0850dfb7beba70b` |
-| `report.md` | `8cefa37e8dc5b5b84437fa8b7b3a764964c79ab6e3652aafe488ccc72fcf3b2b` |
-| `lalonde.typ` | `0104dea8aaef7a312b7d72d4f727adf1c239a8c8f4b5b8c566836a536a427acc` |
+| `report.md` | `bc2e442101cce41c8bb185bc9f48068340ef68ad236d45a726a3660a086d5cf4` |
+| `lalonde.typ` | `cf95d00333d6df22bfe3ac50c081fbedf421571d8a687d1def0fbcf53605ff36` |
 
 The current checked-in ledger and clean-replay ledger are byte-identical. Relative to the preserved pre-review ledger, the sole event retains its ID, purpose, source/contract/audit/split hashes, and `model_changes_permitted: false`; its local access timestamp changed from 1795314949 to 1795317536, and its report hash correctly changed to the regenerated report SHA above. The estimator, split assignment, and numerical estimates did not change. The local timestamp is not a trusted external timestamp, and the ledger is not tamper-proof or globally witnessed.
 
@@ -253,7 +253,7 @@ All required locked commands were executed from this directory with Rust/Cargo 1
 | `cargo run --locked -p arg-cli -- fixtures --dir examples/fixtures` | Passed; 11 fixture outcomes matched, self-contained true, certification/closure false |
 | `cargo run --locked -p arg-cli -- check --kernel corpus/causal_ml.json --json build/reverification/corpus_check.json` | Structurally valid; 0 diagnostics; 7 argument obligations plus 52 claim-axis counters; `claim_supported: false` |
 | `cargo run --locked -p arg-cli -- corpus --dir corpus --root . --json artifacts/corpus_audit.json` | Passed current-byte/structural audit; details below |
-| `argumentos-corpus build`, `verify`, and filtered `query` via `cargo run --locked -p arg-ingest` | Passed; ten deterministic artifacts verified, 19,558,019 bytes, five MCP contract candidates returned |
+| `argumentos-corpus build`, `verify`, and filtered `query` via `cargo run --locked -p arg-ingest` | Passed; ten deterministic artifacts verified, 19,560,586 bytes, five MCP contract candidates returned |
 | `typst compile book/main.typ build/book/causal-ml-book.pdf --root .` | Passed; 33-page PDF |
 
 The 107 tests pass across the workspace. They exercise valid kernel behavior plus malformed/missing CSV fields, bad types/categories/ranges, duplicate IDs and exact rows, source-hash mismatch, deterministic entity/epoch split behavior, salt-independent train-fold membership, leakage failures, numerical diagnostics as implemented, dynamic confidence labels/bounds, artifact tampering, repeated-holdout refusal, and failed-gate reporting with no holdout evaluation. Kernel-hardening tests add bounded hostile JSON inputs, root/symlink escape rejection, receipt consistency and byte verification, atom registry closure/use, scope aggregation and rejection cases, cross-argument support cycles, self-approval mapping, and current-registry corpus checks. Documentary tests add required-group prefix/suffix matching, exact unit-to-source byte/hash round trips (including UTF-8 and CRLF), explicit exclusion records, deterministic builds and queries, path safety, tamper detection, and occurrence preservation. These are deterministic tests, not Monte Carlo claims about estimator performance or evidence of scientific validity.
@@ -277,17 +277,17 @@ The three evidence layers remain distinct:
 | Layer | Delivered contents | Status |
 |---|---|---|
 | Hardened typed kernel | 52 atomicized claims, four arguments, 30 evidence specifications, 49-atom closed registry | Structurally audited; 59 checker counters pending; no scientific evidence promoted |
-| Exact documentary corpus | 388 discovered regular files, 370 included files, 10,130 exact source units | Complete relative to declared roots, required groups, parsing roles, and exclusions |
+| Exact documentary corpus | 387 discovered regular files, 370 included files, 10,133 exact source units | Complete relative to declared roots, required groups, parsing roles, and exclusions |
 | Extracted candidates | 2,252 unique candidates and 4,189 occurrences | `source_assertion_unverified`, `unreviewed`, and `atomicity_status=not_assessed` |
 
 The complete observed coverage is:
 
 | Collection | Discovered | Included | Excluded | Parsed | Metadata only | Units | Candidates present | Occurrences | Pruned dirs |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| `02_production_monograph` | 167 | 157 | 10 | 126 | 31 | 5,322 | 2,144 | 2,273 | 1 |
+| `02_production_monograph` | 166 | 157 | 9 | 126 | 31 | 5,325 | 2,144 | 2,273 | 1 |
 | `05_technical_snapshot` | 115 | 107 | 8 | 97 | 10 | 4,565 | 1,698 | 1,809 | 0 |
 | `08_mcp_operations` | 106 | 106 | 0 | 67 | 39 | 243 | 106 | 107 | 13 |
-| **Total** | **388** | **370** | **18** | **290** | **80** | **10,130** | **2,252 unique overall** | **4,189** | **14** |
+| **Total** | **387** | **370** | **17** | **290** | **80** | **10,133** | **2,252 unique overall** | **4,189** | **14** |
 
 Per-collection candidate counts overlap; occurrence counts, not candidate counts, sum to 4,189. All 15 required groups pass, including both monograph chapter families and entry points and the MCP knowledge, workflow, contract, criteria, evaluation, configuration, and root-documentation groups. `capitulos_de/` denotes data engineering, not German.
 
@@ -313,28 +313,28 @@ cargo run --locked -p arg-ingest -- query \
   --limit 5
 ```
 
-Observed build result: **ten artifacts; documentary coverage verified for 388 regular files**. Observed verification result: **ten artifacts and 19,558,019 bytes verified byte-for-byte; scientific validity remains uncertified**. The query returned five deterministically ordered MCP candidates with exact occurrence paths, source revisions, byte/line spans, and unreviewed status.
+Observed build result: **ten artifacts; documentary coverage verified for 387 regular files**. Observed verification result: **ten artifacts and 19,560,586 bytes verified byte-for-byte; scientific validity remains uncertified**. The query returned five deterministically ordered MCP candidates with exact occurrence paths, source revisions, byte/line spans, and unreviewed status.
 
 Configuration SHA-256: `b94389546b5706b4a5b293336f206290d6b53ab4f71f0d8cd9b553f79a9e3480`.
 
 | Generated artifact | SHA-256 |
 |---|---|
-| `source_inventory.jsonl` | `1545ee520bcedecfbd7e9767753ef20eaae6196cf3bea83b76b9a24d4f1dec7a` |
-| `sources.jsonl` | `69cfef24555ea23a7fe2e108fb6b658d2cdd7fbcd1e0bb75fea1f2a3be3baef7` |
-| `source_units.jsonl` | `c526b8924d84a1d70fe5435ea5b1471a48006ef29d603dcffea3e859cd447c7d` |
-| `argument_candidates.jsonl` | `540a64d4b72253fe0b189627d14c59bd9fb0906878fc62437a1d0bf2d39e1c96` |
-| `relations.jsonl` | `209d7c669c7c5bd3b3cb41e0f4ed2fc627ab1f152d9fa0564547c314002500cd` |
-| `exclusions.jsonl` | `b890bd5d6ae38d3fed4ca648490a38739bdec84fb15220f42f0cb6b955d2f804` |
-| `coverage.json` | `c1336704eb8c482363b269a890a1026ad9028895893adde51ed671fdebe450ff` |
-| `REPORT.md` | `f14f6ed0b8a6d3df3f9cc62b010845e3a2516c9788af4420da31f32f0fe1b82c` |
+| `source_inventory.jsonl` | `e9e0fdd8c74ded3a73349d040503f661009fe71e4ee5569c1ad1e9bb51df434e` |
+| `sources.jsonl` | `7dfc97d78db7231eba4b000cd8aa2484d92e7410d27f6437351749aeed6b87c7` |
+| `source_units.jsonl` | `fd22a8f2c68d129ce529f3f4ce79f6306b239a63359cc62878042ea02df8cae2` |
+| `argument_candidates.jsonl` | `441a83cc850bca5477c87dfd2a236b025dffbef067b519c12f905f884b3f3700` |
+| `relations.jsonl` | `91dd7dd04306474e59db9ea28a5c0f13c898a24277d870c7cd0791293499bfc2` |
+| `exclusions.jsonl` | `fd295d5cd0f0d17c07d38b6d07f6cf40992d6e77434a0a1b5c2e17ee11760fff` |
+| `coverage.json` | `3c3caab087aa36fa3010eba9173b487190b944420fa19ed685dc0ba4d768368b` |
+| `REPORT.md` | `b5cb179a13fc8e79a56cd5a7fb5951cc8b0a9ba13a7a93000a384b7420dd0e22` |
 | `manifest.json` | `78f92be4af1503737cf64f5ac7566064b7b95b2c04e412522f5af31d36375036` |
-| `checksums.json` (independent digest; excluded from itself) | `3e8ad4106f3b82c275bdb9adb76813e125e0923634b0ff2d9d557ed61e715ed4` |
+| `checksums.json` (independent digest; excluded from itself) | `a8d739bc6a0ae05330098a16164f1f32337150832c7f46ccb0e1f9809a7722ce` |
 
 `verify` regenerates all expected artifacts in memory, compares bytes, and rejects missing or unexpected files. Its success establishes deterministic regeneration under the declared configuration, not semantic correctness. Detailed artifact roles and operating instructions are in `corpus/DOCUMENTARY_WORKFLOW.md`.
 
 ### 10.3 Accounting, regression coverage, and imported limitations
 
-- Eighteen regular files are explicitly excluded and inventoried: 15 binary/generated assets, two empty root placeholders, and one unknown non-UTF-8 `.DS_Store`. Fourteen pruned directories are separately recorded once; unread descendants are not included in regular-file totals.
+- Seventeen regular files are explicitly excluded and inventoried: 15 binary/generated assets, one empty root placeholder, and one unknown non-UTF-8 `.DS_Store`. Fourteen pruned directories are separately recorded once; unread descendants are not included in regular-file totals.
 - Eighty metadata-only files are hashed without being treated as candidate prose. Imported Python, Typst, shell, MCP, and other source code was not executed.
 - The relationship stream records 102 byte-identical monograph-file pairs and five content variants. Candidate deduplication, byte identity, and semantic equivalence remain separate operations; all source occurrences are retained.
 - The ingestion crate has 21 passing tests: seven unit tests and 14 integration tests. Every real source unit independently round-trips to original bytes and hashes in the integration suite.
@@ -434,3 +434,15 @@ Consequently, the repaired corpus is a materially safer auditable dossier, not a
 14. **Imported operational evidence:** documentary coverage includes MCP designs, contracts, and acceptance records, but does not make the blocked local acceptance state production-ready or turn estimators discussed in knowledge resources into implemented capabilities.
 
 `reviews/lalonde_internal_audit.md` is a useful internal stress-test, not the missing independent review. The next documentary stage is semantic curation with contradiction/duplicate review and evidence-specific replay, while preserving the exact raw spans as provenance. Any subsequent feature, learner, target, splitting, clipping, or inferential change after seeing the existing holdout result must be openly treated as a new analysis protocol. The correct next scientific step is not in-place model tuning; it is independent design review, justified identification/sensitivity analysis, and genuinely new outcome-independent validation data where feasible.
+
+## 14. Cleanup addendum (2026-11-23)
+
+A focused consistency/readability pass was applied without changing the frozen protocol, `causal_report.json`, `audit.json`, `splits.csv`, `holdout_ledger.json`, the contract, the kernel, or any numerical estimate:
+
+- **Narrative numbers now render with at most two decimals.** `crates/causal-ml/src/report.rs` gained a `small()` formatter for unit-interval diagnostics: values below 0.01 switch to two-decimal scientific notation (e.g. `3.98e-3`) so tiny propensities never render as `0.00`; everything else rounds to two decimals. Dollar means/differences remain at one decimal (already ≤ 2) and percentage shares at two decimals, unchanged.
+- `artifacts/lalonde/report.md` and `book/generated/lalonde.typ` were regenerated with the project's own generator (`cargo run --locked -p causal-ml -- report --contract config/lalonde.contract.json --output build/review-fixes-20261123/lalonde ...`) from the untouched canonical artifacts. Canonical machine evidence (`causal_report.json`, `audit.json`, `splits.csv`, `holdout_ledger.json`) verified byte-identical before promotion. New digests: `artifacts/lalonde/report.md` = `bc2e442101cce41c8bb185bc9f48068340ef68ad236d45a726a3660a086d5cf4`; `book/generated/lalonde.typ` = `cf95d00333d6df22bfe3ac50c081fbedf421571d8a687d1def0fbcf53605ff36`. The ledger's `report_sha256` binds `causal_report.json` (`9193ea4574ab…`) and is unchanged; the `report` command's printed `report_sha256` is likewise the `causal_report.json` digest, not the Markdown digest.
+- The only content differences are the formatted propensity min/p05/median/p95/max values, fold min/max propensities, log loss (`0.39`), Brier (`0.12`), and removal of a duplicated period after the contract description (`benchmark..` → `benchmark.`). No other bytes, claims, or limits changed.
+- `book/LITERATURE_MATRIX.md` typo fixed: “notas evidence” → “not as evidence”.
+- The book was recompiled (33 pages, 616,673 bytes; SHA-256 `c33905ff4f2d2ec1d9cea7490f43852776e20b50cdd2687f31019226815037d8`; Typst PDF output embeds nondeterministic metadata, so digests are not byte-stable across runs).
+- `cargo fmt --all -- --check`, `cargo check --workspace --all-targets`, `cargo clippy --workspace --all-targets -- -D warnings`, `cargo test --workspace`, and `typst compile book/main.typ /tmp/argumentos-verify.pdf --root .` were all re-run on 2026-11-23; all passed. `progress/STATE.json` records the re-compiled book digests and the re-validation date. Test count remains 107.
+- No scientific claim, gate status, holdout binding, or evidence status changed. `scientific_causal_claim_verified`, `claim_supported`, `corpus_closed`, and `scientific_validity_certified` remain `false`.

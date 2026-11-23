@@ -98,10 +98,10 @@ Es la fracción de la varianza residual del tratamiento y del resultado que un c
     table.hline(stroke: 0.6pt),
     table.header([*Confusor*], [*$R^2$ con $D$*], [*$R^2$ con $Y$*], [*Efecto sin $U$*], [*Sesgo real*], [*Valor de robustez*], [*VC, $c = 0.3$*]),
     table.hline(stroke: 0.3pt),
-    [Ninguno], [0,00], [0,00], [0,192], [0,000], [0,18], [0,105],
-    [Débil], [0,04], [0,08], [0,252], [0,059], [0,22], [0,048],
-    [Medio], [0,21], [0,23], [0,434], [0,241], [0,36], [0,127],
-    [Fuerte], [0,46], [0,37], [0,689], [0,496], [0,53], [0,350],
+    [Ninguno], [0,00], [0,00], [0,19], [0,00], [0,18], [0,11],
+    [Débil], [0,04], [0,08], [0,25], [0,06], [0,22], [0,05],
+    [Medio], [0,21], [0,23], [0,43], [0,24], [0,36], [0,13],
+    [Fuerte], [0,46], [0,37], [0,69], [0,50], [0,53], [0,35],
     table.hline(stroke: 0.6pt),
   )
 
@@ -118,10 +118,10 @@ Es la fracción de la varianza residual del tratamiento y del resultado que un c
     table.hline(stroke: 0.6pt),
     table.header([*Confusor*], [*Efecto medio sin $U$*], [*Se trataría*], [*VC medio*], [*Rango con la escala de $X_1$*], [*Decisión frágil*]),
     table.hline(stroke: 0.3pt),
-    [Ninguno], [0,200], [0 %], [0,095], [−0,04 a 0,44], [100 %],
-    [Débil], [0,258], [4 %], [0,041], [0,04 a 0,48], [100 %],
-    [Medio], [0,441], [100 %], [0,129], [0,30 a 0,59], [58 %],
-    [Fuerte], [0,699], [100 %], [0,347], [0,64 a 0,76], [0 %],
+    [Ninguno], [0,20], [0 %], [0,10], [−0,04 a 0,44], [100 %],
+    [Débil], [0,26], [4 %], [0,04], [0,04 a 0,48], [100 %],
+    [Medio], [0,44], [100 %], [0,13], [0,30 a 0,59], [58 %],
+    [Fuerte], [0,70], [100 %], [0,35], [0,64 a 0,76], [0 %],
     table.hline(stroke: 0.6pt),
   )
 

@@ -102,7 +102,7 @@ Cada señal responde una pregunta distinta, y su diseño evita una trampa espec�
 <sec-de-14-caso>
 
 #caso-canonico("Cada cambio enciende su señal y casi ninguna otra")[
-  DGP con verdad: $X_1, X_2, X_3 tilde N(0,1)$, $Z tilde N(0,1)$ instrumento, $D tilde "Bernoulli"(sigma(X_1 + 0,8 Z))$, $Y = 0,5 D + X_1 + 0,5 X_3 + epsilon$. Referencia de 3 000 unidades, ventanas de 400, 100 réplicas por escenario (semilla 20260714 del script). La referencia estima ATE 0,486 (SE 0,040; verdad 0,5).
+  DGP con verdad: $X_1, X_2, X_3 tilde N(0,1)$, $Z tilde N(0,1)$ instrumento, $D tilde "Bernoulli"(sigma(X_1 + 0,8 Z))$, $Y = 0,5 D + X_1 + 0,5 X_3 + epsilon$. Referencia de 3 000 unidades, ventanas de 400, 100 réplicas por escenario (semilla 20260714 del script). La referencia estima ATE 0,49 (SE 0,04; verdad 0,5).
 
   #entero[
   #table(

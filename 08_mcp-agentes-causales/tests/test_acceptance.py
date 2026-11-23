@@ -7,7 +7,6 @@ from __future__ import annotations
 
 import json
 import math
-import os
 import tempfile
 from pathlib import Path
 
@@ -25,7 +24,7 @@ from mcp_causal.models import (
 from mcp_causal.projects import ProjectStore
 from mcp_causal.validators import (
     evaluar_puerta, validar_abstencion, validar_equidad,
-    validar_esquema_roles, validar_observabilidad,
+    validar_observabilidad,
     validar_particion_pared, validar_sensibilidad,
     validar_validez_temporal, validar_version_linaje,
     validar_impacto_dano,
@@ -79,7 +78,6 @@ class TestA01Declaracion:
             )
 
     def test_supuesto_declarado_no_es_verified(self):
-        decl = _declaracion_valida()
         r = ResultadoVerificacion(check_id="test", claim_level=ClaimLevel.DECLARED)
         assert r.claim_level == ClaimLevel.DECLARED
         assert r.claim_level != ClaimLevel.VERIFIED

@@ -157,15 +157,15 @@ Los casos usan un panel de factores con verdad conocida: 20 unidades, 30 períod
 ) <fig-cap28-scm-mc>
 
 #caso-canonico("Dentro de la envolvente convexa, ambos métodos recuperan el efecto")[
-  La unidad tratada tiene cargas dentro de las de los donantes (panel (a) de la @fig-cap28-scm-mc). El control sintético estima el efecto con sesgo de +0,011 y raíz del error cuadrático medio (RMSE) de 0,152; matrix completion con $lambda$ elegido por validación cruzada, sesgo de +0,008 y RMSE de 0,138. El ajuste previo del control sintético tiene RMSPE de 0,36, por debajo del ruido de 0,5, un valor menor que el ruido porque con 19 donantes y 15 períodos previos los pesos ajustan parte del ruido.
+  La unidad tratada tiene cargas dentro de las de los donantes (panel (a) de la @fig-cap28-scm-mc). El control sintético estima el efecto con sesgo de +0,01 y raíz del error cuadrático medio (RMSE) de 0,15; matrix completion con $lambda$ elegido por validación cruzada, sesgo de +8e-3 y RMSE de 0,14. El ajuste previo del control sintético tiene RMSPE de 0,36, por debajo del ruido de 0,5, un valor menor que el ruido porque con 19 donantes y 15 períodos previos los pesos ajustan parte del ruido.
 ]
 
 #caso-canonico("Fuera de la envolvente, el control sintético falla y lo delata el ajuste previo")[
-  Ahora la unidad tratada tiene cargas extremas, fuera de las de todos los donantes (panel (b)). El control sintético ya no puede reproducirla: el RMSPE previo sube a 2,52, cinco veces el ruido, y el RMSE del efecto sube a 0,757. Matrix completion, que extrapola con la estructura de rango bajo, tiene RMSE de 0,482. El sesgo medio sigue siendo pequeño (+0,073 y +0,032) porque el error cambia de signo según la realización de los factores: lo que se degrada es la dispersión, de modo que una sola estimación puede errar mucho en cualquier sentido. El diagnóstico es el ajuste previo, no el efecto.
+  Ahora la unidad tratada tiene cargas extremas, fuera de las de todos los donantes (panel (b)). El control sintético ya no puede reproducirla: el RMSPE previo sube a 2,52, cinco veces el ruido, y el RMSE del efecto sube a 0,76. Matrix completion, que extrapola con la estructura de rango bajo, tiene RMSE de 0,48. El sesgo medio sigue siendo pequeño (+0,07 y +0,03) porque el error cambia de signo según la realización de los factores: lo que se degrada es la dispersión, de modo que una sola estimación puede errar mucho en cualquier sentido. El diagnóstico es el ajuste previo, no el efecto.
 ]
 
 #caso-canonico("El hiperparámetro fija el contrafactual")[
-  Con la tratada dentro de la envolvente, el RMSE del efecto es plano frente a $lambda$ (entre 0,135 y 0,143 para $lambda$ de 0,5 a 20): una meseta. Con la tratada extrema el RMSE crece con $lambda$: 0,46 con $lambda = 0.5$, 0,54 con 5, 0,75 con 10 y 1,02 con 20, porque la regularización contrae hacia cero el contrafactual de la unidad extrema. La elección por validación cruzada de bloque (0,482) queda cerca del mejor valor de la rejilla. Reportar la curva distingue el caso robusto del caso en que el resultado depende del hiperparámetro.
+  Con la tratada dentro de la envolvente, el RMSE del efecto es plano frente a $lambda$ (entre 0,13 y 0,14 para $lambda$ de 0,5 a 20): una meseta. Con la tratada extrema el RMSE crece con $lambda$: 0,46 con $lambda = 0.5$, 0,54 con 5, 0,75 con 10 y 1,02 con 20, porque la regularización contrae hacia cero el contrafactual de la unidad extrema. La elección por validación cruzada de bloque (0,48) queda cerca del mejor valor de la rejilla. Reportar la curva distingue el caso robusto del caso en que el resultado depende del hiperparámetro.
 ]
 
 #caso-canonico("La inferencia por placebos tiene un piso discreto")[

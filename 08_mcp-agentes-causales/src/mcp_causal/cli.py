@@ -5,7 +5,6 @@ import argparse
 import json
 import os
 import sys
-from pathlib import Path
 
 from . import __version__
 from .knowledge import buscar_conocimiento, contar_fichas, listar_fichas, obtener_ficha
@@ -31,7 +30,7 @@ def main(args: list[str] | None = None) -> int:
     p_ficha.add_argument("id", help="ID de la ficha")
 
     # listar
-    p_listar = sub.add_parser("listar", help="Listar fichas disponibles")
+    sub.add_parser("listar", help="Listar fichas disponibles")
 
     # project
     p_proy = sub.add_parser("proyecto", help="Gestionar proyectos")

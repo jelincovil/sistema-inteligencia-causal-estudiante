@@ -81,7 +81,6 @@ def main():
 
     # 2. Esquema C-01
     col = leer()
-    esquema = {"tratamiento": "treatment", "resultado": "re78", "covariables": COVS}
     print("2. esquema C-01  : tratamiento=treatment, resultado=re78,", len(COVS), "covariables")
 
     # 3. Splits C-10 (hash verificado)
@@ -94,7 +93,7 @@ def main():
     # 4. Estimación
     ate, se = ate_ols(col)
     ic = [ate - 1.96 * se, ate + 1.96 * se]
-    D, Y = col["treatment"], col["re78"]
+    D = col["treatment"]
     X = np.column_stack([col[c] for c in COVS])
     e = propensity(X, D)
     ess = ess_kish(D, e)
@@ -138,8 +137,6 @@ def main():
 
     # 6. Registro C-09
     version = "v0001"
-    manifest = {"version": version, "dataset_sha256": tarjeta["datos"]["sha256"],
-                "puerta": "pasa", "semilla": SEMILLA}
     print("6. registro C-09 :", version, "con manifest y hash del dataset")
 
     # 7. Puerta C-06 (tres ventanas)
@@ -177,9 +174,6 @@ def main():
 
     # 9. Servicio C-04
     rangos = {c: (float(col[c].min()), float(col[c].max())) for c in COVS}
-    dentro = {"age": 30, "educ": 10, "black": 1, "hispan": 0,
-              "married": 0, "nodegree": 1, "re74": 2000, "re75": 1500}
-    fuera = dict(dentro, age=99)
     r_in = {"estado": "respuesta", "efecto": round(ate, 1), "ic95": [round(ic[0], 1), round(ic[1], 1)]}
     r_out = {"estado": "abstencion", "motivo": f"age=99 fuera de [{rangos['age'][0]:.0f}, {rangos['age'][1]:.0f}]"}
     print(f"9. servicio C-04 : dentro={r_in['estado']} efecto={r_in['efecto']} | fuera={r_out['estado']} sin número")

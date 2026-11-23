@@ -98,7 +98,7 @@ def load_model(artifacts_dir: Optional[Path] = None) -> LoadedModel:
     # Optional: Serie A on path for other tooling; not required for shim load
     try:
         ensure_serie_a_on_path()
-    except Exception:
+    except (OSError, RuntimeError):
         pass
 
     from .estimator_shim import load_plr_joblib

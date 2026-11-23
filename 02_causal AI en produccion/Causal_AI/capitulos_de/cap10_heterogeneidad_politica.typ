@@ -18,7 +18,7 @@
     [*Tesis:*], [Heterogeneidad es una afirmación predictiva sobre tau(x): se valida fuera de muestra como cualquier predictor — con PEHE, calibración y Qini],
     [*Trade-off:*], [Ganancia de política vs costo de tratar: el umbral se elige sobre valor estimado OOS, no sobre ajuste],
     [*Pieza contratada:*], [Extensión C-12 (política): bundle + Qini + valor IPW OOS; criterio Q-04],
-    [*Casos canónicos:*], [tau(x)=0,3+1,2·x0: PEHE S 0,035 / T 0,048; política $tau>0$ valor 0,56 vs 0,07 aleatorio (semilla 20260710)],
+    [*Casos canónicos:*], [tau(x)=0,3+1,2·x0: PEHE S 0,04 / T 0,05; política $tau>0$ valor 0,56 vs 0,07 aleatorio (semilla 20260710)],
   )
 ]
 
@@ -45,13 +45,13 @@ Los Capítulos 12, 14, 21 y 22 de la edición de método desarrollan T-learner, 
     table.hline(stroke: 0.6pt),
     table.header([*Learner*], [*PEHE OOS*], [*corr($hat(tau), tau$)*]),
     table.hline(stroke: 0.3pt),
-    [S-learner], [0,035], [1,00],
-    [T-learner], [0,048], [1,00],
+    [S-learner], [0,04], [1,00],
+    [T-learner], [0,05], [1,00],
     table.hline(stroke: 0.6pt),
   )
   ]
 
-  $tau$ medio 0,33 y desv. 1,18: la heterogeneidad es real (correlación $x_0$–$tau$ de 1,00 por construcción). Los dos learners aciertan porque la forma es lineal; el punto no es quién gana por 0,013 sino que *sin test OOS con verdad no habría forma de saberlo*: en datos reales ese ranking se decide con Qini, no con PEHE (sección siguiente).
+  $tau$ medio 0,33 y desv. 1,18: la heterogeneidad es real (correlación $x_0$–$tau$ de 1,00 por construcción). Los dos learners aciertan porque la forma es lineal; el punto no es quién gana por 0,01 sino que *sin test OOS con verdad no habría forma de saberlo*: en datos reales ese ranking se decide con Qini, no con PEHE (sección siguiente).
 ]
 
 #repo-ref[
@@ -76,10 +76,10 @@ Los Capítulos 12, 14, 21 y 22 de la edición de método desarrollan T-learner, 
     table.hline(stroke: 0.6pt),
     table.header([*Politica*], [*Trata*], [*Valor IPW*]),
     table.hline(stroke: 0.3pt),
-    [Tratar a todos], [100 %], [0,257],
-    [Aleatorio 50 %], [50 %], [0,068],
-    [S-learner $hat(tau)>0$], [60 %], [0,548],
-    [T-learner $hat(tau)>0$], [60 %], [0,562],
+    [Tratar a todos], [100 %], [0,26],
+    [Aleatorio 50 %], [50 %], [0,07],
+    [S-learner $hat(tau)>0$], [60 %], [0,55],
+    [T-learner $hat(tau)>0$], [60 %], [0,56],
     table.hline(stroke: 0.6pt),
   )
   ]
@@ -137,7 +137,7 @@ Los Capítulos 12, 14, 21 y 22 de la edición de método desarrollan T-learner, 
 
 === Ejercicios conceptuales
 
-+ Con el DGP del caso canónico, un learner con PEHE 0,035 parece excelente. ¿Por qué en datos reales ese número no existe y qué lo sustituye? _Pista:_ Qini IPW OOS.
++ Con el DGP del caso canónico, un learner con PEHE 0,04 parece excelente. ¿Por qué en datos reales ese número no existe y qué lo sustituye? _Pista:_ Qini IPW OOS.
 
 + Si eliges $c$ maximizando valor in-sample y luego reportas ese valor, ¿qué invariante violas y cuál es el sesgo? _Pista:_ C-12 ext (3).
 

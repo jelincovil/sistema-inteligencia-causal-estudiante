@@ -161,7 +161,7 @@ La transformación _within_ de la @sec-cap17_fe_model es TWFE, y por tanto *here
 Las cifras de los tres casos provienen de simulaciones con semilla declarada.#capa-impl[ El script es #code[herramientas/verificaciones/verif_cap17.py].]
 
 #caso-canonico("Adopción escalonada con efecto creciente")[
-  Tres grupos de 20 unidades observados durante 12 periodos: tratados desde el periodo 4, tratados desde el 7 y nunca tratados. El efecto es $0.5 times$ (periodos de exposición), de modo que crece con el tiempo en tratamiento; el promedio verdadero sobre las celdas tratadas es 2,200. Con 200 repeticiones:
+  Tres grupos de 20 unidades observados durante 12 periodos: tratados desde el periodo 4, tratados desde el 7 y nunca tratados. El efecto es $0.5 times$ (periodos de exposición), de modo que crece con el tiempo en tratamiento; el promedio verdadero sobre las celdas tratadas es 2,2. Con 200 repeticiones:
 
   #table(
     columns: (2.6fr, 1fr, 1fr),
@@ -170,13 +170,13 @@ Las cifras de los tres casos provienen de simulaciones con semilla declarada.#ca
     table.hline(stroke: 0.6pt),
     table.header([*Estimador*], [*Media*], [*Desv. típica*]),
     table.hline(stroke: 0.3pt),
-    [Verdad (promedio sobre celdas tratadas)], [2,200], [no aplica],
-    [TWFE (_within_ bidireccional)], [1,455], [0,146],
-    [Imputación (efectos fijos con celdas no tratadas)], [2,200], [0,154],
+    [Verdad (promedio sobre celdas tratadas)], [2,2], [no aplica],
+    [TWFE (_within_ bidireccional)], [1,46], [0,15],
+    [Imputación (efectos fijos con celdas no tratadas)], [2,2], [0,15],
     table.hline(stroke: 0.6pt),
   )
 
-  TWFE subestima el efecto en 0,745, un 34 %, porque usa al grupo tratado desde el periodo 4 como control del grupo tratado desde el 7, cuando el primero ya está en plena dinámica de efecto. El estimador de imputación recupera el valor verdadero. Con esta forma de efecto, la transformación _within_ de este capítulo comete el mismo error que TWFE.
+  TWFE subestima el efecto en 0,75, un 34 %, porque usa al grupo tratado desde el periodo 4 como control del grupo tratado desde el 7, cuando el primero ya está en plena dinámica de efecto. El estimador de imputación recupera el valor verdadero. Con esta forma de efecto, la transformación _within_ de este capítulo comete el mismo error que TWFE.
 ]
 
 #caso-canonico("Un panel con controles no lineales")[
@@ -189,13 +189,13 @@ Las cifras de los tres casos provienen de simulaciones con semilla declarada.#ca
     table.hline(stroke: 0.6pt),
     table.header([*Estimador*], [*Media*], [*Desv. típica*], [*Sesgo*]),
     table.hline(stroke: 0.3pt),
-    [TWFE con $X$ lineal], [1,325], [0,115], [0,325],
-    [DML sin transformación _within_], [1,170], [0,080], [0,170],
-    [DML-panel (_within_ y atributos de trayectoria)], [1,027], [0,065], [0,027],
+    [TWFE con $X$ lineal], [1,33], [0,12], [0,33],
+    [DML sin transformación _within_], [1,17], [0,08], [0,17],
+    [DML-panel (_within_ y atributos de trayectoria)], [1,03], [0,07], [0,03],
     table.hline(stroke: 0.6pt),
   )
 
-  El DML-panel reduce el sesgo de 0,325 a 0,027, y el intervalo del 95 % con error estándar por unidad cubre en 0,97 de las repeticiones (con 30 repeticiones la cifra tiene un margen de error de varios puntos y no se distingue de 0,95). Prescindir de la transformación _within_ es peor que aplicarla (sesgo de 0,170), porque los efectos fijos confunden. El sesgo residual de 0,027 puede atribuirse en parte a que el resumen de trayectoria (la media de $X$ de la unidad) no reproduce exactamente la media de $g_0(X)$, como anticipa la advertencia sobre $tilde(g)$.
+  El DML-panel reduce el sesgo de 0,33 a 0,03, y el intervalo del 95 % con error estándar por unidad cubre en 0,97 de las repeticiones (con 30 repeticiones la cifra tiene un margen de error de varios puntos y no se distingue de 0,95). Prescindir de la transformación _within_ es peor que aplicarla (sesgo de 0,17), porque los efectos fijos confunden. El sesgo residual de 0,03 puede atribuirse en parte a que el resumen de trayectoria (la media de $X$ de la unidad) no reproduce exactamente la media de $g_0(X)$, como anticipa la advertencia sobre $tilde(g)$.
 ]
 
 #caso-canonico("Un instrumento débil")[

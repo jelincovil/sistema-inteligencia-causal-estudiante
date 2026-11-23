@@ -5,12 +5,7 @@ Las fichas se empaquetan como recursos dentro del wheel.
 """
 from __future__ import annotations
 
-import json
 import re
-from pathlib import Path
-from typing import Any
-
-from .models import FichaConocimiento
 
 # Las fichas se definen como datos Python para empaquetado fácil.
 # En producción pueden migrarse a YAML en resources/knowledge/.

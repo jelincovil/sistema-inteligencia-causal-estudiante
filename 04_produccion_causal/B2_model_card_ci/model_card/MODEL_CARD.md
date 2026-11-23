@@ -27,8 +27,8 @@ library_name: sklearn
 | **Población de entrenamiento** | Split **train** del escenario `synthetic/inference/ihdp_medium` (n=1200) |
 | **scenario_id** | `synthetic_inference_ihdp_medium` |
 | **Semilla curso** | 42 |
-| **ATE punto (train, referencia A2)** | ≈ 3.528 |
-| **IC 95% (ref. A2)** | [2.886, 4.169] |
+| **ATE punto (train, referencia A2)** | ≈ 3.53 |
+| **IC 95% (ref. A2)** | [2.89, 4.17] |
 | **Backend** | `plr_sklearn_crossfit` (LassoCV nuisances, K=5) |
 
 ## 2. Supuestos de identificación (declarados)

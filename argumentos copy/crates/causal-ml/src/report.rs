@@ -139,7 +139,12 @@ fn markdown_report(
     )?;
     writeln!(out, "## Frozen protocol and provenance\n")?;
     writeln!(out, "- Dataset ID: `{}`.", inline(&contract.dataset_id))?;
-    writeln!(out, "- Data: {}.", inline(&contract.description))?;
+    // The contract description already ends with a period; do not double-punctuate.
+    writeln!(
+        out,
+        "- Data: {}.",
+        inline(&contract.description).trim_end_matches('.')
+    )?;
     writeln!(out, "- Raw URL: <{}>.", contract.source.raw_url)?;
     writeln!(
         out,
@@ -278,14 +283,22 @@ fn markdown_report(
     } else {
         writeln!(out, "The predeclared calibration gate stopped the run before holdout outcomes were evaluated or reported. Raw CSV parsing and all-record preparation summaries are not zero literal data access, but they are not holdout outcome evaluation or model selection. No holdout estimate or holdout descriptive contrast exists.")?;
     }
-    writeln!(out, "- Calibration: n = {}; log loss = {:.6}; Brier = {:.6}; gate passed = `{}`; outcomes used in gate = `{}`; descriptive calibration outcomes reported = `{}`.", report.calibration.observations, report.calibration.propensity_log_loss, report.calibration.propensity_brier_score, report.calibration.gate_passed, report.calibration.outcome_used_in_gate, report.calibration.outcomes_reported_descriptively)?;
+    writeln!(out, "- Calibration: n = {}; log loss = {}; Brier = {}; gate passed = `{}`; outcomes used in gate = `{}`; descriptive calibration outcomes reported = `{}`.", report.calibration.observations, small(report.calibration.propensity_log_loss), small(report.calibration.propensity_brier_score), report.calibration.gate_passed, report.calibration.outcome_used_in_gate, report.calibration.outcomes_reported_descriptively)?;
     writeln!(
         out,
         "- Calibration outcome-use semantics: {}",
         sentence(&report.calibration.outcome_use_semantics)
     )?;
     writeln!(out, "- **Weak-overlap warning:** {}/{} calibration raw propensities ({:.2}%) fall outside [0.05, 0.95]. `{}` gate_passed is a computational X/T-only result, not scientific approval, positivity verification, or causal identification.", report.calibration.overlap.raw_propensity_outside_0_05_to_0_95, report.calibration.observations, 100.0 * report.calibration.overlap.share_outside_0_05_to_0_95, report.calibration.gate_passed)?;
-    writeln!(out, "- Calibration overlap: min = {:.6}; p05 = {:.6}; median = {:.6}; p95 = {:.6}; max = {:.6}.", report.calibration.overlap.minimum_raw_propensity, report.calibration.overlap.p05_raw_propensity, report.calibration.overlap.median_raw_propensity, report.calibration.overlap.p95_raw_propensity, report.calibration.overlap.maximum_raw_propensity)?;
+    writeln!(
+        out,
+        "- Calibration overlap: min = {}; p05 = {}; median = {}; p95 = {}; max = {}.",
+        small(report.calibration.overlap.minimum_raw_propensity),
+        small(report.calibration.overlap.p05_raw_propensity),
+        small(report.calibration.overlap.median_raw_propensity),
+        small(report.calibration.overlap.p95_raw_propensity),
+        small(report.calibration.overlap.maximum_raw_propensity)
+    )?;
     writeln!(
         out,
         "- Deployed logistic fit: converged = `{}`; separation suspected = `{}`; iterations = {}.",
@@ -321,14 +334,14 @@ fn markdown_report(
     for fold in &report.train_fold_diagnostics {
         writeln!(
             out,
-            "| {} | {} | {} | {} | {} | {:.6} | {:.6} |",
+            "| {} | {} | {} | {} | {} | {} | {} |",
             fold.fold,
             fold.fit_observations,
             fold.evaluation_observations,
             fold.nuisance.propensity.converged,
             fold.nuisance.propensity.separation_suspected,
-            fold.nuisance.propensity.minimum_raw_probability,
-            fold.nuisance.propensity.maximum_raw_probability
+            small(fold.nuisance.propensity.minimum_raw_probability),
+            small(fold.nuisance.propensity.maximum_raw_probability)
         )?;
     }
     writeln!(out, "\n## Warnings and scientific limitations\n")?;
@@ -377,12 +390,12 @@ fn write_aipw_markdown(out: &mut String, estimate: &AipwEstimate) -> Result<()> 
     )?;
     writeln!(
         out,
-        "- Raw propensity min/p05/median/p95/max: {:.6} / {:.6} / {:.6} / {:.6} / {:.6}.",
-        estimate.overlap.minimum_raw_propensity,
-        estimate.overlap.p05_raw_propensity,
-        estimate.overlap.median_raw_propensity,
-        estimate.overlap.p95_raw_propensity,
-        estimate.overlap.maximum_raw_propensity
+        "- Raw propensity min/p05/median/p95/max: {} / {} / {} / {} / {}.",
+        small(estimate.overlap.minimum_raw_propensity),
+        small(estimate.overlap.p05_raw_propensity),
+        small(estimate.overlap.median_raw_propensity),
+        small(estimate.overlap.p95_raw_propensity),
+        small(estimate.overlap.maximum_raw_propensity)
     )?;
     writeln!(
         out,
@@ -465,7 +478,7 @@ fn typst_fragment(
     if report.holdout.is_none() {
         out.push_str("The predeclared calibration gate stopped the run before holdout outcomes were evaluated or reported. Raw CSV parsing and all-record preparation summaries are not zero literal data access, but they are not holdout outcome evaluation or model selection. No holdout estimate or holdout descriptive contrast exists.\n\n");
     }
-    let _ = writeln!(out, "Calibration used {} observations with log loss {:.6}, Brier score {:.6}, and gate passed = {}. Outcomes used in gate = {}; descriptive calibration outcomes reported = {}.", report.calibration.observations, report.calibration.propensity_log_loss, report.calibration.propensity_brier_score, report.calibration.gate_passed, report.calibration.outcome_used_in_gate, report.calibration.outcomes_reported_descriptively);
+    let _ = writeln!(out, "Calibration used {} observations with log loss {}, Brier score {}, and gate passed = {}. Outcomes used in gate = {}; descriptive calibration outcomes reported = {}.", report.calibration.observations, small(report.calibration.propensity_log_loss), small(report.calibration.propensity_brier_score), report.calibration.gate_passed, report.calibration.outcome_used_in_gate, report.calibration.outcomes_reported_descriptively);
     let _ = writeln!(
         out,
         "{}",
@@ -511,13 +524,13 @@ fn typst_fragment(
 fn overlap_typst_row(out: &mut String, estimate: &AipwEstimate) -> Result<()> {
     writeln!(
         out,
-        "  [{}], [{:.6}], [{:.6}], [{:.6}], [{:.6}], [{:.6}], [{:.2}%],",
+        "  [{}], [{}], [{}], [{}], [{}], [{}], [{:.2}%],",
         estimate.role,
-        estimate.overlap.minimum_raw_propensity,
-        estimate.overlap.p05_raw_propensity,
-        estimate.overlap.median_raw_propensity,
-        estimate.overlap.p95_raw_propensity,
-        estimate.overlap.maximum_raw_propensity,
+        small(estimate.overlap.minimum_raw_propensity),
+        small(estimate.overlap.p05_raw_propensity),
+        small(estimate.overlap.median_raw_propensity),
+        small(estimate.overlap.p95_raw_propensity),
+        small(estimate.overlap.maximum_raw_propensity),
         100.0 * estimate.overlap.share_outside_0_05_to_0_95
     )?;
     Ok(())
@@ -532,6 +545,18 @@ fn write_text(path: &Path, content: &str) -> Result<()> {
 
 fn money(value: f64) -> String {
     format!("{value:.1}")
+}
+
+/// Narrative rendering of unit-interval diagnostics: at most two decimals,
+/// switching to scientific notation below 0.01 so tiny probabilities never
+/// render as `0.00`. Canonical full-precision evidence stays in the JSON artifacts.
+fn small(value: f64) -> String {
+    let abs = value.abs();
+    if abs != 0.0 && abs < 0.01 {
+        format!("{value:.2e}")
+    } else {
+        format!("{value:.2}")
+    }
 }
 
 fn optional_number(value: Option<f64>) -> String {

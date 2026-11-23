@@ -11,15 +11,11 @@ import json
 import sqlite3
 import threading
 from pathlib import Path
-from typing import Any
 
 from .models import (
-    Accion,
-    ClaimLevel,
     DeclaracionCausal,
     RegistroEvidencia,
     ResultadoVerificacion,
-    Status,
 )
 
 _SCHEMA = """
@@ -120,14 +116,14 @@ class ProjectStore:
             if "declaracion_revision" not in cols_p:
                 try:
                     conn.execute("ALTER TABLE proyectos ADD COLUMN declaracion_revision TEXT DEFAULT ''")
-                except Exception:
+                except sqlite3.OperationalError:
                     pass
             cols_v = {r[1] for r in conn.execute("PRAGMA table_info(verificaciones)").fetchall()}
             for col in ("revision_declaracion", "perfil_version", "aceptacion_revision"):
                 if col not in cols_v:
                     try:
                         conn.execute(f"ALTER TABLE verificaciones ADD COLUMN {col} TEXT DEFAULT ''")
-                    except Exception:
+                    except sqlite3.OperationalError:
                         pass
 
     # ------------------------------------------------------------ proyectos
@@ -533,7 +529,7 @@ class ProjectStore:
         try:
             data = json.loads(row[0])
             supuestos = tuple(Supuesto(nombre=s["nombre"], clase=ClaseSupuesto(s["clase"]), justificacion=s.get("justificacion",""), criterio_revision=s.get("criterio_revision","")) for s in data.get("supuestos", []))
-            decl = __import__("mcp_causal.models", fromlist=["DeclaracionCausal"]).DeclaracionCausal(estimando=TipoEstimando(data["estimando"]), tratamiento=data["tratamiento"], resultado=data["resultado"], poblacion=data["poblacion"], supuestos=supuestos)
+            _ = DeclaracionCausal(estimando=TipoEstimando(data["estimando"]), tratamiento=data["tratamiento"], resultado=data["resultado"], poblacion=data["poblacion"], supuestos=supuestos)
         except Exception as e:
             return {"estado": "bloqueado", "perfil": perfil, "motivo": f"declaración inválida: {e}"}
         perfil_def = PERFILES.get(perfil)

@@ -209,10 +209,10 @@ Los dos casos usan un proceso generador con $theta_0 = 1$, $n = 500$, $p = 100$ 
     table.hline(stroke: 0.6pt),
     table.header([*Procedimiento*], [*Sesgo*], [*Desv. típica*], [*Cobertura*]),
     table.hline(stroke: 0.3pt),
-    [Post-LASSO ingenuo (validación cruzada)], [−0,007], [0,119], [0,937],
-    [Doble selección (validación cruzada)], [−0,025], [0,116], [0,943],
-    [Doble selección con $lambda$ teórico], [0,002], [0,112], [0,953],
-    [Oráculo (OLS con las cinco confusoras)], [0,002], [0,112], [0,953],
+    [Post-LASSO ingenuo (validación cruzada)], [−7e-3], [0,12], [0,94],
+    [Doble selección (validación cruzada)], [−0,03], [0,12], [0,94],
+    [Doble selección con $lambda$ teórico], [2e-3], [0,11], [0,95],
+    [Oráculo (OLS con las cinco confusoras)], [2e-3], [0,11], [0,95],
     table.hline(stroke: 0.6pt),
   )
 
@@ -229,11 +229,11 @@ Los dos casos usan un proceso generador con $theta_0 = 1$, $n = 500$, $p = 100$ 
     table.hline(stroke: 0.6pt),
     table.header([*Procedimiento*], [*Sesgo*], [*Desv. típica*], [*Cobertura*], [*Confusoras incluidas (de 5)*]),
     table.hline(stroke: 0.3pt),
-    [Post-LASSO ingenuo (validación cruzada)], [0,012], [0,144], [0,883], [4,16],
-    [Doble selección (validación cruzada)], [−0,035], [0,130], [0,953], [5,00],
-    [Post-LASSO ingenuo con $lambda$ teórico], [0,206], [0,135], [0,453], [1,49],
-    [Doble selección con $lambda$ teórico], [−0,003], [0,130], [0,953], [5,00],
-    [Oráculo], [−0,003], [0,130], [0,953], [5,00],
+    [Post-LASSO ingenuo (validación cruzada)], [0,01], [0,14], [0,88], [4,16],
+    [Doble selección (validación cruzada)], [−0,04], [0,13], [0,95], [5,00],
+    [Post-LASSO ingenuo con $lambda$ teórico], [0,21], [0,14], [0,45], [1,49],
+    [Doble selección con $lambda$ teórico], [−3e-3], [0,13], [0,95], [5,00],
+    [Oráculo], [−3e-3], [0,13], [0,95], [5,00],
     table.hline(stroke: 0.6pt),
   )
 
@@ -395,7 +395,7 @@ Este partialling-out ajusta y evalúa en la misma muestra. Es una ilustración d
 
 + Con dos regresores $X_1, X_2$ de varianza 1 y correlación $rho$, y $beta_0 = (1, 0)$, calcule el lado izquierdo de la condición de irrepresentabilidad y encuentre para qué valores de $rho$ se cumple.
 
-+ Complete la demostración de la proposición de la @sec-cap06_omision y calcule, para el segundo caso canónico, el sesgo de omitir las cinco confusoras. Compare con 0,206, el sesgo observado del procedimiento ingenuo con $lambda$ teórico, que incluye 1,49 de ellas en promedio.
++ Complete la demostración de la proposición de la @sec-cap06_omision y calcule, para el segundo caso canónico, el sesgo de omitir las cinco confusoras. Compare con 0,21, el sesgo observado del procedimiento ingenuo con $lambda$ teórico, que incluye 1,49 de ellas en promedio.
 
 + Explique con la proposición de la @sec-cap06_omision por qué una confusora con $gamma_j$ pequeño y $delta_j$ grande es omitida por la selección ingenua pero incluida por la doble selección, y por qué una con ambos pequeños puede omitirse sin consecuencias de primer orden.
 

@@ -344,7 +344,7 @@ def _grafo_dot_desde_networkx(g) -> str:
         buf = io.StringIO()
         write_dot(g, buf)
         return buf.getvalue()
-    except Exception:
+    except ImportError:
         return ""
 
 
@@ -465,7 +465,6 @@ def estimar() -> dict:
     esquema = EsquemaCausal()
     col = leer("train")
     D, Y = col[esquema.tratamiento], col[esquema.resultado]
-    X = np.column_stack([col[c] for c in esquema.covariables])
 
     crude = float(Y[D == 1].mean() - Y[D == 0].mean())
     se_crude = float(math.sqrt(Y[D == 1].var(ddof=1) / int(D.sum())

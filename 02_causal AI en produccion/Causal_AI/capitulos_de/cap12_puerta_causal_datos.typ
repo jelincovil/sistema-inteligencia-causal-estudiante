@@ -99,9 +99,9 @@ La puerta consume las mismas señales del Capítulo 7 (C-02) y las traduce en es
     table.hline(stroke: 0.6pt),
     table.header([*Versión*], [*n*], [*PSI*], [*SMD*], [*Solape*], [*Estado*]),
     table.hline(stroke: 0.3pt),
-    [v0001 sana], [700], [0,011], [0,22], [100 %], [*pasa*],
-    [v0002 deriva], [1 033], [1,347], [0,19], [100 %], [*alerta*],
-    [v0003 positividad], [270], [3,237], [5,24], [0 %], [*falla*],
+    [v0001 sana], [700], [0,01], [0,22], [100 %], [*pasa*],
+    [v0002 deriva], [1 033], [1,35], [0,19], [100 %], [*alerta*],
+    [v0003 positividad], [270], [3,24], [5,24], [0 %], [*falla*],
     table.hline(stroke: 0.6pt),
   )
   ]

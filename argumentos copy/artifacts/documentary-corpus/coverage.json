@@ -3,12 +3,12 @@
   "corpus_id": "causal-ai-production-technical-mcp-v1",
   "collections": {
     "02_production_monograph": {
-      "discovered_regular_files": 167,
+      "discovered_regular_files": 166,
       "included_files": 157,
-      "excluded_files": 10,
+      "excluded_files": 9,
       "parsed_files": 126,
       "metadata_only_files": 31,
-      "source_units": 5322,
+      "source_units": 5325,
       "candidate_occurrences": 2273,
       "candidates_present": 2144,
       "pruned_directories": 1
@@ -36,12 +36,12 @@
       "pruned_directories": 13
     }
   },
-  "discovered_regular_files": 388,
+  "discovered_regular_files": 387,
   "included_files": 370,
-  "excluded_files": 18,
+  "excluded_files": 17,
   "parsed_files": 290,
   "metadata_only_files": 80,
-  "source_units": 10130,
+  "source_units": 10133,
   "unique_candidates": 2252,
   "candidate_occurrences": 4189,
   "pruned_directories": 14,

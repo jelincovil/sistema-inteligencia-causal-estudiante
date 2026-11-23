@@ -11,7 +11,7 @@
 | 2 | 2. Anatomía del sistema | Q-01+Q-08, 5 acciones | `resolver_accion` | pipeline trace |
 | 3 | **3. Contratos de datos** | **C-01, Q-01** | `validar_esquema_roles` | `dos_definiciones` (1.00 vs 1.50) |
 | 4 | **4. Versionado y linaje** | **C-09, Q-08** | `verificar_version_linaje` | hash + champion |
-| 5 | **5. Splits y pared** | **C-10, Q-05** | `verificar_particion_pared` | selección en test (R² 0.0109) |
+| 5 | **5. Splits y pared** | **C-10, Q-05** | `verificar_particion_pared` | selección en test (R² 0.01) |
 | 6 | **6. Validez temporal** | **C-03, Q-03** | `auditar_validez_temporal` | fuga 1.00→0.00 |
 | 7 | **7. Calidad/observabilidad** | **C-02, Q-04** | `medir_observabilidad` (PSI/SMD/ESS) | drift + faltantes 9.6x |
 | 8 | **8. Benchmark como producto** | **C-11** | `verificar_benchmark_producto` | 5 escenarios, pared 0 truth |

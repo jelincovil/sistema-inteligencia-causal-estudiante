@@ -81,7 +81,7 @@ política pública.
 `make cobertura` genera `artifacts/cobertura.json` para un **DGP ilustrativo
 propio**, con `n = 500`, `R = 100` y semilla `20261111`. La corrida conservada
 obtuvo coberturas IC95 de **0,97 (AIPW)**, **0,96 (OLS ajustado)** y **0,00
-(ingenuo)**, con errores Monte Carlo de 0,01706, 0,01960 y 0. El AIPW difiere
+(ingenuo)**, con errores Monte Carlo de 0,02, 0,02 y 0. El AIPW difiere
 0,02 del nominal y no queda dentro de ±1 error Monte Carlo: no es una
 calibración exacta. Estas cifras solo se refieren a ese DGP, no a IHDP/jobs ni
 a datos reales.

@@ -120,7 +120,13 @@ def ajustar_irm(
     se = float(psi.std(ddof=1) / np.sqrt(n))
 
     Z = np.column_stack([np.ones(n), X])
-    ZtZ_inv = np.linalg.inv(Z.T @ Z)
+    try:
+        ZtZ_inv = np.linalg.inv(Z.T @ Z)
+    except np.linalg.LinAlgError as exc:
+        raise ValueError(
+            "el diseño [1, X] es singular (columnas colineales o p >= n); "
+            "revisa los regresores antes de estimar el gradiente"
+        ) from exc
     beta = ZtZ_inv @ Z.T @ psi
     resid = psi - Z @ beta
     beta_cov = ZtZ_inv @ (Z.T * resid**2) @ Z @ ZtZ_inv

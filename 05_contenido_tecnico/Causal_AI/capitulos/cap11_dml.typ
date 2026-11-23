@@ -193,9 +193,9 @@ La verificación de que el _cross-fitting_ se hizo bien se reduce a cuatro invar
     table.hline(stroke: 0.6pt),
     table.header([*Estimador*], [*Media*], [*Desv. típica*]),
     table.hline(stroke: 0.3pt),
-    [OLS con las cinco covariables lineales], [1,41], [0,025],
-    [DML con boosting, sin _cross-fitting_], [0,86], [0,042],
-    [DML con boosting, con _cross-fitting_ ($K = 5$)], [0,95], [0,021],
+    [OLS con las cinco covariables lineales], [1,41], [0,03],
+    [DML con boosting, sin _cross-fitting_], [0,86], [0,04],
+    [DML con boosting, con _cross-fitting_ ($K = 5$)], [0,95], [0,02],
     table.hline(stroke: 0.6pt),
   )
 

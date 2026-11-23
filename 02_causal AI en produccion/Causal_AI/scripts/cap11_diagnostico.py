@@ -85,7 +85,7 @@ def main():
         print(f"  gamma_u={gamma:.1f} → ATE={a:.3f} SE={s:.3f} IC=[{a-1.96*s:.3f},{a+1.96*s:.3f}] {'← cruza 0' if a-1.96*s < 0 else ''}")
 
     # Rosenbaum-like Gamma* (simplificado): valor donde IC toca 0 interpolado
-    print(f"  Gamma≈0.8 cruza, 1.2 invierte signo — ver texto — umbral de robustez (propio del DGP)")
+    print("  Gamma≈0.8 cruza, 1.2 invierte signo — ver texto — umbral de robustez (propio del DGP)")
 
 if __name__ == "__main__":
     main()

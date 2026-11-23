@@ -602,8 +602,8 @@ diseño y no un chequeo que los datos observados puedan certificar.
     ninguno elimina la posibilidad de confusión en otro contexto. Si falla, el contraste
     puede quedar confundido y el ATE no está identificado por este ajuste.],
   [Positividad / soporte común], [`observable`],
-    [OOF antes de trimming: propensión [0,043; 0,916], solape 0,99777 y ESS
-    332,2076/448 = 0,7415; se recorta 1 unidad de 448. Diagnóstico muestral, no prueba
+    [OOF antes de trimming: propensión [0,04; 0,92], solape ≈99,8 % y ESS
+    332,21/448 ≈ 0,74; se recorta 1 unidad de 448. Diagnóstico muestral, no prueba
     para todo vector nuevo. Si A2 falla, restringir población, acotar o abstenerse.],
   [Consistencia / SUTVA], [`no_observable`],
     [El DGP tiene unidades independientes, un resultado por tratamiento y ausencia de
@@ -645,12 +645,12 @@ predicción auxiliar; no arregla modelos lineales incorrectos ni confusión no o
   [Diferencia cruda], [10,3 puntos; IC aprox. [7,60; 13,05]],
   [OLS ajustado (comparador)], [4,8 puntos; IC [3,8; 5,8]],
   [*ATE AIPW*], [*5,2 puntos; IC [3,9; 6,4]*],
-  [ESS OOF / n], [332,2076 / 448 = 0,7415],
-  [Propensión OOF antes de trimming], [[0,043; 0,916]],
-  [Solape OOF en [0,05; 0,95]], [0,99777 (aprox. 99,8 %)],
-  [Unidades recortadas], [1/448 (0,2232 %), un control; ningún tratado],
+  [ESS OOF / n], [332,21 / 448 ≈ 0,74],
+  [Propensión OOF antes de trimming], [[0,04; 0,92]],
+  [Solape OOF en [0,05; 0,95]], [≈99,8 %],
+  [Unidades recortadas], [1/448 (0,22 %), un control; ningún tratado],
   [SMD máximo: sin ponderar / ponderado], [0,43 / 0,11],
-  [$R^2$ de la proyección de heterogeneidad], [0,095; discriminación baja],
+  [$R^2$ de la proyección de heterogeneidad], [0,1; discriminación baja],
 )
 
 *Validación por particiones.* AIPW se reestima *independientemente* en `train`,
@@ -673,8 +673,8 @@ estabilidad precisa. El estrato predeclarado por `bw` en la mediana produce 7,2 
 scores AIPW en estratos; no constituyen un CATE flexible validado.
 
 *Cobertura Monte Carlo.* Con un DGP ilustrativo propio —no IHDP ni Jobs—, $n=500$,
-$R=100$ y semilla `20261111`, las coberturas IC95 fueron AIPW 0,97 (error MC 0,01706),
-OLS 0,96 (0,01960) e ingenuo 0,00 (0). Es evidencia limitada a ese DGP y no demuestra
+$R=100$ y semilla `20261111`, las coberturas IC95 fueron AIPW 0,97 (error MC 0,02),
+OLS 0,96 (0,02) e ingenuo 0,00 (0). Es evidencia limitada a ese DGP y no demuestra
 calibración exacta ni validez en datos reales.
 
 = Sensibilidad y placebos: interpretación correcta
@@ -697,7 +697,7 @@ calibración exacta ni validez en datos reales.
   [Cotas de Manski], [[−37,66; 48,48]],
     [Sin ignorabilidad no hay identificación puntual; las cotas incluyen cero. Ilustración
     con `Y` observado en [10,41; 96,54]; extremos muestrales no garantizan soporte real.],
-  [Placebo de tratamiento], [pasa; p = 0,005],
+  [Placebo de tratamiento], [pasa; p = 5e-3],
     [200 permutaciones, pliegues fijos: media −0,04, DE 0,62, IC [−1,42; 1,06]; el ATE
     observado es extremo. Examina calibración e implementación, no ausencia de confusión.],
   [Placebo de resultado], [pasa; 0,04 [−0,23; 0,32]],
@@ -785,7 +785,7 @@ Invoke-RestMethod -Uri http://127.0.0.1:8000/consulta `
 Para otras rutas POST se usa el mismo patrón con el objeto completo. Si prefieres `curl.exe`,
 recuerda que la barra `\` de los ejemplos Unix *no* es continuación de línea en PowerShell.
 `bw = 1` está dentro del rango activo [−3,1332; 3,0532] y por encima de la mediana guardada
-(aprox. −0,01335), de modo que selecciona `bw` alto. Fragmento esperado:
+(aprox. −0,01), de modo que selecciona `bw` alto. Fragmento esperado:
 
 ```json
 {
@@ -999,10 +999,10 @@ no cinco estados simultáneos del servicio actual.
   columns: (1.5fr, 1.1fr, 1.1fr, 1.2fr, 1.6fr),
   inset: 5pt,
   table.header([*Ventana*], [*PSI máx*], [*SMD pond.*], [*ATE ventana*], [*Acción*]),
-  [`sana`], [0,024], [0,07], [5,64], [`continuar` / `pasa`],
-  [`deriva`], [0,883], [0,03], [5,16], [`reentrenar`],
-  [`positividad`], [3,069], [5,16], [7,2], [`abstenerse` / `falla`],
-  [`balance`], [0,029], [0,05], [3,63], [`alertar`],
+  [`sana`], [0,02], [0,07], [5,64], [`continuar` / `pasa`],
+  [`deriva`], [0,88], [0,03], [5,16], [`reentrenar`],
+  [`positividad`], [3,07], [5,16], [7,2], [`abstenerse` / `falla`],
+  [`balance`], [0,03], [0,05], [3,63], [`alertar`],
   [`confusor_oculto`], [0,0], [0,03], [1,0], [`alertar`],
 )
 

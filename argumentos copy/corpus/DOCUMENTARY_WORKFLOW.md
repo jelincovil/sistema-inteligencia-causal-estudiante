@@ -9,7 +9,7 @@ Three layers must remain distinct:
 | Layer | Current contents | Meaning |
 |---|---|---|
 | Typed argument kernel | 52 claims, 4 arguments, 30 evidence specifications, 49-atom closed registry | Hardened, atomic, and registry-enforced LaLonde/theory kernel in `corpus/causal_ml.json`; 59 checker counters remain pending |
-| Exact documentary sources | 388 discovered regular files, 370 included files, 10,130 source units | Source-complete ingestion relative to the declared roots and exclusions, with exact paths, byte spans, line spans, and hashes |
+| Exact documentary sources | 387 discovered regular files, 370 included files, 10,133 source units | Source-complete ingestion relative to the declared roots and exclusions, with exact paths, byte spans, line spans, and hashes |
 | Extracted candidates | 2,252 unique candidates and 4,189 occurrences | Unreviewed, whitespace-normalized source assertions; not 2,252 manually curated or scientifically verified arguments |
 
 Every extracted candidate has `epistemic_status=source_assertion_unverified`, `review_status=unreviewed`, and `atomicity_status=not_assessed`. A `cand.<hash>` identifier is a content-derived extraction key, not a durable curated identity. Automatic topics and argument kinds are also unreviewed.
@@ -112,12 +112,12 @@ The retained artifacts make the documentary result inspectable and independently
 
 | Collection | Discovered | Included | Excluded | Parsed | Metadata only | Units | Candidates present | Occurrences | Pruned dirs |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| `02_production_monograph` | 167 | 157 | 10 | 126 | 31 | 5,322 | 2,144 | 2,273 | 1 |
+| `02_production_monograph` | 166 | 157 | 9 | 126 | 31 | 5,325 | 2,144 | 2,273 | 1 |
 | `05_technical_snapshot` | 115 | 107 | 8 | 97 | 10 | 4,565 | 1,698 | 1,809 | 0 |
 | `08_mcp_operations` | 106 | 106 | 0 | 67 | 39 | 243 | 106 | 107 | 13 |
-| **Total** | **388** | **370** | **18** | **290** | **80** | **10,130** | **2,252 unique overall** | **4,189** | **14** |
+| **Total** | **387** | **370** | **17** | **290** | **80** | **10,133** | **2,252 unique overall** | **4,189** | **14** |
 
-Per-collection candidate counts overlap because the same normalized statement can occur in several collections. Occurrences, not per-collection candidate counts, sum to 4,189. Discovered regular files satisfy `370 + 18 = 388`; the 14 pruned directories are recorded separately and their descendants were not read.
+Per-collection candidate counts overlap because the same normalized statement can occur in several collections. Occurrences, not per-collection candidate counts, sum to 4,189. Discovered regular files satisfy `370 + 17 = 387`; the 14 pruned directories are recorded separately and their descendants were not read.
 
 All 15 required groups pass: two production chapter families and entry points, technical chapters and entry point, 25 MCP knowledge resources, 8 workflows, 16 current contract JSON files plus contract documentation, the local contract, evaluation criteria, seven evaluation specifications, MCP configuration, and the MCP root README. `capitulos_de/` and `main_de.typ` denote **data engineering**, not German-language material.
 
@@ -126,7 +126,7 @@ All 15 required groups pass: two production chapter families and entry points, t
 - Current manuscript prose, knowledge resources, workflows, contracts, criteria, and evaluation Markdown can produce candidates according to their declared roles.
 - Bibliographies, review ledgers, historical text, layouts, and other support material are retained as source units but do not automatically become current candidates.
 - Source code, tests, configuration outside candidate-approved roles, and generated reports remain metadata-only and hashed; imported code is not executed.
-- Fifteen binary/generated assets and two empty root placeholders are excluded but inventoried. One unknown non-UTF-8 source, `02_causal AI en produccion/.DS_Store`, is also excluded and inventoried.
+- Fifteen binary/generated assets and one empty root placeholder are excluded but inventoried. One unknown non-UTF-8 source, `02_causal AI en produccion/.DS_Store`, is also excluded and inventoried.
 - Pruned dependency/build/VCS directories are recorded once. Their unread descendants cannot be represented in regular-file totals.
 
 The relationship stream preserves 102 byte-identical monograph-file pairs. Five same-relative-path files differ and are marked `content_variant`:

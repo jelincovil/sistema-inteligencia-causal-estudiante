@@ -19,49 +19,49 @@
   "required_verifications": [
     {
       "check_id": "C-01_roles",
-      "contract_file": "C-01_roles.json",
+      "contract_file": "contratos/C-01.json",
       "name": "Validacion de roles de columnas",
       "status_required": "pass",
       "max_claim": "computed"
     },
     {
       "check_id": "C-03_temporal",
-      "contract_file": "C-03_temporal.json",
+      "contract_file": "contratos/C-03.json",
       "name": "Validacion temporal de features",
       "status_required": "pass",
       "max_claim": "computed"
     },
     {
       "check_id": "C-09_linaje",
-      "contract_file": "C-09_linaje.json",
+      "contract_file": "contratos/C-09.json",
       "name": "Linaje y versionado de artefactos",
       "status_required": "pass",
       "max_claim": "computed"
     },
     {
       "check_id": "C-10_particion",
-      "contract_file": "C-10_particion.json",
+      "contract_file": "contratos/C-10.json",
       "name": "Particion y pared de evaluacion",
       "status_required": "pass",
       "max_claim": "computed"
     },
     {
       "check_id": "C-02_observabilidad",
-      "contract_file": "C-02_observabilidad.json",
+      "contract_file": "contratos/C-02.json",
       "name": "Observabilidad de supuestos",
       "status_required": "pass",
       "max_claim": "computed"
     },
     {
       "check_id": "C-12_exigencias",
-      "contract_file": "C-12_exigencias.json",
+      "contract_file": "contratos/C-12.json",
       "name": "Exigencias del estimador",
       "status_required": "pass",
       "max_claim": "computed"
     },
     {
       "check_id": "C-06_puerta",
-      "contract_file": "C-06_puerta.json",
+      "contract_file": "contratos/C-06.json",
       "name": "Puerta causal de elegibilidad",
       "status_required": "pass",
       "max_claim": "computed"

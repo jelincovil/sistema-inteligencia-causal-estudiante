@@ -6,18 +6,13 @@ validan tipos, rangos, consistencia y producen reason_codes específicos.
 """
 
 import hashlib
-import json
 import math
 import re
 from pathlib import Path
-from typing import Any
-
-import numpy as np
 
 from .models import (
     Accion,
     ClaimLevel,
-    DeclaracionCausal,
     ResultadoVerificacion,
     Status,
 )
@@ -45,7 +40,6 @@ def _resultado(
 
 def validar_esquema_roles(esquema: dict) -> ResultadoVerificacion:
     """C-01_roles: cada columna un solo rol; tabla valida; tratamiento varia."""
-    reasons = []
     tratamiento = esquema.get("tratamiento", "")
     resultado_col = esquema.get("resultado", "")
     covariables = esquema.get("covariables", [])

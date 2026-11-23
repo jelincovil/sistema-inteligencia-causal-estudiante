@@ -38,7 +38,7 @@
 - LaLonde's 1986 AER article has no stable DOI in the consulted records. OpenAlex's nearest exact-title record is `W2150118316`, but OpenAlex dates it as the 1984 NBER-aligned/preprint record rather than the 1986 journal page. The bibliography therefore records the journal citation without inventing a DOI.
 - Dehejia & Wahba exists as a working-paper record (OpenAlex `W2171442673`, NBER DOI `10.3386/w6586`) and as a JASA record (OpenAlex `W3122948292`; alternate `W2891753394`) with DOI `10.1080/01621459.1999.10473858`. The bibliography uses the JASA version.
 - Heckman, LaLonde & Smith (1999) was added as methodological context, not as de novo evidence for this CSV.
-- Cinelli & Hazlett (2020) was added as a reference for omitted-variable-bias bounds, notas evidence that the frozen AIPW run satisfies such a bound.
+- Cinelli & Hazlett (2020) was added as a reference for omitted-variable-bias bounds, not as evidence that the frozen AIPW run satisfies such a bound.
 
 ## Remaining boundaries
 

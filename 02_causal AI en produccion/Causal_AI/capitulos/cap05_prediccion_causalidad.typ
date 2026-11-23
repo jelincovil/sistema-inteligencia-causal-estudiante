@@ -166,9 +166,9 @@ Los tres casos usan el procedimiento anterior. Las cifras están promediadas sob
     table.hline(stroke: 0.6pt),
     table.header([*Estimador*], [*Media*], [*Desv. típica*], [*Sesgo*]),
     table.hline(stroke: 0.3pt),
-    [Contraste de un bosque con $(D, X)$], [0,815], [0,133], [−0,185],
-    [OLS con los controles], [1,003], [0,048], [0,003],
-    [Residualización con bosques y _cross-fitting_], [1,020], [0,047], [0,020],
+    [Contraste de un bosque con $(D, X)$], [0,82], [0,13], [−0,19],
+    [OLS con los controles], [1,00], [0,05], [3e-3],
+    [Residualización con bosques y _cross-fitting_], [1,02], [0,05], [0,02],
     table.hline(stroke: 0.6pt),
   )
 
@@ -185,10 +185,10 @@ Los tres casos usan el procedimiento anterior. Las cifras están promediadas sob
     table.hline(stroke: 0.6pt),
     table.header([*$n$*], [*Media*], [*Sesgo*], [*Desv. típica*], [*Cobertura IC 95 %*]),
     table.hline(stroke: 0.3pt),
-    [500], [2,518], [1,518], [0,151], [0,00],
-    [2~000], [2,524], [1,524], [0,083], [0,00],
-    [8~000], [2,521], [1,521], [0,039], [0,00],
-    [32~000], [2,521], [1,521], [0,020], [0,00],
+    [500], [2,52], [1,52], [0,15], [0,00],
+    [2~000], [2,52], [1,52], [0,08], [0,00],
+    [8~000], [2,52], [1,52], [0,04], [0,00],
+    [32~000], [2,52], [1,52], [0,02], [0,00],
     table.hline(stroke: 0.6pt),
   )
 
@@ -196,7 +196,7 @@ Los tres casos usan el procedimiento anterior. Las cifras están promediadas sob
 ]
 
 #caso-canonico("Controlar por todo lo disponible")[
-  $A$ y $B$ son normales estándar independientes, $D = A + epsilon_D$, $Y = D + B + epsilon_Y$ y $C = A + B + epsilon_C$ es una variable que ambos causan (un _collider_). El efecto de $D$ sobre $Y$ es 1 y no hay confusión: $A$ y $B$ no se asocian. Con 200~000 observaciones, el coeficiente de $D$ es 0,999 sin controlar por $C$ y 0,798 al controlar por $C$, que coincide con el valor exacto $4 \/ 5$ del Ejercicio 3; con $n = 10~000$ y 200 repeticiones, la media al controlar por $C$ es 0,802 (desviación típica de 0,010). En esa muestra grande, la correlación entre $A$ y $B$ es −0,003 y, al condicionar en el 20 % superior de $C$, pasa a ser −0,293.
+  $A$ y $B$ son normales estándar independientes, $D = A + epsilon_D$, $Y = D + B + epsilon_Y$ y $C = A + B + epsilon_C$ es una variable que ambos causan (un _collider_). El efecto de $D$ sobre $Y$ es 1 y no hay confusión: $A$ y $B$ no se asocian. Con 200~000 observaciones, el coeficiente de $D$ es 1,00 sin controlar por $C$ y 0,80 al controlar por $C$, que coincide con el valor exacto $4 \/ 5$ del Ejercicio 3; con $n = 10~000$ y 200 repeticiones, la media al controlar por $C$ es 0,80 (desviación típica de 0,01). En esa muestra grande, la correlación entre $A$ y $B$ es −3e-3 y, al condicionar en el 20 % superior de $C$, pasa a ser −0,29.
 ]
 
 El tercer caso es el mecanismo inverso al de la confusión: allí condicionar *elimina* una asociación espuria; aquí la *crea*, y explica por qué "controlar por todo lo disponible" no es una estrategia conservadora sino una fuente activa de sesgo. #cite(<elwert2014endogenous>, form: "prose") llaman a este fenómeno sesgo de selección endógena: dos variables independientes se vuelven dependientes al condicionar en una causa común o en un descendiente de ella. El @cap-intervencion-contrafactual formaliza cuándo ocurre cada caso mediante el criterio de puerta trasera; aquí basta con dejar instalada la intuición numérica. Hay una variante más cotidiana del mismo error: usar como control una variable posterior al tratamiento. La experiencia potencial de un trabajador, definida como edad menos escolaridad menos seis, es función exacta de la escolaridad y no puede incluirse como control en una regresión del salario sobre los años de estudio.

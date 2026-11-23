@@ -65,14 +65,14 @@ La advertencia de la sección anterior se estudia en su forma más cruda con una
     table.hline(stroke: 0.6pt),
     table.header([*Población*], [*A*], [*B*], [*Lectura*]),
     table.hline(stroke: 0.3pt),
-    [Casos leves], [0,862], [0,904], [B mejor],
-    [Casos graves], [0,548], [0,598], [B mejor],
-    [Agregado], [0,732], [0,614], [A parece mejor],
+    [Casos leves], [0,86], [0,90], [B mejor],
+    [Casos graves], [0,55], [0,60], [B mejor],
+    [Agregado], [0,73], [0,61], [A parece mejor],
     table.hline(stroke: 0.6pt),
   )
   ]
 
-  Agregando, el veredicto se invierte: A tiene una tasa global de 0,732 contra 0,614 de B. No hay truco de medición: la inversión es consecuencia de que A trabajó sobre casos fáciles y B sobre casos difíciles, de modo que el agregado compara perfiles distintos. Con 40 000 pacientes simulados (semilla 7), el agregado y los estratos salen exactamente como lo indica la tabla; el script del repositorio reproduce la escena y sus tres lecturas. El problema no es estadístico, es semántico: el agregado responde la pregunta _¿cuáles pacientes mejoraron con A?_ y el estrato responde _¿cuál tratamiento conviene aplicar?_; solo la segunda es la pregunta causal.
+  Agregando, el veredicto se invierte: A tiene una tasa global de 0,73 contra 0,61 de B. No hay truco de medición: la inversión es consecuencia de que A trabajó sobre casos fáciles y B sobre casos difíciles, de modo que el agregado compara perfiles distintos. Con 40 000 pacientes simulados (semilla 7), el agregado y los estratos salen exactamente como lo indica la tabla; el script del repositorio reproduce la escena y sus tres lecturas. El problema no es estadístico, es semántico: el agregado responde la pregunta _¿cuáles pacientes mejoraron con A?_ y el estrato responde _¿cuál tratamiento conviene aplicar?_; solo la segunda es la pregunta causal.
 ]
 
 La lección no es "desagregue siempre por gravedad", que la tabla misma deja sin defensa: si la asignación hubiera dependido de alguna otra variable — la hora de ingreso, el seguro, el barrio — el desagregado correcto sería otro. La lección es que *no existe una respuesta puramente estadística a qué desagregación es la correcta*: se requiere una teoría causal — la gravedad afecta a la asignación y al resultado — y esa teoría solo puede protegerse si el dato registra la gravedad como columna, con su tiempo de medida y su rol declarado. Cuando la gravedad no se mide, la inversión no se corrige; cuando se mide pero nadie declaró su rol, se corrige solo si alguien recuerda condicionar.

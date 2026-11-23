@@ -19,14 +19,13 @@ def main():
 
     with open(ESC / "observed.csv") as f:
         filas = list(csv.DictReader(f))
-    d = np_sum = None
     import numpy as np
     D = np.array([float(r["treatment"]) for r in filas])
     Y = np.array([float(r["re78"]) for r in filas])
 
     print("== Traza del escenario real/jobs ==")
     print(f"1. dato bruto        : {meta['num_units']} unidades, {len(filas[0])} columnas ({meta['name']}, {meta['reference']})")
-    print(f"2. esquema (C-01)    : tratamiento = treatment, resultado = re78")
+    print("2. esquema (C-01)    : tratamiento = treatment, resultado = re78")
     print(f"   covariables       : {', '.join(meta['covariates'])}")
     print(f"   ajuste declarado   : {len(ident['valid_adjustment_sets'][0])} covariables pre-tratamiento")
     print(f"3. procedencia        : asignación {meta['num_experimental']} experimental + {meta['num_observational']} observacional (LaLonde-style, sintético)")

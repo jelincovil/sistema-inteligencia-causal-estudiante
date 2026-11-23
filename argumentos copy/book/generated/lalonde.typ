@@ -32,7 +32,7 @@ The exact source and causal-report SHA-256 digests are `#source-sha` and `#repor
   caption: [Cross-fitted train AIPW and, when the X/T-only gate permits it, one final external-nuisance holdout evaluation. Nominal dollars; causal identification remains unverified.],
 )
 
-Calibration used 114 observations with log loss 0.394993, Brier score 0.124629, and gate passed = true. Outcomes used in gate = false; descriptive calibration outcomes reported = true.
+Calibration used 114 observations with log loss 0.39, Brier score 0.12, and gate passed = true. Outcomes used in gate = false; descriptive calibration outcomes reported = true.
 The legacy outcome\_used field mirrors outcome\_used\_in\_gate. Descriptive calibration outcome means are computed after the gate and reported as associations only; neither the gate nor descriptive reporting selects or revises models.
 #strong[Weak-overlap warning:] 44/114 calibration raw propensities (38.60%) fall outside [0.05, 0.95]. The computational X/T-only gate result is not scientific approval, positivity verification, or causal identification.
 
@@ -43,8 +43,8 @@ The legacy outcome\_used field mirrors outcome\_used\_in\_gate. Descriptive cali
   columns: (1.5fr, 0.6fr, 0.65fr, 0.65fr, 0.65fr, 0.65fr, 0.65fr),
   inset: 4pt,
   [Role], [Minimum], [p05], [Median], [p95], [Maximum], [Outside 5--95%],
-  [train_cross_fitted], [0.003982], [0.010534], [0.122134], [0.841023], [0.915724], [37.70%],
-  [holdout_external_nuisance], [0.007054], [0.012561], [0.154671], [0.848377], [0.883931], [30.60%],
+  [train_cross_fitted], [3.98e-3], [0.01], [0.12], [0.84], [0.92], [37.70%],
+  [holdout_external_nuisance], [7.05e-3], [0.01], [0.15], [0.85], [0.88], [30.60%],
 )
 
 Predeclared clip sensitivity (not model selection and not an unmeasured-confounding bound):

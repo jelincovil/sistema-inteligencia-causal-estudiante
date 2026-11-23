@@ -26,7 +26,7 @@
 == Este capítulo es de consumo, no de método
 <sec-de-09-consumo>
 
-La teoría del DML — ortogonalidad de Neyman, modelos PLR/IRM/PLIV como estimandos distintos, la doble robustez como propiedad estadística del *score* — no la repite este libro, porque está escrita completa y con sus condiciones en la edición de método (Caps. 10 y 11). Lo que este capítulo hace es la traducción que esa teoría le pide al plano de datos: *un estimador DML es un consumidor del pipeline*, y cuatro de sus exigencias solo pueden entregarse ahí abajo. No son detalles de implementación: cada una es una condición sin la cual el resultado del estimador sale mal **sin que el estimador lo sepa**. El riesgo particular de DML es exactamente ése: una casa de buen diseño levantada sobre un sumidero.
+La teoría del DML — ortogonalidad de Neyman, modelos PLR/IRM/PLIV como estimandos distintos, la doble robustez como propiedad estadística del *score* — no la repite este libro, porque está escrita completa y con sus condiciones en la edición de método (Caps. 10 y 11). Lo que este capítulo hace es la traducción que esa teoría le pide al plano de datos: *un estimador DML es un consumidor del pipeline*, y cuatro de sus exigencias solo pueden entregarse ahí abajo. No son detalles de implementación: cada una es una condición sin la cual el resultado del estimador sale mal _sin que el estimador lo sepa_. El riesgo particular de DML es exactamente ése: una casa de buen diseño levantada sobre un sumidero.
 
 El formato es deliberado: cada sección dice qué promesa estadística hay detrás (una oración de menor técnica, con la remisión al teorema que la prueba), qué forma toma en el pipeline, y qué verificación del plano de datos la hace cumplir — junto al caso canónico con cifras reales, y su cierre con el contrato C-12, la pieza que formaliza el trabajo.
 
@@ -215,7 +215,7 @@ Ninguna de estas señales es el error predictivo del nuisance. Un pipeline que s
 
 + La comparación de learners de este capítulo añade LASSO y un no lineal. Dé las dos hipótesis sobre la esparsidad y suavidad y cómo se relacionan con la condición $sqrt(n) a_n^2 -> 0$ de la edición de método. _Pista:_ con $s$ variables verdaderas y $p$ totales (LASSO): $s log p = o(sqrt(n))$; la forma funcional no lineal exige condiciones de aproximación y regularidad propias.
 
-+ ¿Por qué en el caso de outcome mal especificado la doble robustez no sube a exactamente 0,347 o baja a 0,28, cuando las cifras muestran que sigue en ~0,30? Explique el papel del propensity "exacto" por diseño del DGP. _Pista:_ si el propensity fuera además mala especificado, ninguna pierna de DR compensa; el control pretó la falla exclusiva al outcome.
++ ¿Por qué en el caso de outcome mal especificado la doble robustez no sube a exactamente 0,35 o baja a 0,28, cuando las cifras muestran que sigue en ~0,30? Explique el papel del propensity "exacto" por diseño del DGP. _Pista:_ si el propensity fuera además mala especificado, ninguna pierna de DR compensa; el control pretó la falla exclusiva al outcome.
 
 + Liste tres documentos que el registro espera anexos al estimador, y etiquete cada uno: ficha del estimador (Cap. #ref(<de-cap-versionado>, supplement: none)), documento de soporte (C-12) o artefacto servible (Parte IV). _Pista:_ ESS/n y el rango de $hat(e)$ comparten dos destinos; la regla de trimming va a la ficha; la partición del cross-fitting queda en el documento.
 

@@ -231,7 +231,7 @@ def _probar_perfil_malformado() -> bool:
             r = c.post(endpoint, json=perfil)
             try:
                 j = r.json()
-            except Exception:
+            except ValueError:
                 j = None
             bien = (r.status_code == 200 and isinstance(j, dict)
                     and j.get("estado") == "abstencion"

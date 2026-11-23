@@ -7,7 +7,7 @@ from __future__ import annotations
 import importlib
 import sys
 
-REQUIRED = ("numpy", "pandas", "sklearn")
+REQUIRED = ("numpy", "pandas", "sklearn", "ipykernel")
 RANDOM_STATE = 42
 
 
@@ -26,7 +26,7 @@ def main() -> int:
         else:
             print(f"import {module}: OK")
 
-    print(f"semilla de referencia del curso: {RANDOM_STATE}")
+    print(f"semilla de referencia del curso (informativo, sin comprobación): {RANDOM_STATE}")
     return 0 if ok else 1
 
 

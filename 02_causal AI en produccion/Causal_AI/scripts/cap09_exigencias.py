@@ -20,7 +20,6 @@ import numpy as np
 
 def boosting(X, y, resto0, iteraciones=50, nu=0.2):
     """Stump boosting mínimo: agrega una regla por iteración."""
-    n = len(y)
     pred = resto0.copy()
     reglas = []
     resto = y - pred
@@ -37,14 +36,6 @@ def boosting(X, y, resto0, iteraciones=50, nu=0.2):
         reglas.append((j, corte, g))
         pred += nu * np.where(X[:, j] <= corte, g[0], g[1])
         resto = y - pred
-    def predecir(Xn):
-        p = np.full(Xn.shape[0], y.mean()) * 0
-        y0 = y.mean()
-        base = np.full(Xn.shape[0], 0.0)
-        # reconstruye la predicción: media + suma acumulada de reglas
-        p = np.full(Xn.shape[0], 0.0) + (resto0.mean() if hasattr(resto0, "mean") else 0)
-        # más simple: reconstruir desde 0: pred == resto0 + suma(nu*regla); lo fijo re-construyendo:
-        return None
     return reglas, resto0.mean()
 
 def fit_arbol_predict(Xtr, ytr, Xn, max_secuencia=6, nu=1.0):
@@ -138,7 +129,7 @@ def caseC():
         plugin.append((mu1_hat - mu0_hat).mean())
         psi = (mu1_hat - mu0_hat + D * (Y - mu1_hat) / e - (1 - D) * (Y - mu0_hat) / (1 - e))
         dr.append(psi.mean())
-    print(f"  efecto verdadero = 0,30; outcome con forma no lineal pronunciada (semilla 20260701)")
+    print("  efecto verdadero = 0,30; outcome con forma no lineal pronunciada (semilla 20260701)")
     print(f"  plug-in con outcome lineal (mal especificado): ATE = {np.mean(plugin):.2f} (sd {np.std(plugin):.3f})")
     print(f"  doblemente robusto (propensity correcto):     ATE = {np.mean(dr):.2f} (sd {np.std(dr):.3f})")
 

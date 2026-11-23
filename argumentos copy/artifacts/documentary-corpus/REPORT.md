@@ -6,7 +6,7 @@ This is deterministic documentary ingestion, not scientific or semantic certific
 
 | Collection | Discovered files | Included | Excluded | Parsed | Metadata only | Units | Candidates present | Occurrences | Pruned directories |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| 02_production_monograph | 167 | 157 | 10 | 126 | 31 | 5322 | 2144 | 2273 | 1 |
+| 02_production_monograph | 166 | 157 | 9 | 126 | 31 | 5325 | 2144 | 2273 | 1 |
 | 05_technical_snapshot | 115 | 107 | 8 | 97 | 10 | 4565 | 1698 | 1809 | 0 |
 | 08_mcp_operations | 106 | 106 | 0 | 67 | 39 | 243 | 106 | 107 | 13 |
 
@@ -42,7 +42,7 @@ Exact normalized duplicate statements share one content-derived candidate ID and
 | Reason | Entries |
 |---|---:|
 | `binary_or_generated_asset_excluded_but_inventoried` | 15 |
-| `explicit_empty_root_placeholder` | 2 |
+| `explicit_empty_root_placeholder` | 1 |
 | `pruned_by_declared_policy_no_descendants_read` | 14 |
 | `unknown_non_utf8_or_unsupported_asset_excluded_but_inventoried` | 1 |
 

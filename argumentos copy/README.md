@@ -180,7 +180,7 @@ Three layers are intentionally separate:
 | Layer | Current size | Evidentiary meaning |
 |---|---:|---|
 | Hardened typed kernel | 52 claims, 4 arguments, 30 evidence specifications, 49-atom registry | Structurally audited LaLonde/theory kernel; 59 checker counters remain pending |
-| Exact documentary corpus | 388 discovered files, 370 included files, 10,130 source units | Complete relative to declared roots and policies, with exact hashes and byte/line spans |
+| Exact documentary corpus | 387 discovered files, 370 included files, 10,133 source units | Complete relative to declared roots and policies, with exact hashes and byte/line spans |
 | Extracted candidates | 2,252 unique candidates, 4,189 occurrences | Unreviewed normalized source assertions, **not** curated or scientifically verified arguments |
 
 Every extracted candidate remains `source_assertion_unverified`, `unreviewed`, and `atomicity_status=not_assessed`. A content-derived `cand.<hash>` is not a durable curated identifier. `documentary_coverage_complete=true` is a structural statement about this declared ingestion policy, not semantic completeness, execution replay, identification, or scientific certification.
