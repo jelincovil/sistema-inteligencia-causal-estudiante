@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:argument-audit:lexicon:1.0",
+  "title": "Authored hover glosses",
+  "description": "A gloss explains an atom id. It is not inferred and it cannot mark a claim approved.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "language", "entries"],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "language": { "enum": ["en", "es"] },
+    "entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "gloss"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[A-Za-z][A-Za-z0-9_.:-]*$"
+          },
+          "gloss": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  }
+}

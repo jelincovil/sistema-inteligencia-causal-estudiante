@@ -1,0 +1,18 @@
+[package]
+name = "argument-cli"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+description = "argument-audit command line. Checks structure; does not certify a corpus."
+
+[[bin]]
+name = "argument-audit"
+path = "src/main.rs"
+
+[dependencies]
+anyhow = { workspace = true }
+argument-audit = { path = "../argument-audit" }
+argument-document = { path = "../argument-document" }
+argument-card = { path = "../argument-card" }
+clap = { workspace = true }
+serde_json = { workspace = true }

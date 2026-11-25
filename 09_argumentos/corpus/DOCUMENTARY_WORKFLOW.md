@@ -84,7 +84,7 @@ cargo fmt --all -- --check
 cargo check --workspace --all-targets --locked
 cargo clippy --workspace --all-targets --locked -- -D warnings
 cargo test --workspace --locked
-cargo run --locked -p arg-cli -- fixtures --dir examples/fixtures
+cargo run --locked -p argument-cli -- fixtures --dir examples/fixtures
 ```
 
 The statistical holdout is not reopened by documentary ingestion. Changing source ingestion or documentary formatting is not permission to revise the frozen LaLonde protocol against its consumed holdout.

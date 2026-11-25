@@ -21,23 +21,43 @@ The typed-kernel, fixture, book, and bundled LaLonde workflows are local to this
 - Typst 0.15.1 for the book.
 - `curl`, `cmp`, and a SHA-256 utility only for optional independent upstream checks. Network access is not needed for the software checks; the pinned input must be restored locally for the real-data pipeline.
 
-Run all commands from this directory (`09_argumentos/`). The Cargo package containing the `argumentos` binary is named **`arg-cli`**; the statistical package and binary are both **`causal-ml`**; and the documentary package is **`arg-ingest`**, with binary **`argumentos-corpus`**.
+Run all commands from this directory (`09_argumentos/`). The Cargo package containing the `argument-audit` binary is named **`argument-cli`**; the statistical package and binary are both **`causal-ml`**; and the documentary package is **`arg-ingest`**, with binary **`argumentos-corpus`**.
 
 ### Inspect the project without running estimation or creating a holdout event
 
 ```sh
 mkdir -p build/book build/audits
 
-cargo run --locked -p arg-cli -- doctor
-cargo run --locked -p arg-cli -- fixtures --dir examples/fixtures
-cargo run --locked -p arg-cli -- check --kernel corpus/causal_ml.json
-cargo run --locked -p arg-cli -- corpus \
+cargo run --locked -p argument-cli -- doctor
+cargo run --locked -p argument-cli -- fixtures --dir examples/fixtures
+cargo run --locked -p argument-cli -- check --kernel corpus/causal_ml.json
+cargo run --locked -p argument-cli -- corpus \
   --dir corpus --root . --json build/audits/corpus_audit.json
 
 typst compile book/main.typ build/book/causal-ml-book.pdf --root .
 ```
 
 `check` and `corpus` may return structural success while obligations remain pending. That is expected: they inventory and type-check the argument/evidence graph but do not replay evidence or verify prose anchors.
+
+The graph and controlled-card commands inspect the same administrative projection:
+
+```sh
+cargo run --locked -p argument-cli -- check \
+  --kernel examples/structural_alias.json \
+  --emit-graph build/audits/graph.json
+cargo run --locked -p argument-cli -- explain \
+  --graph build/audits/graph.json A.alias
+cargo run --locked -p argument-cli -- explain \
+  --kernel examples/structural_alias.json argument:A.alias
+cargo run --locked -p argument-cli -- render \
+  --kernel examples/structural_alias.json --language es \
+  --out build/audits/card.txt
+cargo run --locked -p argument-cli -- align \
+  --kernel examples/structural_alias.json \
+  --text build/audits/card.txt --language es
+```
+
+`explain` returns an explicit dependency trace for one graph entity. `render` emits a deterministic controlled-language card, and `align` compares that card's parsed formal projection with the kernel while checking fixed wording rules. No score, model call, prose endorsement, or semantic-alignment certificate is produced: matching projections do not establish that arbitrary surrounding prose is faithful, and every claim remains unsupported by these commands.
 
 ### Reproduce the real-data protocol in a new directory
 
@@ -134,7 +154,7 @@ flowchart TD
     F --> G[causal-ml report]
     G --> H[Markdown and Typst case fragment]
     H --> I[Compiled cited book]
-    J[Typed claim corpus] --> K[argumentos corpus]
+    J[Typed claim corpus] --> K[argument-audit corpus]
     I --> K
     F --> K
     K --> L[Structural and current-byte audit]
@@ -153,13 +173,14 @@ flowchart TD
 | 6. LaLonde case | Provenance, frozen protocol, empirical and identification limits | Bundled CSV, contract, audit, estimate, ledger, and generated Typst fragment |
 | 7. Uncertainty and transport | Sampling versus identification uncertainty, sensitivity, external validity | IF intervals and fixed clipping sensitivities only; no hidden-confounding certification |
 | 8. Governance and deployment | Feature availability, leakage, temporal/entity roles, monitoring, rollback | Strict data checks, split strategies, ledger; monitoring design without a fake live service |
-| 9. Argument kernel | Typed claims, assumptions, canonical hashing, cycles, receipts and evidence limits | `arg-model`, `arg-check`, `arg-cli`, fixtures, and recursive corpus audit |
+| 9. Argument kernel | Typed claims, assumptions, canonical hashing, cycles, receipts and evidence limits | `argument-document`, `argument-audit`, `argument-card`, `argument-cli`, graph traces, controlled cards, fixtures, and recursive corpus audit |
 
 ### Workspace components
 
-- **`crates/arg-model`**: strict serde loading, duplicate-key and self-authored-status rejection, typed claims/expressions/evidence/receipts, and canonical content hashes.
-- **`crates/arg-check`**: compiled `scientific_audit` and `structural` profiles, rule contracts, derivation-local cycle behavior, pending obligations, and candidate-only receipt admission. Its small SSCH fixture is exact arithmetic for one synthetic example, not a statistical law.
-- **`crates/arg-cli`**: the `argumentos` executable (`doctor`, `check`, `fixtures`, `corpus`). The corpus command recursively detects cross-file ID collisions and missing local sources/artifacts, inventories current bytes and hashes, and never certifies scientific validity.
+- **`crates/argument-document`**: strict serde loading, duplicate-key and self-authored-status rejection, typed claims/expressions/evidence/receipts, and canonical content hashes.
+- **`crates/argument-audit`**: compiled `scientific_audit` and `structural` profiles, rule contracts, derivation-local cycle behavior, pending obligations, candidate-only receipt admission, and explicit dependency-graph traces. Its small SSCH fixture is exact arithmetic for one synthetic example, not a statistical law.
+- **`crates/argument-card`**: deterministic controlled-card rendering and parsing in English and Spanish, formal-projection comparison, and fixed wording diagnostics. It does not call a language model or endorse the semantic fidelity of prose.
+- **`crates/argument-cli`**: the `argument-audit` executable (`doctor`, `check`, `fixtures`, `explain`, `render`, `align`, `corpus`, and receipt admission). The corpus command recursively detects cross-file ID collisions and missing local sources/artifacts, inventories current bytes and hashes, and never certifies scientific validity.
 - **`crates/causal-ml`**: strict protocol contracts, typed CSV auditing, deterministic preprocessing and splits, source/audit/split/report hashing, leakage checks, logistic IRLS/ridge linear algebra, AIPW estimation, holdout bookkeeping, and Markdown/Typst rendering.
 - **`crates/arg-ingest`**: deterministic source discovery, exact unit extraction, candidate indexing, provenance links, required-group coverage, duplicate/variant relations, verification, and read-only candidate queries.
 - **`schemas/kernel.schema.json`**: exchange-shape documentation for argument kernel 1.0/1.1. The Rust loader, not an external schema runtime, enforces the contract.
@@ -234,17 +255,17 @@ cargo fmt --all -- --check
 cargo check --workspace --all-targets --locked
 cargo clippy --workspace --all-targets --locked -- -D warnings
 cargo test --workspace --locked
-cargo run --locked -p arg-cli -- fixtures --dir examples/fixtures
+cargo run --locked -p argument-cli -- fixtures --dir examples/fixtures
 cargo run --locked -p arg-ingest -- verify \
   --config config/corpus-ingest.json \
   --repository-root .. \
   --output artifacts/documentary-corpus
-cargo run --locked -p arg-cli -- corpus \
+cargo run --locked -p argument-cli -- corpus \
   --dir corpus --root . --json build/audits/corpus_audit.json
 typst compile book/main.typ build/book/causal-ml-book.pdf --root .
 ```
 
-The 107 deterministic tests include malformed/missing CSV fields, dtype/range and duplicate failures, source-hash mismatch, entity and epoch leakage, deterministic split behavior, numerical edge cases, artifact tampering, refusal of holdout reuse, bounded malicious JSON inputs, path/symlink escape rejection, receipt consistency/byte verification, atom-registry closure, aggregation/scope checks, cross-argument cycles, exact documentary-unit round trips, required-group matching, exclusion accounting, and deterministic verification/query behavior. Estimation regression tests use small synthetic fixtures only within test output; all published LaLonde numbers come from the real pinned artifact.
+The deterministic test suites cover malformed/missing CSV fields, dtype/range and duplicate failures, source-hash mismatch, entity and epoch leakage, deterministic split behavior, numerical edge cases, artifact tampering, refusal of holdout reuse, bounded malicious JSON inputs, path/symlink escape rejection, receipt consistency/byte verification, atom-registry closure, aggregation/scope checks, cross-argument cycles, dependency-graph reconstruction and traces, controlled-card round trips and wording diagnostics, CLI behavior and exit codes, exact documentary-unit round trips, required-group matching, exclusion accounting, and deterministic verification/query behavior. Estimation regression tests use small synthetic fixtures only within test output; all published LaLonde numbers come from the real pinned artifact.
 
 `/target/` and `/build/` are ignored. No generated PDF or clean-room replay is silently presented as a new checked-in scientific result. Any change to outcomes, features, learner, split salt/fractions, clipping, or scientific question after holdout access requires a transparently new protocol and analysis—not an in-place assertion that the old holdout remains untouched.
 

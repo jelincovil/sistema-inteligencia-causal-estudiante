@@ -1,0 +1,12 @@
+[package]
+name = "argument-audit"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+description = "Local argument checker. No network, no language model, no proof promotion."
+
+[dependencies]
+argument-document = { path = "../argument-document" }
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }

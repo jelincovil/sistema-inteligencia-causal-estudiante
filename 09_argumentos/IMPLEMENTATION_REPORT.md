@@ -446,3 +446,83 @@ A focused consistency/readability pass was applied without changing the frozen p
 - The book was recompiled (33 pages, 616,673 bytes; SHA-256 `c33905ff4f2d2ec1d9cea7490f43852776e20b50cdd2687f31019226815037d8`; Typst PDF output embeds nondeterministic metadata, so digests are not byte-stable across runs).
 - `cargo fmt --all -- --check`, `cargo check --workspace --all-targets`, `cargo clippy --workspace --all-targets -- -D warnings`, `cargo test --workspace`, and `typst compile book/main.typ /tmp/argumentos-verify.pdf --root .` were all re-run on 2026-11-23; all passed. `progress/STATE.json` records the re-compiled book digests and the re-validation date. Test count remains 107.
 - No scientific claim, gate status, holdout binding, or evidence status changed. `scientific_causal_claim_verified`, `claim_supported`, `corpus_closed`, and `scientific_validity_certified` remain `false`.
+
+## 15. Selective audit-graph and controlled-card migration (2026-11-24)
+
+### 15.1 Scope, names, and preserved destination hardening
+
+The useful graph/dependency-explanation and deterministic controlled-card layers from the untracked reference tree `argument_audit_update/` were selectively migrated into `09_argumentos/`. The reference tree was not imported wholesale and is not a workspace member or release input.
+
+The workspace now has six members with unqualified package names:
+
+- `argument-document` (formerly `arg-model`): strict document loading and canonical representation;
+- `argument-audit` (formerly `arg-check`): structural/scientific profiles, graph checks, obligations, and receipt admission;
+- `argument-card`: controlled-card rendering, parsing, and formal-projection alignment;
+- `argument-cli` (formerly `arg-cli`): the `argument-audit` executable;
+- `arg-ingest`: the `argumentos-corpus` documentary executable; and
+- `causal-ml`: the unchanged frozen statistical pipeline.
+
+`Cargo.toml`, `Cargo.lock`, imports, package-qualified Cargo commands, current documentation, and integration tests use those names; no compatibility aliases were added. The destination schema and hardened implementations of `check.rs`, `admit.rs`, `ssch.rs`, and `corpus.rs` were retained rather than replaced by the reference versions. In particular, bounded inputs, duplicate-key rejection, the atom registry and canonical hashes, fail-closed scope checks, cycle/SCC handling, obligation counters, candidate-only receipt admission, current-byte checks, and path containment/symlink rejection remain in force.
+
+Two migration defects were corrected before release: receipt admission now rejects an empty `command_argv` as `ContractError::Invalid` and excessive arguments as `CollectionTooLarge`; and the migrated conditional-application fixture no longer declares `scenario=lab`, so its expected `obligation_dropped` assertion exercises the intended conditional instead of being masked by `scope_mismatch`.
+
+### 15.2 Delivered graph and card behavior
+
+`check --emit-graph` emits a deterministic dependency graph. `explain` accepts either that graph or a kernel and reports dependency traces without executing evidence. `render` produces a deterministic English or Spanish controlled card; `align` reparses it, compares its formal projection with the kernel, and applies fixed wording checks. The `argument-card` implementation makes no model or network call.
+
+These operations remain administrative only. They do not execute Lean, replay external evidence, certify scientific validity, or endorse arbitrary prose. A successful smoke alignment returned `outcome=no_blocking_problem`, `endorsement=not_endorsed`, and formal round-trip `true`, while `claim_supported` and `alignment_guaranteed` both remained `false`. A matching projection is not a general semantic-fidelity certificate.
+
+The corpus and statistical integration suites were expanded with regression and negative-path coverage. Statistical tests use generated synthetic fixtures only; documentary tests use declared source bytes. Neither suite changes a scientific result.
+
+### 15.3 Validation performed
+
+All commands below were run from `09_argumentos/` and passed:
+
+```sh
+cargo fmt --all -- --check
+cargo check --workspace --all-targets --locked
+cargo clippy --workspace --all-targets --locked -- -D warnings
+cargo test --workspace --locked
+
+cargo run --locked -p argument-cli -- doctor
+cargo run --locked -p argument-cli -- fixtures --dir examples/fixtures
+cargo run --locked -p argument-cli -- check \
+  --kernel corpus/causal_ml.json --json build/audits/corpus_check.json
+cargo run --locked -p argument-cli -- corpus \
+  --dir corpus --root . --json build/audits/corpus_audit.json
+cargo run --locked -p argument-cli -- check \
+  --kernel examples/structural_alias.json --emit-graph build/audits/graph.json
+cargo run --locked -p argument-cli -- explain \
+  --graph build/audits/graph.json A.alias
+cargo run --locked -p argument-cli -- explain \
+  --kernel examples/structural_alias.json argument:A.alias
+cargo run --locked -p argument-cli -- render \
+  --kernel examples/structural_alias.json --language es \
+  --out build/README_card.txt
+cargo run --locked -p argument-cli -- align \
+  --kernel examples/structural_alias.json \
+  --text build/README_card.txt --language es
+
+typst compile book/main.typ build/book/causal-ml-book.pdf --root .
+```
+
+Strict documentary regeneration initially exposed source-byte drift, not a migration-code regression: four clean, already-committed MCP files had changed since the previous documentary build—`08_mcp-agentes-causales/contracts/local_v1.json`, `contratos/README.md`, `pyproject.toml`, and `src/mcp_causal/__init__.py`. The complete deterministic artifact set was rebuilt with:
+
+```sh
+cargo run --locked -p arg-ingest -- build \
+  --config config/corpus-ingest.json \
+  --repository-root .. \
+  --output artifacts/documentary-corpus
+cargo run --locked -p arg-ingest -- verify \
+  --config config/corpus-ingest.json \
+  --repository-root .. \
+  --output artifacts/documentary-corpus
+```
+
+Verification then passed with `verified 10 artifacts and 19560680 bytes; scientific validity remains uncertified`. Five generated files changed because of current source hashes, byte/line spans, and candidate occurrences: `sources.jsonl`, `source_inventory.jsonl`, `source_units.jsonl`, `argument_candidates.jsonl`, and `checksums.json`; coverage counts did not change. The correction also binds `checksums.json` to the unchanged current bytes of `REPORT.md`.
+
+### 15.4 Scientific and repository boundaries
+
+No `prepare` or `estimate` command was run on real data. The frozen LaLonde contract, consumed holdout ledger, canonical statistical artifacts, kernel scientific content, and generated LaLonde fragment were not changed. No model was retuned, no scientific result was regenerated, and no new holdout access occurred. This migration asserts software and documentary reproducibility only—not scientific readiness, causal identification, semantic corpus closure, production approval, or evidence replay.
+
+Mem0 was unavailable and was not consulted; no practice in this migration is attributed to it. Unrelated pre-existing changes outside `09_argumentos/` were excluded from the migration commit, as were `book/main.pdf`, `data/real/lalonde.csv`, `progress/d1-ultra-audit-2026-11-23.md`, local `build/` and `target/` outputs, and the untracked `argument_audit_update/` reference tree. Earlier sections of this report and the historical progress records remain historical records, not rewritten claims about the current package names or test count.

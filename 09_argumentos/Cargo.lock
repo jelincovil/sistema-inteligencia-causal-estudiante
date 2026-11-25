@@ -59,27 +59,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "330a5ed07fa54e4702c9d6c4174f74427fc0ef6e214bbd677ae50a5099946470"
 
 [[package]]
-name = "arg-check"
-version = "0.1.0"
-dependencies = [
- "arg-model",
- "serde",
- "serde_json",
- "thiserror",
-]
-
-[[package]]
-name = "arg-cli"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "arg-check",
- "arg-model",
- "clap",
- "serde_json",
-]
-
-[[package]]
 name = "arg-ingest"
 version = "0.1.0"
 dependencies = [
@@ -92,7 +71,39 @@ dependencies = [
 ]
 
 [[package]]
-name = "arg-model"
+name = "argument-audit"
+version = "0.1.0"
+dependencies = [
+ "argument-document",
+ "serde",
+ "serde_json",
+ "thiserror",
+]
+
+[[package]]
+name = "argument-card"
+version = "0.1.0"
+dependencies = [
+ "argument-document",
+ "serde",
+ "serde_json",
+ "thiserror",
+]
+
+[[package]]
+name = "argument-cli"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "argument-audit",
+ "argument-card",
+ "argument-document",
+ "clap",
+ "serde_json",
+]
+
+[[package]]
+name = "argument-document"
 version = "0.1.0"
 dependencies = [
  "serde",
@@ -115,7 +126,6 @@ name = "causal-ml"
 version = "0.1.0"
 dependencies = [
  "anyhow",
- "arg-model",
  "clap",
  "csv",
  "serde",

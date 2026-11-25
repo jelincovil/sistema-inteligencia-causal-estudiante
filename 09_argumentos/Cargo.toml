@@ -1,9 +1,10 @@
 [workspace]
 resolver = "2"
 members = [
-    "crates/arg-model",
-    "crates/arg-check",
-    "crates/arg-cli",
+    "crates/argument-document",
+    "crates/argument-audit",
+    "crates/argument-card",
+    "crates/argument-cli",
     "crates/arg-ingest",
     "crates/causal-ml",
 ]

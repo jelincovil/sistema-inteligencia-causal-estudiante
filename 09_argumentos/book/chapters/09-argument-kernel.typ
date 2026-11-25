@@ -6,14 +6,16 @@
 
 Statistical artifacts can be reproducible while their interpretation becomes detached from its premises. The argument kernel is a small administrative layer for typed claims, exact expression trees, dependency rules, evidence specifications, canonical content hashes, and cycle diagnostics. It is intentionally conservative: structural validity records whether a formal dependency follows a compiled rule, not whether the underlying science is true.
 
-The four workspace crates have distinct responsibilities:
+The six workspace members have distinct responsibilities:
 
-- `arg-model` strictly loads schema documents, rejects duplicate fields and self-authored status claims, preserves claim/evidence types, and computes canonical hashes;
-- `arg-check` implements profile rules, derivation-local cycle handling, candidate receipt admission, and explicit pending obligations;
-- `arg-cli` exposes kernel checks, local fixtures, doctor information, receipt admission, and recursive corpus byte inventories; and
-- `causal-ml` handles the real-data audit, splits, nuisance estimation, AIPW, holdout ledger, and artifact-derived reports.
+- `argument-document` strictly loads schema documents, rejects duplicate fields and self-authored status claims, preserves claim/evidence types, and computes canonical hashes;
+- `argument-audit` implements profile rules, derivation-local and cross-argument cycle handling, candidate receipt admission, explicit pending obligations, and dependency-graph traces;
+- `argument-card` renders and parses deterministic controlled-language cards, compares their formal projection with the kernel, and applies fixed wording checks without calling a language model;
+- `argument-cli` exposes the `argument-audit` executable for kernel checks, local fixtures, doctor information, graph explanation, card rendering and alignment, receipt admission, and recursive corpus byte inventories;
+- `causal-ml` handles the real-data audit, splits, nuisance estimation, AIPW, holdout ledger, and artifact-derived reports; and
+- `arg-ingest` provides the separate `argumentos-corpus` executable for deterministic documentary ingestion, verification, and read-only candidate queries.
 
-The kernel neither replaces the estimator nor embeds statistical authority in JSON. It makes the provenance and reasoning dependencies inspectable.
+The kernel neither replaces the estimator nor embeds statistical authority in JSON. It makes the provenance and reasoning dependencies inspectable. `check --emit-graph` serializes that graph, `explain` returns an entity-local trace, `render` produces a controlled card, and `align` compares the card's formal projection and wording keys. Alignment is therefore a mechanical round-trip check, not an endorsement of arbitrary prose, semantic-alignment certification, evidence replay, or claim support.
 
 == Claims, scopes, expressions, and canonical identity
 
@@ -80,7 +82,7 @@ This linkage is intentionally not a green scientific dashboard. Factual claims a
 
 == Corpus inventory and its precise limits <reconstruction>
 
-The `argumentos corpus` command recursively discovers JSON kernels, performs strict loading and structural checks, and emits a deterministic JSON catalog. It inventories raw and canonical file hashes, claim/source/evidence records, availability and pending counts, duplicate cross-file IDs, local source paths, and current registered artifact paths and digests. Missing files, invalid kernels, duplicate identifiers, rejected derivations, or path-escaping locators cause a nonzero audit result.
+The `argument-audit corpus` command recursively discovers JSON kernels, performs strict loading and structural checks, and emits a deterministic JSON catalog. It inventories raw and canonical file hashes, claim/source/evidence records, availability and pending counts, duplicate cross-file IDs, local source paths, and current registered artifact paths and digests. Missing files, invalid kernels, duplicate identifiers, rejected derivations, or path-escaping locators cause a nonzero audit result.
 
 A passing corpus inventory means that the local structural and existence checks succeeded. It specifically does *not* mean that:
 

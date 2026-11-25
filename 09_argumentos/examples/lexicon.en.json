@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "language": "en",
+  "entries": [
+    {
+      "id": "P",
+      "gloss": "the premise P"
+    },
+    {
+      "id": "Q",
+      "gloss": "the conclusion Q"
+    }
+  ]
+}
