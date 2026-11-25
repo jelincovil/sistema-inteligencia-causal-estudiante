@@ -61,7 +61,7 @@ Pruned directories are recorded once and their descendants were not read. Exclud
 
 ## Commands
 
-From `argumentos copy/`, using this checked-in configuration and its parent repository:
+From `argumentos/`, using this checked-in configuration and its parent repository:
 
 ```sh
 cargo run --locked -p arg-ingest -- build --config config/corpus-ingest.json --repository-root .. --output artifacts/documentary-corpus
