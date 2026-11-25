@@ -2,7 +2,7 @@
 
 **Project:** Causal ML/AI: identification, implementation, and evidence  
 **Final validation date:** 2026-11-23 UTC (scoped re-validation; see addendum)
-**Scope:** `argumentos/`, plus declared read-only documentary ingestion from `02_causal AI en produccion/`, `05_contenido_tecnico/`, and `08_mcp-agentes-causales/` in the parent repository
+**Scope:** `09_argumentos/`, plus declared read-only documentary ingestion from `02_causal AI en produccion/`, `05_contenido_tecnico/`, and `08_mcp-agentes-causales/` in the parent repository
 
 ## 1. Delivered system and evidence boundary
 
@@ -293,7 +293,7 @@ Per-collection candidate counts overlap; occurrence counts, not candidate counts
 
 ### 10.2 Executed build, verification, and query
 
-The final workflow was executed from `argumentos/`:
+The final workflow was executed from `09_argumentos/`:
 
 ```sh
 cargo run --locked -p arg-ingest -- build \

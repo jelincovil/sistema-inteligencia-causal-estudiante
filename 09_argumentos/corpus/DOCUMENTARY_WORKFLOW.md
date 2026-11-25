@@ -18,7 +18,7 @@ Every extracted candidate has `epistemic_status=source_assertion_unverified`, `r
 
 ## Required repository layout
 
-Run all commands from `argumentos/`. The typed kernel and LaLonde workflow are local to this directory, while documentary ingestion explicitly depends on these siblings in the parent repository:
+Run all commands from `09_argumentos/`. The typed kernel and LaLonde workflow are local to this directory, while documentary ingestion explicitly depends on these siblings in the parent repository:
 
 ```text
 ../02_causal AI en produccion/

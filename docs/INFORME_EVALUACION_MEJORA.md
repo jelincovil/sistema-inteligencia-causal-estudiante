@@ -4,7 +4,7 @@
 **Branch:** `semana4/proyecto`  
 **Baseline HEAD:** `737e166`  
 **Evaluation date:** 2026-11-22  
-**Scope:** the existing teaching, notebook, production, monograph, and MCP components, plus the conversion of `argumentos/` into a self-contained Causal ML/AI theory and real-data engineering project.
+**Scope:** the existing teaching, notebook, production, monograph, and MCP components, plus the conversion of `09_argumentos/` into a self-contained Causal ML/AI theory and real-data engineering project.
 
 ## 1. Executive conclusion
 
@@ -23,11 +23,11 @@ The final scoped software checks pass:
 
 **These results do not certify causal identification, scientific validity, legal redistribution rights, production readiness, or deployment safety.** The MCP local V1 acceptance runner remains intentionally blocked, the A4 historical holdout is no longer independent confirmatory evidence, LaLonde data-value redistribution rights remain unresolved upstream, and several security and operational boundaries still require trusted inputs or further engineering.
 
-The detailed argument-project deliverable and artifact evidence are in [`argumentos/IMPLEMENTATION_REPORT.md`](../argumentos/IMPLEMENTATION_REPORT.md). This root report does not duplicate all of its formulas and generated digests.
+The detailed argument-project deliverable and artifact evidence are in [`09_argumentos/IMPLEMENTATION_REPORT.md`](../09_argumentos/IMPLEMENTATION_REPORT.md). This root report does not duplicate all of its formulas and generated digests.
 
 ## 2. Preservation and attribution boundaries
 
-The starting worktree was **not clean**. Before this audit it already contained staged changes to `.gitignore` and `README.md`, extensive Week 4 edits and deletions, modified monograph and license files, numerous untracked teaching materials, and the pre-existing `argumentos/` argument kernel.
+The starting worktree was **not clean**. Before this audit it already contained staged changes to `.gitignore` and `README.md`, extensive Week 4 edits and deletions, modified monograph and license files, numerous untracked teaching materials, and the pre-existing `09_argumentos/` argument kernel.
 
 Accordingly:
 
@@ -50,7 +50,7 @@ For mixed files such as root `README.md`, the Week 4 implementation, and the mon
 | Production | The modified B1/B3/B4 runtimes and documentation, `src/causalops/`, `04_produccion_causal/Makefile`, its README, and the newly added test directories. |
 | MCP | The canonical/legacy packaging corrections, declaration/path/lineage validation, CLI and Docker entrypoint changes, associated docs, and new regression/acceptance tests under `08_mcp-agentes-causales/`. |
 | Week 4 | Focused current-tree corrections concentrated in data/split verification, registration/promotion, service gating, window selection, and smoke/regression checks. These changes sit within a much larger pre-existing Week 4 rewrite. |
-| `argumentos/` | The self-contained Causal ML crate, data/provenance/protocol, argument corpus, nine-chapter book, tests, generated case-study artifacts, reports, and project documentation, while preserving the original typed argument-kernel semantics. |
+| `09_argumentos/` | The self-contained Causal ML crate, data/provenance/protocol, argument corpus, nine-chapter book, tests, generated case-study artifacts, reports, and project documentation, while preserving the original typed argument-kernel semantics. |
 
 The large number of other modified/deleted/untracked paths shown by `git status` must **not** be interpreted as wholly authored by this intervention.
 
@@ -66,7 +66,7 @@ The large number of other modified/deleted/untracked paths shown by `git status`
 | `06_proyecto_final/` | Final-project instructions and assessment context. |
 | `07_docencia/semana_4_proyecto/` | Teaching prototype, synthetic benchmark datasets, DML-IV extension, registry and service; focused on current-tree correctness without regenerating evidence. |
 | `08_mcp-agentes-causales/` | Canonical MCP 2.0.0 server and renamed legacy package; focused on declaration enforcement, path containment, lineage, packaging, and acceptance status. |
-| `argumentos/` | New self-contained Rust/Type/Typst project linking claims, theory, observational data, estimation, and evidence limits. |
+| `09_argumentos/` | New self-contained Rust/Type/Typst project linking claims, theory, observational data, estimation, and evidence limits. |
 | `MANIFEST_ESTUDIANTE.json`, `scripts/` | Public-distribution declaration and root environment/integrity checks. |
 
 This was a systems and methodology audit with focused repairs, not an independent line-by-line peer review of every page, citation, pedagogical claim, and legacy artifact in the repository.
@@ -133,7 +133,7 @@ No Mem0 result supplied a causal identification, estimator-selection, or statist
 
 **Boundary.** Manifest integrity covers only the files declared for public distribution, not the entire worktree. No GitHub Actions run was triggered, and there is still no root CI matrix covering notebooks, production, MCP, Rust, and every Typst edition.
 
-## 6. `argumentos/`: delivered theory and real-data engineering project
+## 6. `09_argumentos/`: delivered theory and real-data engineering project
 
 The directory is now a self-contained Rust workspace rather than only an argument-kernel sketch. It includes:
 
@@ -211,7 +211,7 @@ Items 4–6 are documented residual boundaries as well as failed properties for 
 
 The current Week 4 numeric IHDP/Jobs files are under `synthetic/`. Their numeric values must not be described as direct empirical observations from the original studies. Reserved `real/` labels in older benchmark metadata or other namespaces are not, by themselves, evidence of empirical provenance. The deleted `real/ihdp` CI path was corrected to `synthetic/ihdp` for this reason and because the current files live there.
 
-By contrast, the LaLonde/NSW–PSID CSV in `argumentos/data/real/` is a pinned observational data artifact. Its genuine observational provenance still does not make treatment randomized or its adjusted contrasts automatically causal.
+By contrast, the LaLonde/NSW–PSID CSV in `09_argumentos/data/real/` is a pinned observational data artifact. Its genuine observational provenance still does not make treatment randomized or its adjusted contrasts automatically causal.
 
 ## 10. Executed commands and reproducibility notes
 
@@ -272,7 +272,7 @@ No `make demo`, `make estimar`, `make registrar`, or `make monitor` was run.
 ### Rust argument/Causal ML project
 
 ```sh
-cd argumentos
+cd 09_argumentos
 cargo fmt --all -- --check
 cargo check --workspace
 cargo clippy --workspace --all-targets -- -D warnings

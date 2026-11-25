@@ -21,7 +21,7 @@ The typed-kernel, fixture, book, and bundled LaLonde workflows are local to this
 - Typst 0.15.1 for the book.
 - `curl`, `cmp`, and a SHA-256 utility only for optional independent upstream checks. Network access is not needed for the software checks; the pinned input must be restored locally for the real-data pipeline.
 
-Run all commands from this directory (`argumentos/`). The Cargo package containing the `argumentos` binary is named **`arg-cli`**; the statistical package and binary are both **`causal-ml`**; and the documentary package is **`arg-ingest`**, with binary **`argumentos-corpus`**.
+Run all commands from this directory (`09_argumentos/`). The Cargo package containing the `argumentos` binary is named **`arg-cli`**; the statistical package and binary are both **`causal-ml`**; and the documentary package is **`arg-ingest`**, with binary **`argumentos-corpus`**.
 
 ### Inspect the project without running estimation or creating a holdout event
 

@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "phase": "kernel_hardened_documentary_validated_scientific_review_pending",
   "updated_at": "2026-11-23T13:51:57Z",
-  "scope": "argumentos/ plus declared read-only parent documentary sources",
+  "scope": "09_argumentos/ plus declared read-only parent documentary sources",
   "base_commit": null,
   "implementation_commit": null,
   "self_contained": false,
